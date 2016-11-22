@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Klasa1AApp</string>
+    <string name="app_name">Klasa1A</string>
+    <string name="dyzurni_label">Dyżurnymi w tym tygodniu są:</string>
 </resources>
