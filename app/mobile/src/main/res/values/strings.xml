@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Klasa1A</string>
     <string name="dyzurni_label">Dyżurnymi w tym tygodniu są:</string>
+    <string name="number_label">Numer w dzienniku:</string>
+    <string name="number_1value">[number1]</string>
+    <string name="number_2value">[number2]</string>
+    <string name="name_label">Imie:</string>
+    <string name="name_1value">[name1]</string>
+    <string name="name_2value">[name2]</string>
+    <string name="surname_label">Nazwisko:</string>
+    <string name="surname_1value">[surname1]</string>
+    <string name="surname_2value">[surname2]</string>
 </resources>
