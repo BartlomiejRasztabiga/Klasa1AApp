@@ -21,11 +21,17 @@ apply plugin: 'war'
 jar {
     baseName = 'dyzurni'
     version =  '0.1.0'
+    from('src/main/java/pl/ct8/rasztabiga/') {
+        include 'config.properties'
+    }
 }
 
 war {
     baseName = 'dyzurni'
     version =  '0.1.0'
+    from('src/main/java/pl/ct8/rasztabiga/') {
+        include 'config.properties'
+    }
 }
 
 

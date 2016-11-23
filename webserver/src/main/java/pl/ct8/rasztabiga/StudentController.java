@@ -7,8 +7,6 @@ import pl.ct8.rasztabiga.models.Dyzurni;
 @RestController
 public class StudentController {
 
-    private static final String template = "Dużurnymi są: %s %s!";
-
     @RequestMapping("/dyzurni")
     public Dyzurni whoIs()
     {
