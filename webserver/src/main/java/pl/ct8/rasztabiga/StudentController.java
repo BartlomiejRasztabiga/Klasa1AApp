@@ -10,6 +10,7 @@ public class StudentController {
     @RequestMapping("/dyzurni")
     public Dyzurni whoIs()
     {
+        App.setDuzyrni();
         return App.dyzurni;
     }
 

@@ -34,7 +34,7 @@ public class App {
         System.out.println(number2);
 */
         fillListWithRealNames();
-        simulate(30);
+        //simulate(5);
         //setDuzyrni();
         //System.out.println(dyzurni.getDyzurny1() + " " + dyzurni.getDyzurny2());
 
@@ -93,7 +93,7 @@ public class App {
 
         try {
 
-            input = new FileInputStream("src/main/java/pl/ct8/rasztabiga/config.properties");
+            input = new FileInputStream(System.getProperty("user.dir") + File.separator + "config.properties");
 
             // load a properties file
             prop.load(input);
@@ -120,7 +120,7 @@ public class App {
 
         try {
 
-            output = new FileOutputStream("src/main/java/pl/ct8/rasztabiga/config.properties");
+            output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
 
             // set the properties value
             prop.setProperty("first", String.valueOf(number1));
@@ -142,7 +142,7 @@ public class App {
         }
     }
 
-    private static void setDuzyrni() {
+    public static void setDuzyrni() {
 
         readDyzurni();
 
@@ -158,6 +158,7 @@ public class App {
         if(number2 > 33) {
             number2 = number2 - 33;
         }
+
         writeDyzurni();
     }
 

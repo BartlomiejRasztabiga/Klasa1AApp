@@ -20,6 +20,9 @@ android {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/us.monoid.web/resty
+    compile group: 'us.monoid.web', name: 'resty', version: '0.3.2'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
