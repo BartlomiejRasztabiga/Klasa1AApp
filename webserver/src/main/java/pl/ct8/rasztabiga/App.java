@@ -34,7 +34,7 @@ public class App {
         System.out.println(number2);
 */
         fillListWithRealNames();
-        simulate(11);
+        simulate(30);
         //setDuzyrni();
         //System.out.println(dyzurni.getDyzurny1() + " " + dyzurni.getDyzurny2());
 
@@ -85,7 +85,7 @@ public class App {
         list.add(new Student("Dawid", "Wąsala", 30));
         list.add(new Student("Wiktor", "Wdowin", 31));
         list.add(new Student("Barbara", "Winkler", 32));
-        list.add(new Student("Karol", "Wyrębkiewicz", 32));
+        list.add(new Student("Karol", "Wyrębkiewicz", 33));
     }
 
     private static void readDyzurni() {
@@ -152,6 +152,12 @@ public class App {
         dyzurni = new Dyzurni(list.get(number1 - 1), list.get(number2 - 1));
         number1 += 2;
         number2 += 2;
+        if(number1 > 33) {
+            number1 = number1 - 33;
+        }
+        if(number2 > 33) {
+            number2 = number2 - 33;
+        }
         writeDyzurni();
     }
 
