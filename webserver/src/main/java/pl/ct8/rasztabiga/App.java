@@ -1,5 +1,7 @@
 package pl.ct8.rasztabiga;
 
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,8 +12,13 @@ import pl.ct8.rasztabiga.models.Student;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 @Configuration
 @ComponentScan
@@ -26,6 +33,7 @@ public class App {
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
+
 /*
         //writeDyzurni();
         readDyzurni();
@@ -34,7 +42,27 @@ public class App {
         System.out.println(number2);
 */
         fillListWithRealNames();
-        //simulate(5);
+        //setDuzyrni();
+
+        try {
+            SchedulerFactory sf = new StdSchedulerFactory();
+            Scheduler sched = sf.getScheduler();
+
+            JobDetail job = newJob(SetDyzurniTask.class).withIdentity("job1", "group1").build();
+
+            CronTrigger trigger = newTrigger().withIdentity("trigger1", "group1").withSchedule(cronSchedule("0/20 * * * * ?"))
+                    .build();
+
+            Date ft = sched.scheduleJob(job, trigger);
+            System.out.println((job.getKey() + " has been scheduled to run at: " + ft + " and repeat based on expression: "
+                    + trigger.getCronExpression()));
+
+            sched.start();
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+
+        //simulate(5000);
         //setDuzyrni();
         //System.out.println(dyzurni.getDyzurny1() + " " + dyzurni.getDyzurny2());
 

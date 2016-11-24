@@ -45,6 +45,12 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
+    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.2.3'
+
+// https://mvnrepository.com/artifact/org.quartz-scheduler/quartz-jobs
+    compile group: 'org.quartz-scheduler', name: 'quartz-jobs', version: '2.2.3'
+
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile("org.springframework.boot:spring-boot-starter-web")
     testCompile('org.springframework.boot:spring-boot-starter-test')
