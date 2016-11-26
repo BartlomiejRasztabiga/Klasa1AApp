@@ -1,12 +1,12 @@
 package pl.ct8.rasztabiga;
 
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import pl.ct8.rasztabiga.models.Dyzurni;
 import pl.ct8.rasztabiga.models.Student;
 
@@ -16,63 +16,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
-
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
 @SpringBootApplication
+@EnableScheduling
 public class App {
 
-    private static List<Student> list = new ArrayList<>(33);
-    public static Dyzurni dyzurni;
+    private static final List<Student> list = new ArrayList<>(33);
+    private static final Properties prop = new Properties();
+    static Dyzurni dyzurni;
     private static int number1, number2;
-    private static Properties prop = new Properties();
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
 
-/*
-        //writeDyzurni();
-        readDyzurni();
-
-        System.out.println(number1);
-        System.out.println(number2);
-*/
         fillListWithRealNames();
-        //setDuzyrni();
 
-        try {
-            SchedulerFactory sf = new StdSchedulerFactory();
-            Scheduler sched = sf.getScheduler();
-
-            JobDetail job = newJob(SetDyzurniTask.class).withIdentity("job1", "group1").build();
-
-            CronTrigger trigger = newTrigger().withIdentity("trigger1", "group1").withSchedule(cronSchedule("0/20 * * * * ?"))
-                    .build();
-
-            Date ft = sched.scheduleJob(job, trigger);
-            System.out.println((job.getKey() + " has been scheduled to run at: " + ft + " and repeat based on expression: "
-                    + trigger.getCronExpression()));
-
-            sched.start();
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-
-        //simulate(5000);
-        //setDuzyrni();
-        //System.out.println(dyzurni.getDyzurny1() + " " + dyzurni.getDyzurny2());
-
-        //for(Student a : list) {
-        //    System.out.println(a);
-        //}
     }
 
     public static void simulate(int weeks) {
-        for(int i = 1; i < weeks; i++) {
+        for (int i = 1; i < weeks; i++) {
             setDuzyrni();
             System.out.println("Tydzien " + i);
             System.out.println(dyzurni.getDyzurny1() + " " + dyzurni.getDyzurny2());
@@ -170,27 +134,26 @@ public class App {
         }
     }
 
-    public static void setDuzyrni() {
+    private static void setDuzyrni() {
 
         readDyzurni();
-
-        //System.out.println(number1);
-        //System.out.println(number2);
 
         dyzurni = new Dyzurni(list.get(number1 - 1), list.get(number2 - 1));
         number1 += 2;
         number2 += 2;
-        if(number1 > 33) {
+        if (number1 > 33) {
             number1 = number1 - 33;
         }
-        if(number2 > 33) {
+        if (number2 > 33) {
             number2 = number2 - 33;
         }
 
         writeDyzurni();
     }
 
-    public static void startSchedule() {
-
+    @Scheduled(cron = "0/20 * * * * ?")
+    private static void scheduleSetDyzurni() {
+        App.setDuzyrni();
+        System.out.println("Set dyzurni: at " + new Date());
     }
 }

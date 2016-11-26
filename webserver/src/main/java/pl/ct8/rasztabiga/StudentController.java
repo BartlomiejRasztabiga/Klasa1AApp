@@ -8,8 +8,7 @@ import pl.ct8.rasztabiga.models.Dyzurni;
 public class StudentController {
 
     @RequestMapping("/dyzurni")
-    public Dyzurni whoIs()
-    {
+    public Dyzurni whoIs() {
         //App.setDuzyrni();
         return App.dyzurni;
     }
