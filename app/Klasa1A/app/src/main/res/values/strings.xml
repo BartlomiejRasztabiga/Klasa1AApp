@@ -3,4 +3,7 @@
     <string name="this_week_on_duties">W tym tygodniu dyżurnymi są:</string>
     <string name="refresh">Odśwież</string>
     <string name="error_message">Błąd podczas pozyskiwania danych, spróbuj ponownie</string>
+    <string name="dialog_download_new_version">Jest dostępna nowa wersja. Czy chcesz ją teraz pobrać?</string>
+    <string name="download">Pobierz</string>
+    <string name="cancel">Anuluj</string>
 </resources>
