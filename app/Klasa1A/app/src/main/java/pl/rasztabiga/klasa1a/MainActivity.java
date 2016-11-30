@@ -1,9 +1,13 @@
 package pl.rasztabiga.klasa1a;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
@@ -56,38 +60,30 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
-             if(new CheckNewUpdatesTask().execute().get()) {
-                 Log.d(TAG, "New version!");
-                 //TODO Dodać pytanie użytkownika czy pobrać
-                 if(isStoragePermissionGranted()) {
-                     new DownloadNewVersion().execute();
-                 } else {
-                     Log.w(TAG, "You didn't give me permission!");
-                 }
+            if (new CheckNewUpdatesTask().execute().get()) {
+                Log.v(TAG, "New version!");
+                //TODO Dodać pytanie użytkownika czy pobrać
+                if (isStoragePermissionGranted()) {
+                    showDownloadNewVersionDialog();
+                } else {
+                    Log.w(TAG, "You didn't give me permission!");
+                }
 
-             }
+            }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
-        //REMOVED THAT LINE
-       /* if(isStoragePermissionGranted()) {
-            new DownloadNewVersion().execute();
-        } else {
-            Log.w(TAG, "You didn't give me permission!");
-        }*/
-
-
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            Log.d(TAG, String.valueOf(pInfo.versionCode));
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
 
         new GetDyzurniTask().execute();
 
     }
+
+    public void showDownloadNewVersionDialog() {
+        DialogFragment dialog = new DownloadNewVersionDialog();
+        dialog.show(getFragmentManager(), "DownloadNewVersionDialog");
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -133,7 +129,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void downloadNewVersion() {
+        new DownloadNewVersion().execute();
+    }
 
+    boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted");
+            return true;
+        }
+    }
 
     private class GetDyzurniTask extends AsyncTask<Void, Void, String> {
 
@@ -151,31 +167,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             loadingIndicator.setVisibility(View.INVISIBLE);
-            if(s != null && !s.equals("")) {
+            if (s != null && !s.equals("")) {
                 showOnDutiesDataView();
                 setDyzurni(s);
             } else {
                 showErrorMessage();
             }
-        }
-    }
-
-    private boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
-            return true;
         }
     }
 
@@ -186,10 +183,10 @@ public class MainActivity extends AppCompatActivity {
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 int installedVersionCode = pInfo.versionCode;
                 int serverVersionCode = NetworkUtilities.getActualVersion();
-                if(installedVersionCode == 0) {
+                if (installedVersionCode == 0) {
                     throw new Exception("Błędna wersja na serwerze, skontakuj się z administratorem");
                 } else if (serverVersionCode > installedVersionCode) {
-                    Log.d(TAG, "New version available. \n Yours: " + installedVersionCode +"\n" + "Server: " + serverVersionCode);
+                    Log.d(TAG, "New version available.\n Yours: " + installedVersionCode + "\n" + "Server: " + serverVersionCode);
                     return true;
                 } else {
                     return false;
@@ -203,11 +200,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
+    public class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            Log.d(TAG, "Inside DownloadNewVersion");
+            if (!isStoragePermissionGranted()) {
+                Log.d(TAG, "You didn't give me permission!");
+                return null;
+            }
+
+            Log.v(TAG, "Inside DownloadNewVersion");
             //get destination to update file and set Uri
             //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
             //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
@@ -257,5 +259,6 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
 
 }
