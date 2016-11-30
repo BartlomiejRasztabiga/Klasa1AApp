@@ -8,14 +8,15 @@ import okhttp3.Response;
 
 public class NetworkUtilities {
 
-    private static final String QUERY_URL = "http://89.36.219.95:8007/dyzurni";
+    private static final String DYZURNI_QUERY_URL = "http://89.36.219.95:8007/dyzurni";
+    private static final String VERSION_QUERY_URL = "http://89.36.219.95:8007/getversion";
 
     public static String getDyzurni() {
 
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(QUERY_URL)
+                .url(DYZURNI_QUERY_URL)
                 .build();
 
         try {
@@ -26,5 +27,22 @@ public class NetworkUtilities {
         }
 
         return null;
+    }
+
+    public static int getActualVersion() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(VERSION_QUERY_URL)
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            return Integer.valueOf(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 }

@@ -23,8 +23,9 @@ import java.util.Properties;
 @EnableScheduling
 public class App {
 
-    private static final List<Student> list = new ArrayList<>(33);
-    private static final Properties prop = new Properties();
+    private static final String CRON_EXPRESSION = "0 0 1 * * 1";
+    private static final List<Student> LIST = new ArrayList<>(33);
+    private static final Properties PROP = new Properties();
     static Dyzurni dyzurni;
     private static int number1, number2;
 
@@ -45,39 +46,39 @@ public class App {
     }
 
     private static void fillListWithRealNames() {
-        list.add(new Student("Jakub", "Bębacz", 1));
-        list.add(new Student("Karol", "Brożyna", 2));
-        list.add(new Student("Przemysław", "Cedro", 3));
-        list.add(new Student("Mateusz", "Chodurski", 4));
-        list.add(new Student("Roskana", "Cieśla", 5));
-        list.add(new Student("Tomasz", "Domagała", 6));
-        list.add(new Student("Izabela", "Działak", 7));
-        list.add(new Student("Weronika", "Dziwirek", 8));
-        list.add(new Student("Marcin", "Grzegorzewski", 9));
-        list.add(new Student("Radosław", "Grzesik", 10));
-        list.add(new Student("Karolina", "Homa", 11));
-        list.add(new Student("Adam", "Kaleta", 12));
-        list.add(new Student("Bartłomiej", "Kopyść", 13));
-        list.add(new Student("Jakub", "Kozieł", 14));
-        list.add(new Student("Mateusz", "Krzysiek", 15));
-        list.add(new Student("Jan", "Kuc", 16));
-        list.add(new Student("Jessica", "Łukawska", 17));
-        list.add(new Student("Sylwia", "Malarczyk", 18));
-        list.add(new Student("Aleksandra", "Mazur", 19));
-        list.add(new Student("Izabela", "Mojecka", 20));
-        list.add(new Student("Kinga", "Nowakowska", 21));
-        list.add(new Student("Agnieszka", "Pajdała", 22));
-        list.add(new Student("Kamil", "Petrus", 23));
-        list.add(new Student("Karol", "Polit", 24));
-        list.add(new Student("Bartłomiej", "Rasztabiga", 25));
-        list.add(new Student("Jędrzej", "Sarna", 26));
-        list.add(new Student("Miłosz", "Słoń", 27));
-        list.add(new Student("Mateusz", "Sobierajski", 28));
-        list.add(new Student("Mikołaj", "Stefański", 29));
-        list.add(new Student("Dawid", "Wąsala", 30));
-        list.add(new Student("Wiktor", "Wdowin", 31));
-        list.add(new Student("Barbara", "Winkler", 32));
-        list.add(new Student("Karol", "Wyrębkiewicz", 33));
+        LIST.add(new Student("Jakub", "Bębacz", 1));
+        LIST.add(new Student("Karol", "Brożyna", 2));
+        LIST.add(new Student("Przemysław", "Cedro", 3));
+        LIST.add(new Student("Mateusz", "Chodurski", 4));
+        LIST.add(new Student("Roskana", "Cieśla", 5));
+        LIST.add(new Student("Tomasz", "Domagała", 6));
+        LIST.add(new Student("Izabela", "Działak", 7));
+        LIST.add(new Student("Weronika", "Dziwirek", 8));
+        LIST.add(new Student("Marcin", "Grzegorzewski", 9));
+        LIST.add(new Student("Radosław", "Grzesik", 10));
+        LIST.add(new Student("Karolina", "Homa", 11));
+        LIST.add(new Student("Adam", "Kaleta", 12));
+        LIST.add(new Student("Bartłomiej", "Kopyść", 13));
+        LIST.add(new Student("Jakub", "Kozieł", 14));
+        LIST.add(new Student("Mateusz", "Krzysiek", 15));
+        LIST.add(new Student("Jan", "Kuc", 16));
+        LIST.add(new Student("Jessica", "Łukawska", 17));
+        LIST.add(new Student("Sylwia", "Malarczyk", 18));
+        LIST.add(new Student("Aleksandra", "Mazur", 19));
+        LIST.add(new Student("Izabela", "Mojecka", 20));
+        LIST.add(new Student("Kinga", "Nowakowska", 21));
+        LIST.add(new Student("Agnieszka", "Pajdała", 22));
+        LIST.add(new Student("Kamil", "Petrus", 23));
+        LIST.add(new Student("Karol", "Polit", 24));
+        LIST.add(new Student("Bartłomiej", "Rasztabiga", 25));
+        LIST.add(new Student("Jędrzej", "Sarna", 26));
+        LIST.add(new Student("Miłosz", "Słoń", 27));
+        LIST.add(new Student("Mateusz", "Sobierajski", 28));
+        LIST.add(new Student("Mikołaj", "Stefański", 29));
+        LIST.add(new Student("Dawid", "Wąsala", 30));
+        LIST.add(new Student("Wiktor", "Wdowin", 31));
+        LIST.add(new Student("Barbara", "Winkler", 32));
+        LIST.add(new Student("Karol", "Wyrębkiewicz", 33));
     }
 
     private static void readDyzurni() {
@@ -87,12 +88,12 @@ public class App {
 
             input = new FileInputStream(System.getProperty("user.dir") + File.separator + "config.properties");
 
-            // load a properties file
-            prop.load(input);
+            // load a Properties file
+            PROP.load(input);
 
-            // get the property value and print it out
-            number1 = Integer.valueOf(prop.getProperty("first"));
-            number2 = Integer.valueOf(prop.getProperty("second"));
+            // get the Property value and print it out
+            number1 = Integer.valueOf(PROP.getProperty("first"));
+            number2 = Integer.valueOf(PROP.getProperty("second"));
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -114,12 +115,12 @@ public class App {
 
             output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
 
-            // set the properties value
-            prop.setProperty("first", String.valueOf(number1));
-            prop.setProperty("second", String.valueOf(number2));
+            // set the Properties value
+            PROP.setProperty("first", String.valueOf(number1));
+            PROP.setProperty("second", String.valueOf(number2));
 
-            // save properties to project root folder
-            prop.store(output, null);
+            // save Properties to project root folder
+            PROP.store(output, null);
 
         } catch (IOException io) {
             io.printStackTrace();
@@ -134,11 +135,11 @@ public class App {
         }
     }
 
-    private static void setDuzyrni() {
+    static void setDuzyrni() {
 
         readDyzurni();
 
-        dyzurni = new Dyzurni(list.get(number1 - 1), list.get(number2 - 1));
+        dyzurni = new Dyzurni(LIST.get(number1 - 1), LIST.get(number2 - 1));
         number1 += 2;
         number2 += 2;
         if (number1 > 33) {
@@ -151,7 +152,60 @@ public class App {
         writeDyzurni();
     }
 
-    @Scheduled(cron = "0/20 * * * * ?")
+    public static int readActualVersionCode() {
+        InputStream input = null;
+
+        try {
+
+            input = new FileInputStream(System.getProperty("user.dir") + File.separator + "config.properties");
+
+            // load a Properties file
+            PROP.load(input);
+
+            // get the Property value and print it out
+            return Integer.valueOf(PROP.getProperty("actualVersionCode"));
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
+    public static void writeActualVersionCode(int versionCode) {
+        OutputStream output = null;
+
+        try {
+
+            output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
+
+            // set the Properties value
+            PROP.setProperty("actualVersionCode", String.valueOf(versionCode));
+
+            // save Properties to project root folder
+            PROP.store(output, null);
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = CRON_EXPRESSION)
     private static void scheduleSetDyzurni() {
         App.setDuzyrni();
         System.out.println("Set dyzurni: at " + new Date());
