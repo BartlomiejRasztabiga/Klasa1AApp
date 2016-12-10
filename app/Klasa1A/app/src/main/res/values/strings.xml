@@ -12,4 +12,8 @@
     <string name="wednesday">Środa</string>
     <string name="thursday">Czwartek</string>
     <string name="friday">Piątek</string>
+    <string name="changelog_full_title">Lista zmian</string>
+    <string name="changelog_title">Co nowego</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">Więcej…</string>
 </resources>

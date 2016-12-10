@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.models.Dyzurni;
 import pl.rasztabiga.klasa1a.models.LuckyNumbers;
 import pl.rasztabiga.klasa1a.models.Student;
@@ -71,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
         friday_tv = (TextView) findViewById(R.id.friday_tv);
         errorMessageTextView = (TextView) findViewById(R.id.error_message_display);
         loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
+
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.isFirstRun()) {
+            cl.getLogDialog().show();
+        }
 
         try {
             if (new CheckNewUpdatesTask().execute().get()) {
