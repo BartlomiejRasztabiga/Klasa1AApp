@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+    <release version="1.2.2" versioncode="5">
+        <change>Dodano: listę zmian</change>
+    </release>
+    <release version="1.2.1" versioncode="4" >
+        <change>Naprawiono: kilka błędów dotyczących wyświetlania tekstu</change>
+        <change>Naprawiono: wyświetlanie w trybie poziomym</change>
+    </release>
+    <release version="1.2" versioncode="3" >
+        <change>Dodano: szczęśliwe numerki</change>
+    </release>
+    <release version="1.0" versioncode="1">
+        <change>Pierwsza wersja</change>
+    </release>
+</changelog>
