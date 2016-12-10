@@ -142,6 +142,11 @@ public class MainActivity extends AppCompatActivity {
             JSONObject dyzurny1 = json.getJSONObject("dyzurny1");
             JSONObject dyzurny2 = json.getJSONObject("dyzurny2");
 
+            //Only for tests
+            name1.setText("");
+            name2.setText("");
+            //End
+
             //TODO I don't know if it's really needed (below)
             Dyzurni dyzurni = new Dyzurni(new Student(dyzurny1.getString("name"), dyzurny1.getString("surname"), dyzurny1.getInt("number")), new Student(dyzurny2.getString("name"), dyzurny2.getString("surname"), dyzurny2.getInt("number")));
             name1.setText(dyzurni.getDyzurny1().getName() + " " + dyzurni.getDyzurny1().getSurname());
@@ -164,6 +169,15 @@ public class MainActivity extends AppCompatActivity {
 
             LuckyNumbers luckyNumbers = new LuckyNumbers(arrayList);
             ArrayList<Integer> luckyNumbersList = luckyNumbers.getNumbersList();
+
+            //Only for tests
+            monday_tv.setText("");
+            tuesday_tv.setText("");
+            wednesday_tv.setText("");
+            thursday_tv.setText("");
+            friday_tv.setText("");
+            //End
+
             if(luckyNumbersList.get(0) != 0) {
                 monday_tv.setText(String.valueOf(luckyNumbersList.get(0)));
                 tuesday_tv.setText(String.valueOf(luckyNumbersList.get(1)));
@@ -234,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             if (s != null && !s.equals("")) {
+                showOnDutiesDataView();
                 setLuckyNumbers(s);
             } else {
                 showErrorMessage();
