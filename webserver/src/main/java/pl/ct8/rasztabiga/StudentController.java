@@ -4,6 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.ct8.rasztabiga.models.Dyzurni;
+import pl.ct8.rasztabiga.models.LuckyNumbers;
+
+import java.util.ArrayList;
 
 @RestController
 public class StudentController {
@@ -30,5 +33,31 @@ public class StudentController {
     public int getVersionCode() {
         return App.readActualVersionCode();
     }
+
+    @RequestMapping("/getluckynumbers")
+    public LuckyNumbers getLuckyNumbers() {
+        return App.luckyNumbers;
+    }
+
+    @RequestMapping("/setluckynumbers")
+    public LuckyNumbers setLuckyNumbers(@RequestParam("a") int monday, @RequestParam("b") int tuesday, @RequestParam("c") int wednesday, @RequestParam("d") int thursday, @RequestParam("e") int friday) {
+        ArrayList<Integer> list = new ArrayList<>(5);
+        list.add(monday);
+        list.add(tuesday);
+        list.add(wednesday);
+        list.add(thursday);
+        list.add(friday);
+        App.setLuckyNumbers(list);
+        return App.luckyNumbers;
+    }
+
+    @RequestMapping("/setluckynumbersfromdisk")
+    public LuckyNumbers setLuckyNumbersFromDisk() {
+        App.readLuckyNumbers();
+        return App.luckyNumbers;
+    }
+
+
+
 
 }

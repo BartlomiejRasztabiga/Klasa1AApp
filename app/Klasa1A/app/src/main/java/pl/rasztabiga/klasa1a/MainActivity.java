@@ -1,13 +1,10 @@
 package pl.rasztabiga.klasa1a;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
@@ -15,10 +12,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,23 +23,34 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import pl.rasztabiga.klasa1a.models.Dyzurni;
+import pl.rasztabiga.klasa1a.models.LuckyNumbers;
 import pl.rasztabiga.klasa1a.models.Student;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    //TODO To have numbers and days in one row use linear layout
+
     private String TAG = MainActivity.class.getName();
 
     private TextView name1;
     private TextView name2;
+
+    private TextView monday_tv;
+    private TextView tuesday_tv;
+    private TextView wednesday_tv;
+    private TextView thursday_tv;
+    private TextView friday_tv;
 
     private TextView errorMessageTextView;
 
@@ -55,9 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         name1 = (TextView) findViewById(R.id.name1);
         name2 = (TextView) findViewById(R.id.name2);
+        monday_tv = (TextView) findViewById(R.id.monday_tv);
+        tuesday_tv = (TextView) findViewById(R.id.tuesday_tv);
+        wednesday_tv = (TextView) findViewById(R.id.wednesday_tv);
+        thursday_tv = (TextView) findViewById(R.id.thursday_tv);
+        friday_tv = (TextView) findViewById(R.id.friday_tv);
         errorMessageTextView = (TextView) findViewById(R.id.error_message_display);
         loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
-
 
         try {
             if (new CheckNewUpdatesTask().execute().get()) {
@@ -68,14 +80,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.w(TAG, "You didn't give me permission!");
                 }
-
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
-
         new GetDyzurniTask().execute();
+        new GetLuckyNumbersTask().execute();
 
     }
 
@@ -96,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.action_refresh) {
             new GetDyzurniTask().execute();
+            new GetLuckyNumbersTask().execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -105,11 +117,21 @@ public class MainActivity extends AppCompatActivity {
         errorMessageTextView.setVisibility(View.INVISIBLE);
         name1.setVisibility(View.VISIBLE);
         name2.setVisibility(View.VISIBLE);
+        monday_tv.setVisibility(View.VISIBLE);
+        tuesday_tv.setVisibility(View.VISIBLE);
+        wednesday_tv.setVisibility(View.VISIBLE);
+        thursday_tv.setVisibility(View.VISIBLE);
+        friday_tv.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
         name1.setVisibility(View.INVISIBLE);
         name2.setVisibility(View.INVISIBLE);
+        monday_tv.setVisibility(View.INVISIBLE);
+        tuesday_tv.setVisibility(View.INVISIBLE);
+        wednesday_tv.setVisibility(View.INVISIBLE);
+        thursday_tv.setVisibility(View.INVISIBLE);
+        friday_tv.setVisibility(View.INVISIBLE);
         errorMessageTextView.setVisibility(View.VISIBLE);
     }
 
@@ -123,6 +145,31 @@ public class MainActivity extends AppCompatActivity {
             Dyzurni dyzurni = new Dyzurni(new Student(dyzurny1.getString("name"), dyzurny1.getString("surname"), dyzurny1.getInt("number")), new Student(dyzurny2.getString("name"), dyzurny2.getString("surname"), dyzurny2.getInt("number")));
             name1.setText(dyzurni.getDyzurny1().getName() + " " + dyzurni.getDyzurny1().getSurname());
             name2.setText(dyzurni.getDyzurny2().getName() + " " + dyzurni.getDyzurny2().getSurname());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setLuckyNumbers(String JSONString) {
+        try {
+            JSONObject json = new JSONObject(JSONString);
+            JSONArray list = json.getJSONArray("numbersList");
+            ArrayList<Integer> arrayList = new ArrayList<>(5);
+
+            for(int i=0;i < list.length(); i++) {
+                arrayList.add(Integer.valueOf(list.get(i).toString()));
+            }
+
+            LuckyNumbers luckyNumbers = new LuckyNumbers(arrayList);
+            ArrayList<Integer> luckyNumbersList = luckyNumbers.getNumbersList();
+            if(luckyNumbersList.get(0) != 0) {
+                monday_tv.setText(String.valueOf(luckyNumbersList.get(0)));
+                tuesday_tv.setText(String.valueOf(luckyNumbersList.get(1)));
+                wednesday_tv.setText(String.valueOf(luckyNumbersList.get(2)));
+                thursday_tv.setText(String.valueOf(luckyNumbersList.get(3)));
+                friday_tv.setText(String.valueOf(luckyNumbersList.get(4)));
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -175,6 +222,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private class GetLuckyNumbersTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return NetworkUtilities.getLuckyNumbers();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s != null && !s.equals("")) {
+                setLuckyNumbers(s);
+            } else {
+                showErrorMessage();
+            }
+        }
+    }
+
+
 
     private class CheckNewUpdatesTask extends AsyncTask<Void, Void, Boolean> {
         @Override

@@ -6,4 +6,10 @@
     <string name="dialog_download_new_version">Jest dostępna nowa wersja. Czy chcesz ją teraz pobrać?</string>
     <string name="download">Pobierz</string>
     <string name="cancel">Anuluj</string>
+    <string name="this_week_lucky_numbers">W tym tygodniu szczęśliwe numerki to:</string>
+    <string name="monday">Poniedziałek</string>
+    <string name="tuesday">Wtorek</string>
+    <string name="wednesday">Środa</string>
+    <string name="thursday">Czwartek</string>
+    <string name="friday">Piątek</string>
 </resources>

@@ -8,13 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.ct8.rasztabiga.models.Dyzurni;
+import pl.ct8.rasztabiga.models.LuckyNumbers;
 import pl.ct8.rasztabiga.models.Student;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Configuration
 @ComponentScan
@@ -24,9 +22,11 @@ import java.util.Properties;
 public class App {
 
     private static final String CRON_EXPRESSION = "0 0 1 * * 1";
+    private static final String RESRT_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
     private static final List<Student> LIST = new ArrayList<>(33);
     private static final Properties PROP = new Properties();
     static Dyzurni dyzurni;
+    static LuckyNumbers luckyNumbers;
     private static int number1, number2;
 
     public static void main(String[] args) {
@@ -205,9 +205,96 @@ public class App {
         }
     }
 
+    public static void setLuckyNumbers(ArrayList<Integer> list) {
+        luckyNumbers = new LuckyNumbers(list);
+        writeLuckyNumbers();
+    }
+
+    public static void readLuckyNumbers() {
+        InputStream input = null;
+
+        try {
+
+            input = new FileInputStream(System.getProperty("user.dir") + File.separator + "config.properties");
+
+            // load a Properties file
+            PROP.load(input);
+
+            // get the Property value and print it out
+            Integer monday = Integer.valueOf(PROP.getProperty("ln.monday"));
+            Integer tuesday = Integer.valueOf(PROP.getProperty("ln.tuesday"));
+            Integer wednesday = Integer.valueOf(PROP.getProperty("ln.wednesday"));
+            Integer thursday = Integer.valueOf(PROP.getProperty("ln.thursday"));
+            Integer friday = Integer.valueOf(PROP.getProperty("ln.friday"));
+
+            ArrayList<Integer> list = new ArrayList<>(5);
+            list.add(monday);
+            list.add(tuesday);
+            list.add(wednesday);
+            list.add(thursday);
+            list.add(friday);
+            list.trimToSize();
+
+            luckyNumbers = new LuckyNumbers(list);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void writeLuckyNumbers() {
+        OutputStream output = null;
+
+        try {
+
+            output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
+
+            // set the Properties value
+            ArrayList<Integer> list = luckyNumbers.getNumbersList();
+            PROP.setProperty("ln.monday", String.valueOf(list.get(0)));
+            PROP.setProperty("ln.tuesday", String.valueOf(list.get(1)));
+            PROP.setProperty("ln.wednesday", String.valueOf(list.get(2)));
+            PROP.setProperty("ln.thursday", String.valueOf(list.get(3)));
+            PROP.setProperty("ln.friday", String.valueOf(list.get(4)));
+
+            // save Properties to project root folder
+            PROP.store(output, null);
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     @Scheduled(cron = CRON_EXPRESSION)
     private static void scheduleSetDyzurni() {
         App.setDuzyrni();
         System.out.println("Set dyzurni: at " + new Date());
+    }
+
+    @Scheduled(cron = RESRT_LUCKY_NUMBERS_CRON_EXPRESSION)
+    private static void resetLuckyNumbers() {
+        ArrayList<Integer> list = new ArrayList<>(5);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        list.add(0);
+        luckyNumbers = new LuckyNumbers(list);
+        writeLuckyNumbers();
     }
 }
