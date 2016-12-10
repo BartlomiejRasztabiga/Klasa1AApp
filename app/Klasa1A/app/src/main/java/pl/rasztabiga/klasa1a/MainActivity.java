@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -280,11 +281,11 @@ public class MainActivity extends AppCompatActivity {
             //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
             //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
             //solution, please inform us in comment
+            //TODO CHANGE THIS TO SDK 25, http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
             String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
             String fileName = "klasa1a.apk";
             destination += fileName;
             final Uri uri = Uri.parse("file://" + destination);
-
             //Delete update file if exists
             File file = new File(destination);
             if (file.exists())
