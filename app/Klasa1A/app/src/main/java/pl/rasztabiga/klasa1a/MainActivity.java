@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -302,12 +303,14 @@ public class MainActivity extends AppCompatActivity {
             //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
             //solution, please inform us in comment
             //TODO CHANGE THIS TO SDK 25, http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
-            String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
+            //String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
             String fileName = "klasa1a.apk";
-            destination += fileName;
-            final Uri uri = Uri.parse("file://" + destination);
+            //destination += fileName;
+            //File file = new File(getApplicationContext().getFilesDir(), fileName);
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "klasa1a.apk");
+            final Uri uri = Uri.fromFile(file);
             //Delete update file if exists
-            File file = new File(destination);
+            //File file = new File(destination);
             if (file.exists())
                 //file.delete() - test this, I think sometimes it doesnt work
                 file.delete();
