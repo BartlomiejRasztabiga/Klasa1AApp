@@ -50,7 +50,7 @@ public class App {
         LIST.add(new Student("Karol", "Brożyna", 2));
         LIST.add(new Student("Przemysław", "Cedro", 3));
         LIST.add(new Student("Mateusz", "Chodurski", 4));
-        LIST.add(new Student("Roskana", "Cieśla", 5));
+        LIST.add(new Student("Roksana", "Cieśla", 5));
         LIST.add(new Student("Tomasz", "Domagała", 6));
         LIST.add(new Student("Izabela", "Działak", 7));
         LIST.add(new Student("Weronika", "Dziwirek", 8));
@@ -152,7 +152,7 @@ public class App {
         writeDyzurni();
     }
 
-    public static int readActualVersionCode() {
+    static int readActualVersionCode() {
         InputStream input = null;
 
         try {
@@ -179,7 +179,7 @@ public class App {
         return 0;
     }
 
-    public static void writeActualVersionCode(int versionCode) {
+    static void writeActualVersionCode(int versionCode) {
         OutputStream output = null;
 
         try {
@@ -205,12 +205,12 @@ public class App {
         }
     }
 
-    public static void setLuckyNumbers(ArrayList<Integer> list) {
+    static void setLuckyNumbers(ArrayList<Integer> list) {
         luckyNumbers = new LuckyNumbers(list);
         writeLuckyNumbers();
     }
 
-    public static void readLuckyNumbers() {
+    static void readLuckyNumbers() {
         InputStream input = null;
 
         try {
@@ -249,7 +249,7 @@ public class App {
         }
     }
 
-    public static void writeLuckyNumbers() {
+    private static void writeLuckyNumbers() {
         OutputStream output = null;
 
         try {
@@ -288,12 +288,7 @@ public class App {
 
     @Scheduled(cron = RESRT_LUCKY_NUMBERS_CRON_EXPRESSION)
     private static void resetLuckyNumbers() {
-        ArrayList<Integer> list = new ArrayList<>(5);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
-        list.add(0);
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0,0,0,0,0));
         luckyNumbers = new LuckyNumbers(list);
         writeLuckyNumbers();
     }
