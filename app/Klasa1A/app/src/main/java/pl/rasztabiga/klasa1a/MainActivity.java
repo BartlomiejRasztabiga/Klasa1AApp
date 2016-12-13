@@ -117,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
             new GetLuckyNumbersTask().execute();
             return true;
         }
+        else if (itemThatWasClickedId == R.id.action_calendar) {
+            Intent newIntent = new Intent(this, TestsCalendarActivity.class);
+            startActivity(newIntent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -261,8 +265,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 
     private class CheckNewUpdatesTask extends AsyncTask<Void, Void, Boolean> {
         @Override
