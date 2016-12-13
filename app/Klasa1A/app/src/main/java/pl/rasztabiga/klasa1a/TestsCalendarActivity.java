@@ -1,9 +1,11 @@
 package pl.rasztabiga.klasa1a;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -16,8 +18,10 @@ import java.util.Locale;
 
 public class TestsCalendarActivity extends AppCompatActivity {
 
-    private static final String TAG = "heheiksde";
+    private static final String TAG = TestsCalendarActivity.class.getName();
     CompactCalendarView compactCalendarView;
+    ListView eventList;
+    TextView debug_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,8 @@ public class TestsCalendarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tests_calendar);
 
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
+        eventList = (ListView) findViewById(R.id.event_list);
+        debug_tv = (TextView) findViewById(R.id.debug_tv);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
         String dateInString = "14-12-2016 00:00:00";
@@ -34,8 +40,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, date.toString());
-        Event ev1 = new Event(Color.GREEN, date.getTime() , "Something");
+        final Event ev1 = new Event(Color.GREEN, date.getTime() , "Something");
         compactCalendarView.addEvent(ev1, false);
 
         dateInString = "25-12-2016 00:00:00";
@@ -50,11 +55,27 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
         Log.d("lop;", "Events: " + compactCalendarView.getEvents(date.getTime()));
 
+        Event ev3 = new Event(Color.BLUE, date.getTime(), "Lel");
+        compactCalendarView.addEvent(ev3, false);
+
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
                 Log.d(TAG, "Day was clicked: " + dateClicked + " with events " + events);
+
+                //TODO put there recyclerview
+                /*for (Event e : events) {
+                    debug_tv.setText("Processing" + e.toString());
+                    TableRow row = new TableRow(getApplicationContext());
+                    row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    TextView tv = new TextView(getApplicationContext());
+                    tv.setText(e.getData().toString());
+                    tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    row.addView(tv);
+                    eventList.addView(row, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                    Log.d(TAG, "added row");
+                }*/
             }
 
             @Override
