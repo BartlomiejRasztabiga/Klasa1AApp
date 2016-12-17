@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.ct8.rasztabiga.models.Dyzurni;
 import pl.ct8.rasztabiga.models.LuckyNumbers;
+import pl.ct8.rasztabiga.models.Student;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class StudentController {
@@ -64,7 +66,11 @@ public class StudentController {
     public void addStudents(){
         DataBaseController.addStudents(App.LIST);
     }
+    @RequestMapping("/getstudentsfromdb")
+    public List<Student> getStudentsFromDB(){
+        return DataBaseController.getStudents();
 
+    }
 
 
 

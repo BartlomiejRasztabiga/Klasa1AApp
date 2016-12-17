@@ -2,10 +2,8 @@ package pl.ct8.rasztabiga;
 
 import pl.ct8.rasztabiga.models.Student;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseController {
@@ -68,18 +66,27 @@ public class DataBaseController {
         }
 
     }
-    public static void getStudents(List<Student> studentList) {
+
+    public static List<Student> getStudents() {
         Connection connection = connect();
         Statement stmt;
-        try{
+        List<Student> studentList = new ArrayList<>();
+        try {
             stmt = connection.createStatement();
+            //searching command
+            String searchSQL = "SELECT * FROM STUDENTS";
+            ResultSet rs = stmt.executeQuery(searchSQL);
             // reading students
-            while(true){
-                
+            while (rs.next()) {
+                Student student = new Student(rs.getString("name"), rs.getString("surname"), rs.getInt("number"));
+                studentList.add(student);
+
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("Powinno dzialac");
+        return studentList;
     }
 }
 
