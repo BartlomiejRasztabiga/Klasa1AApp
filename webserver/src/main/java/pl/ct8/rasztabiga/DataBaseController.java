@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataBaseController {
+public class DatabaseController {
 
     private static final String dataBase = "heh";
 

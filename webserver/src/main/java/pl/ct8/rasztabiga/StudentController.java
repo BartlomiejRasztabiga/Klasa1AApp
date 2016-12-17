@@ -60,15 +60,15 @@ public class StudentController {
     }
     @RequestMapping("/createstudentstable")
     public void createTable(){
-        DataBaseController.createStudentsTable();
+        DatabaseController.createStudentsTable();
     }
     @RequestMapping("/addstudents")
     public void addStudents(){
-        DataBaseController.addStudents(App.LIST);
+        DatabaseController.addStudents(App.LIST);
     }
     @RequestMapping("/getstudentsfromdb")
     public List<Student> getStudentsFromDB(){
-        return DataBaseController.getStudents();
+        return DatabaseController.getStudents();
 
     }
 
