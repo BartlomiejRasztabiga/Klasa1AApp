@@ -56,9 +56,9 @@ public class StudentController {
         App.readLuckyNumbers();
         return App.luckyNumbers;
     }
-    @RequestMapping("/createtable")
+    @RequestMapping("/createstudentstable")
     public void createTable(){
-        DataBaseController.createTable();
+        DataBaseController.createStudentsTable();
     }
     @RequestMapping("/addstudents")
     public void addStudents(){

@@ -25,20 +25,20 @@ public class DataBaseController {
         return c;
     }
 
-    public static void createTable() {
+    public static void createStudentsTable() {
         Connection connection = connect();
-        Statement stat;
+        Statement stmt;
         try {
-            stat = connection.createStatement();
+            stmt = connection.createStatement();
             // creating table
             String tabelaSQL = "CREATE TABLE STUDENTS"
                     + " (NUMBER INTEGER PRIMARY KEY NOT NULL,"
                     + " NAME    TEXT    NOT NULL, "
                     + " SURNAME TEXT    NOT NULL)";
             // executing
-            stat.executeUpdate(tabelaSQL);
+            stmt.executeUpdate(tabelaSQL);
             // closing connection
-            stat.close();
+            stmt.close();
             connection.close();
         } catch (SQLException e) {
             System.out.println("Nie mogę stworzyć tabeli" + e.getMessage());
@@ -67,6 +67,19 @@ public class DataBaseController {
             e.printStackTrace();
         }
 
+    }
+    public static void getStudents(List<Student> studentList) {
+        Connection connection = connect();
+        Statement stmt;
+        try{
+            stmt = connection.createStatement();
+            // reading students
+            while(true){
+                
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }
 
