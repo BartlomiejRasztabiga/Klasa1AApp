@@ -259,8 +259,6 @@ public class MainActivity extends AppCompatActivity {
             if (s != null && !s.equals("")) {
                 showOnDutiesDataView();
                 setLuckyNumbers(s);
-            } else {
-                showErrorMessage();
             }
         }
     }

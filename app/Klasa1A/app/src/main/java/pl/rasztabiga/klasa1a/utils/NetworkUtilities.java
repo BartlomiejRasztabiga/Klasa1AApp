@@ -11,6 +11,7 @@ public class NetworkUtilities {
     private static final String DYZURNI_QUERY_URL = "http://89.36.219.95:8007/dyzurni";
     private static final String VERSION_QUERY_URL = "http://89.36.219.95:8007/getversion";
     private static final String LUCKY_NUMBERS_QUERY_URL = "http://89.36.219.95:8007/getluckynumbers";
+    private static final String EXAMS_QUERY_URL = "http://89.36.219.95:8007/getexams";
 
     public static String getDyzurni() {
 
@@ -18,6 +19,23 @@ public class NetworkUtilities {
 
         Request request = new Request.Builder()
                 .url(DYZURNI_QUERY_URL)
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            return response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String getExams() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(EXAMS_QUERY_URL)
                 .build();
 
         try {

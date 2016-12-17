@@ -1,13 +1,4 @@
-package pl.rasztabiga.klasa1a.models;
-
-
-import android.graphics.Color;
-import android.graphics.Interpolator;
-
-import com.github.sundeepk.compactcalendarview.domain.Event;
-
-import java.util.Calendar;
-import java.util.Date;
+package pl.ct8.rasztabiga.models;
 
 public class Exam {
     private String subject;
@@ -44,10 +35,4 @@ public class Exam {
         return day;
     }
 
-    public Event createEvent() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-        Date date = calendar.getTime();
-        return new Event(Color.GREEN, date.getTime(), this);
-    }
 }
