@@ -1,7 +1,6 @@
 package pl.ct8.rasztabiga.models;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LuckyNumbers {
 

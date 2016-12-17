@@ -23,11 +23,12 @@ public class App {
 
     private static final String CRON_EXPRESSION = "0 0 1 * * 1";
     private static final String RESRT_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
-    private static final List<Student> LIST = new ArrayList<>(33);
+    static final List<Student> LIST = new ArrayList<>(33);
     private static final Properties PROP = new Properties();
     static Dyzurni dyzurni;
     static LuckyNumbers luckyNumbers;
     private static int number1, number2;
+
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -278,6 +279,10 @@ public class App {
                 }
             }
         }
+    }
+
+    public static List<Student> getLIST() {
+        return LIST;
     }
 
     @Scheduled(cron = CRON_EXPRESSION)
