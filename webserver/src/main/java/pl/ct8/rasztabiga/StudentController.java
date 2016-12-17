@@ -9,6 +9,7 @@ import pl.ct8.rasztabiga.models.Student;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class StudentController {
@@ -42,13 +43,13 @@ public class StudentController {
     }
 
     @RequestMapping("/setluckynumbers")
-    public LuckyNumbers setLuckyNumbers(@RequestParam("a") int monday, @RequestParam("b") int tuesday, @RequestParam("c") int wednesday, @RequestParam("d") int thursday, @RequestParam("e") int friday) {
+    public LuckyNumbers setLuckyNumbers(@RequestParam Map<String, String> numbers) {
         ArrayList<Integer> list = new ArrayList<>(5);
-        list.add(monday);
-        list.add(tuesday);
-        list.add(wednesday);
-        list.add(thursday);
-        list.add(friday);
+        list.add(Integer.valueOf(numbers.get("a")));
+        list.add(Integer.valueOf(numbers.get("b")));
+        list.add(Integer.valueOf(numbers.get("c")));
+        list.add(Integer.valueOf(numbers.get("d")));
+        list.add(Integer.valueOf(numbers.get("e")));
         App.setLuckyNumbers(list);
         return App.luckyNumbers;
     }
