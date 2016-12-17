@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_tests_calendar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pl.rasztabiga.klasa1a.TestsCalendarActivity">
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/compactcalendar_view"
+        android:layout_width="fill_parent"
+
+        android:layout_height="300dp"
+        app:compactCalendarTextSize="18sp"
+        app:compactCalendarBackgroundColor="#efefef"
+        app:compactCalendarTextColor="#212121"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#1e88e5"
+        app:compactCalendarCurrentDayBackgroundColor="#01579b"
+        app:compactCalendarMultiEventIndicatorColor="#424242" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/date_tv"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/compactcalendar_view"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_exams"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/date_tv">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</RelativeLayout>
