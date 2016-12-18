@@ -57,21 +57,6 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
         new GetEventsTask().execute();
 
- /*       Exam exam1 = new Exam("EDB", "SPR1", 2016, 11, 14);
-        compactCalendarView.addEvent(exam1.createEvent(), false);
-
-        Exam exam2 = new Exam("FIZYKA", "JĄDROWA", 2016, 11, 25);
-        compactCalendarView.addEvent(exam2.createEvent(), false);
-
-        Exam exam3 = new Exam("MATEMATYKA", "SPR1", 2016, 11, 25);
-        compactCalendarView.addEvent(exam3.createEvent(), false);
-
-        Exam exam4 = new Exam("PODSTAWY PRZEDSIĘBIORCZOŚCI", "spr1", 2016, 11, 25);
-        compactCalendarView.addEvent(exam4.createEvent(), false);
-
-        Exam exam5 = new Exam("EDUKACJA DLA BEZPIECZEŃSTWA", "Test z działu 2 - Banki i giełda", 2016, 11, 25);
-        compactCalendarView.addEvent(exam5.createEvent(), false);*/
-
         date_tv.setText(dateFormat.format(new Date()));
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
@@ -96,14 +81,6 @@ public class TestsCalendarActivity extends AppCompatActivity {
                 Log.d(TAG, "Month was scrolled to: " + firstDayOfNewMonth);
             }
         });
-    }
-
-    public Event createNewEvent(int year, int month, int day, Exam exam)
-    {
-        calendar.set(year, month, day);
-        Date date = calendar.getTime();
-
-        return new Event(Color.GREEN, date.getTime(), exam);
     }
 
     public void setEvents(String JSONString) {

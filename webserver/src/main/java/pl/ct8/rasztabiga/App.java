@@ -22,27 +22,11 @@ import java.util.*;
 public class App {
 
     private static final String CRON_EXPRESSION = "0 0 1 * * 1";
-    private static final String RESRT_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
-    static final List<Student> LIST = new ArrayList<>(33);
-    private static final Properties PROP = new Properties();
-    static Dyzurni dyzurni;
-    static LuckyNumbers luckyNumbers;
-    private static int number1, number2;
-
+    private static final String RESET_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
+    static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
-
-        fillListWithRealNames();
-
-    }
-
-    public static void simulate(int weeks) {
-        for (int i = 1; i < weeks; i++) {
-            setDuzyrni();
-            System.out.println("Tydzien " + i);
-            System.out.println(dyzurni.getDyzurny1() + " " + dyzurni.getDyzurny2());
-        }
 
     }
 
@@ -82,65 +66,14 @@ public class App {
         LIST.add(new Student("Karol", "Wyrębkiewicz", 33));
     }
 
-    private static void readDyzurni() {
-        InputStream input = null;
+    static void nextDuzyrni() {
 
-        try {
+        int number1, number2;
+        Dyzurni dyzurni = DatabaseController.getDyzurni();
 
-            input = new FileInputStream(System.getProperty("user.dir") + File.separator + "config.properties");
+        number1 = dyzurni.getDyzurny1().getNumber();
+        number2 = dyzurni.getDyzurny2().getNumber();
 
-            // load a Properties file
-            PROP.load(input);
-
-            // get the Property value and print it out
-            number1 = Integer.valueOf(PROP.getProperty("first"));
-            number2 = Integer.valueOf(PROP.getProperty("second"));
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static void writeDyzurni() {
-        OutputStream output = null;
-
-        try {
-
-            output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
-
-            // set the Properties value
-            PROP.setProperty("first", String.valueOf(number1));
-            PROP.setProperty("second", String.valueOf(number2));
-
-            // save Properties to project root folder
-            PROP.store(output, null);
-
-        } catch (IOException io) {
-            io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    static void setDuzyrni() {
-
-        readDyzurni();
-
-        dyzurni = new Dyzurni(LIST.get(number1 - 1), LIST.get(number2 - 1));
         number1 += 2;
         number2 += 2;
         if (number1 > 33) {
@@ -150,151 +83,18 @@ public class App {
             number2 = number2 - 33;
         }
 
-        writeDyzurni();
-    }
-
-    static int readActualVersionCode() {
-        InputStream input = null;
-
-        try {
-
-            input = new FileInputStream(System.getProperty("user.dir") + File.separator + "config.properties");
-
-            // load a Properties file
-            PROP.load(input);
-
-            // get the Property value and print it out
-            return Integer.valueOf(PROP.getProperty("actualVersionCode"));
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
-    }
-
-    static void writeActualVersionCode(int versionCode) {
-        OutputStream output = null;
-
-        try {
-
-            output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
-
-            // set the Properties value
-            PROP.setProperty("actualVersionCode", String.valueOf(versionCode));
-
-            // save Properties to project root folder
-            PROP.store(output, null);
-
-        } catch (IOException io) {
-            io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    static void setLuckyNumbers(ArrayList<Integer> list) {
-        luckyNumbers = new LuckyNumbers(list);
-        writeLuckyNumbers();
-    }
-
-    static void readLuckyNumbers() {
-        InputStream input = null;
-
-        try {
-
-            input = new FileInputStream(System.getProperty("user.dir") + File.separator + "config.properties");
-
-            // load a Properties file
-            PROP.load(input);
-
-            // get the Property value and print it out
-            Integer monday = Integer.valueOf(PROP.getProperty("ln.monday"));
-            Integer tuesday = Integer.valueOf(PROP.getProperty("ln.tuesday"));
-            Integer wednesday = Integer.valueOf(PROP.getProperty("ln.wednesday"));
-            Integer thursday = Integer.valueOf(PROP.getProperty("ln.thursday"));
-            Integer friday = Integer.valueOf(PROP.getProperty("ln.friday"));
-
-            ArrayList<Integer> list = new ArrayList<>(5);
-            list.add(monday);
-            list.add(tuesday);
-            list.add(wednesday);
-            list.add(thursday);
-            list.add(friday);
-            list.trimToSize();
-
-            luckyNumbers = new LuckyNumbers(list);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static void writeLuckyNumbers() {
-        OutputStream output = null;
-
-        try {
-
-            output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
-
-            // set the Properties value
-            ArrayList<Integer> list = luckyNumbers.getNumbersList();
-            PROP.setProperty("ln.monday", String.valueOf(list.get(0)));
-            PROP.setProperty("ln.tuesday", String.valueOf(list.get(1)));
-            PROP.setProperty("ln.wednesday", String.valueOf(list.get(2)));
-            PROP.setProperty("ln.thursday", String.valueOf(list.get(3)));
-            PROP.setProperty("ln.friday", String.valueOf(list.get(4)));
-
-            // save Properties to project root folder
-            PROP.store(output, null);
-
-        } catch (IOException io) {
-            io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static List<Student> getLIST() {
-        return LIST;
+        DatabaseController.setDyzurni(number1, number2);
     }
 
     @Scheduled(cron = CRON_EXPRESSION)
     private static void scheduleSetDyzurni() {
-        App.setDuzyrni();
+        nextDuzyrni();
         System.out.println("Set dyzurni: at " + new Date());
     }
 
-    @Scheduled(cron = RESRT_LUCKY_NUMBERS_CRON_EXPRESSION)
+    @Scheduled(cron = RESET_LUCKY_NUMBERS_CRON_EXPRESSION)
     private static void resetLuckyNumbers() {
         ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0,0,0,0,0));
-        luckyNumbers = new LuckyNumbers(list);
-        writeLuckyNumbers();
+        DatabaseController.setLuckyNumbers(list);
     }
 }

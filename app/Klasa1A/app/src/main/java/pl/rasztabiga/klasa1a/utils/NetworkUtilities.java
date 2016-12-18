@@ -8,10 +8,13 @@ import okhttp3.Response;
 
 public class NetworkUtilities {
 
-    private static final String DYZURNI_QUERY_URL = "http://89.36.219.95:8007/dyzurni";
-    private static final String VERSION_QUERY_URL = "http://89.36.219.95:8007/getversion";
-    private static final String LUCKY_NUMBERS_QUERY_URL = "http://89.36.219.95:8007/getluckynumbers";
-    private static final String EXAMS_QUERY_URL = "http://89.36.219.95:8007/getexams";
+    private static final String SERVER_ADDR = "http://89.36.219.95:8007";
+    //private static final String SERVER_ADDR = "http://192.168.1.10:8007";
+
+    private static final String DYZURNI_QUERY_URL = SERVER_ADDR + "/getdyzurni";
+    private static final String VERSION_QUERY_URL = SERVER_ADDR + "/getversion";
+    private static final String LUCKY_NUMBERS_QUERY_URL = SERVER_ADDR + "/getluckynumbers";
+    private static final String EXAMS_QUERY_URL = SERVER_ADDR + "/getexams";
 
     public static String getDyzurni() {
 

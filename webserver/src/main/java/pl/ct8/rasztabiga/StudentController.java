@@ -8,7 +8,6 @@ import pl.ct8.rasztabiga.models.Exam;
 import pl.ct8.rasztabiga.models.LuckyNumbers;
 import pl.ct8.rasztabiga.models.Student;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,57 +16,75 @@ import java.util.Map;
 public class StudentController {
 
     @RequestMapping("/dyzurni")
-    public Dyzurni whoIs() {
-        //App.setDuzyrni();
-        return App.dyzurni;
+    public Dyzurni getDyzurniOld() {
+        return DatabaseController.getDyzurni();
+    }
+
+    @RequestMapping("/getdyzurni")
+    public Dyzurni getDyzurni() {
+        return DatabaseController.getDyzurni();
     }
 
     @RequestMapping("/setdyzurni")
-    public Dyzurni setDyzurni() {
-        App.setDuzyrni();
-        return App.dyzurni;
+    public void setDyzurni(@RequestParam("first") int first, @RequestParam("second") int second) {
+        DatabaseController.setDyzurni(first, second);
     }
 
-    @RequestMapping("/setversion")
-    public int setVersionCode(@RequestParam("ver") int versionCode) {
-        App.writeActualVersionCode(versionCode);
-        return App.readActualVersionCode();
-    }
-
-    @RequestMapping("/getversion")
-    public int getVersionCode() {
-        return App.readActualVersionCode();
+    @RequestMapping("/nextdyzurni")
+    public void nextDyzurni() {
+        App.nextDuzyrni();
     }
 
     @RequestMapping("/getluckynumbers")
     public LuckyNumbers getLuckyNumbers() {
-        return App.luckyNumbers;
+        return DatabaseController.getLuckyNumbers();
     }
 
     @RequestMapping("/setluckynumbers")
-    public LuckyNumbers setLuckyNumbers(@RequestParam("a") int monday, @RequestParam("b") int tuesday, @RequestParam("c") int wednesday, @RequestParam("d") int thursday, @RequestParam("e") int friday) {
+    public void setLuckyNumbers(@RequestParam("a") int monday, @RequestParam("b") int tuesday, @RequestParam("c") int wednesday, @RequestParam("d") int thursday, @RequestParam("e") int friday) {
         ArrayList<Integer> list = new ArrayList<>(5);
         list.add(monday);
         list.add(tuesday);
         list.add(wednesday);
         list.add(thursday);
         list.add(friday);
-        App.setLuckyNumbers(list);
-        return App.luckyNumbers;
+        DatabaseController.setLuckyNumbers(list);
     }
 
-    @RequestMapping("/setluckynumbersfromdisk")
-    public LuckyNumbers setLuckyNumbersFromDisk() {
-        App.readLuckyNumbers();
-        return App.luckyNumbers;
+    @RequestMapping("/getexams")
+    public List<Exam> getExams() {
+        return DatabaseController.getExams();
     }
+
+    @RequestMapping("/addexam")
+    public void addExam(@RequestParam Map<String, String> list) {
+        Exam exam = new Exam(list.get("subject"), list.get("desc"), Integer.valueOf(list.get("year")),
+                Integer.valueOf(list.get("month")), Integer.valueOf(list.get("day")));
+
+        DatabaseController.addExam(exam);
+    }
+
+    @RequestMapping("/getversion")
+    public int getVersionCode() {
+        return DatabaseController.getActualVersionCode();
+    }
+
+    @RequestMapping("/setversion")
+    public void setVersionCode(@RequestParam("ver") int versionCode) {
+        DatabaseController.setActualVersionCode(versionCode);
+    }
+
+    //Na gorze sa nowe metody
+
+    // Na dole metody testowe do tworzenia tabel
+
 
     @RequestMapping("/createstudentstable")
     public void createStudentsTable() {
         DatabaseController.createStudentsTable();
     }
 
-    @RequestMapping("/addstudents")
+    @RequestMapping("/addstudentstotable")
     public void addStudents() {
         DatabaseController.addStudents(App.LIST);
     }
@@ -80,14 +97,6 @@ public class StudentController {
     @RequestMapping("/createexamstable")
     public void createExamsTable() {
         DatabaseController.createExamsTable();
-    }
-
-    @RequestMapping("/addexam")
-    public void addExam(@RequestParam Map<String, String> list) {
-        Exam exam = new Exam(list.get("subject"), list.get("desc"), Integer.valueOf(list.get("year")),
-                Integer.valueOf(list.get("month")), Integer.valueOf(list.get("day")));
-
-        DatabaseController.addExam(exam);
     }
 
     @RequestMapping("/createsettingstable")
@@ -103,9 +112,5 @@ public class StudentController {
         DatabaseController.createSettingsTable();
     }
 
-    @RequestMapping("/getexams")
-    public List<Exam> getExams() {
-        return DatabaseController.getExams();
-    }
 
 }

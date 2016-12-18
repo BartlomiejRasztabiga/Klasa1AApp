@@ -1,15 +1,20 @@
 package pl.ct8.rasztabiga;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import pl.ct8.rasztabiga.models.Dyzurni;
 import pl.ct8.rasztabiga.models.Exam;
+import pl.ct8.rasztabiga.models.LuckyNumbers;
 import pl.ct8.rasztabiga.models.Student;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseController {
+
+    private static final String BEGIN_TRANSCATION = "BEGIN TRANSACTION";
+    private static final String END_TRANSCATION = "END TRANSACTION";
+
+    //TODO Add transaction where needed
 
     private static Connection getConnection() {
         Connection c = null;
@@ -23,7 +28,7 @@ public class DatabaseController {
         return c;
     }
 
-    public static void createStudentsTable() {
+    static void createStudentsTable() {
         Connection connection = getConnection();
         Statement stmt = null;
         try {
@@ -51,7 +56,7 @@ public class DatabaseController {
         }
     }
 
-    public static void createExamsTable() {
+    static void createExamsTable() {
         Connection connection = getConnection();
         Statement stmt = null;
         try {
@@ -83,7 +88,7 @@ public class DatabaseController {
         }
     }
 
-    public static void createSettingsTable() {
+    static void createSettingsTable() {
         Connection connection = getConnection();
         Statement stmt = null;
         try {
@@ -109,7 +114,7 @@ public class DatabaseController {
         }
     }
 
-    public static void initializeSettingsTable() {
+    static void initializeSettingsTable() {
         Connection connection = getConnection();
         PreparedStatement stmt = null;
         try {
@@ -164,7 +169,7 @@ public class DatabaseController {
         }
     }
 
-    public static void addExam(Exam exam) {
+    static void addExam(Exam exam) {
         Connection connection = getConnection();
         PreparedStatement stmt = null;
         try {
@@ -194,7 +199,7 @@ public class DatabaseController {
         }
     }
 
-    public static void addStudents(List<Student> studentList) {
+    static void addStudents(List<Student> studentList) {
         // connection
         Connection connection = getConnection();
         Statement stmt = null;
@@ -224,7 +229,7 @@ public class DatabaseController {
 
     }
 
-    public static List<Student> getStudents() {
+    static List<Student> getStudents() {
         Connection connection = getConnection();
         Statement stmt = null;
         List<Student> studentList = new ArrayList<>();
@@ -238,8 +243,11 @@ public class DatabaseController {
                 Student student = new Student(rs.getString("name"), rs.getString("surname"), rs.getInt("number"));
                 studentList.add(student);
             }
+
+            return studentList;
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         } finally {
             try {
                 if (stmt != null) {
@@ -251,10 +259,9 @@ public class DatabaseController {
             }
         }
 
-        return studentList;
     }
 
-    public static List<Exam> getExams() {
+    static List<Exam> getExams() {
         Connection connection = getConnection();
         Statement stmt = null;
         List<Exam> examsList = new ArrayList<>();
@@ -269,6 +276,110 @@ public class DatabaseController {
                 examsList.add(exam);
             }
 
+            return examsList;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    static Student getStudent(int number) {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "SELECT * FROM STUDENTS WHERE NUMBER = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setInt(1, number);
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            return new Student(rs.getString("NAME"), rs.getString("SURNAME"), rs.getInt("NUMBER"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    static Dyzurni getDyzurni() {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        int first, second;
+        try {
+            String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, "dyzurni.first");
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            first = Integer.valueOf(rs.getString("VALUE"));
+
+            stmt.setString(1, "dyzurni.second");
+
+            rs = stmt.executeQuery();
+            rs.next();
+
+            second = Integer.valueOf(rs.getString("VALUE"));
+
+            return new Dyzurni(getStudent(first), getStudent(second));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static void setDyzurni(int first, int second) {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, String.valueOf(first));
+            stmt.setString(2, "dyzurni.first");
+
+            stmt.executeUpdate();
+
+            stmt.setString(1, String.valueOf(second));
+            stmt.setString(2, "dyzurni.second");
+
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -281,8 +392,152 @@ public class DatabaseController {
                 e.printStackTrace();
             }
         }
+    }
 
-        return examsList;
+    static LuckyNumbers getLuckyNumbers() {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        ArrayList<Integer> list =  new ArrayList<>(5);
+        try {
+            String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, "ln.monday");
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+            list.add(Integer.valueOf(rs.getString("VALUE")));
+
+            stmt.setString(1, "ln.tuesday");
+            rs = stmt.executeQuery();
+            rs.next();
+            list.add(Integer.valueOf(rs.getString("VALUE")));
+
+            stmt.setString(1, "ln.wednesday");
+            rs = stmt.executeQuery();
+            rs.next();
+            list.add(Integer.valueOf(rs.getString("VALUE")));
+
+            stmt.setString(1, "ln.thursday");
+            rs = stmt.executeQuery();
+            rs.next();
+            list.add(Integer.valueOf(rs.getString("VALUE")));
+
+            stmt.setString(1, "ln.friday");
+            rs = stmt.executeQuery();
+            rs.next();
+            list.add(Integer.valueOf(rs.getString("VALUE")));
+
+            return new LuckyNumbers(list);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static void setLuckyNumbers(ArrayList<Integer> list) {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, String.valueOf(list.get(0)));
+            stmt.setString(2, "ln.monday");
+
+            stmt.executeUpdate();
+
+            stmt.setString(1, String.valueOf(list.get(1)));
+            stmt.setString(2, "ln.tuesday");
+
+            stmt.executeUpdate();
+
+            stmt.setString(1, String.valueOf(list.get(2)));
+            stmt.setString(2, "ln.wednesday");
+
+            stmt.executeUpdate();
+
+            stmt.setString(1, String.valueOf(list.get(3)));
+            stmt.setString(2, "ln.thursday");
+
+            stmt.executeUpdate();
+
+            stmt.setString(1, String.valueOf(list.get(4)));
+            stmt.setString(2, "ln.friday");
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static int getActualVersionCode() {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, "actualVersionNumber");
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            return Integer.valueOf(rs.getString("VALUE"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static void setActualVersionCode(int versionCode) {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, String.valueOf(versionCode));
+            stmt.setString(2, "actualVersionNumber");
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
