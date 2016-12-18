@@ -48,6 +48,6 @@ public class Exam {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         Date date = calendar.getTime();
-        return new Event(Color.GREEN, date.getTime(), this);
+        return new Event(Color.RED, date.getTime(), this);
     }
 }
