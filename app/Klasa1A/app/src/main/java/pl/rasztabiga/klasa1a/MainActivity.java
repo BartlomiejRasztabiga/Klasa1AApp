@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG, "New version!");
                 //TODO Dodać pytanie użytkownika czy pobrać
                 if (isStoragePermissionGranted()) {
-                    showDownloadNewVersionDialog();
+                        showDownloadNewVersionDialog();
                 } else {
                     Log.w(TAG, "You didn't give me permission!");
                 }
@@ -115,8 +115,7 @@ public class MainActivity extends AppCompatActivity {
             new GetDyzurniTask().execute();
             new GetLuckyNumbersTask().execute();
             return true;
-        }
-        else if (itemThatWasClickedId == R.id.action_calendar) {
+        } else if (itemThatWasClickedId == R.id.action_calendar) {
             Intent newIntent = new Intent(this, TestsCalendarActivity.class);
             startActivity(newIntent);
         }
@@ -172,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             JSONArray list = json.getJSONArray("numbersList");
             ArrayList<Integer> arrayList = new ArrayList<>(5);
 
-            for(int i=0;i < list.length(); i++) {
+            for (int i = 0; i < list.length(); i++) {
                 arrayList.add(Integer.valueOf(list.get(i).toString()));
             }
 
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             friday_tv.setText("");
             //End
 
-            if(luckyNumbersList.get(0) != 0) {
+            if (luckyNumbersList.get(0) != 0) {
                 monday_tv.setText(String.valueOf(luckyNumbersList.get(0)));
                 tuesday_tv.setText(String.valueOf(luckyNumbersList.get(1)));
                 wednesday_tv.setText(String.valueOf(luckyNumbersList.get(2)));
@@ -259,8 +258,6 @@ public class MainActivity extends AppCompatActivity {
             if (s != null && !s.equals("")) {
                 showOnDutiesDataView();
                 setLuckyNumbers(s);
-            } else {
-                showErrorMessage();
             }
         }
     }

@@ -1,8 +1,10 @@
 package pl.rasztabiga.klasa1a;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.AsyncListUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +12,10 @@ import android.widget.TextView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -20,6 +26,7 @@ import java.util.Locale;
 
 import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.utils.ExamAdapter;
+import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 public class TestsCalendarActivity extends AppCompatActivity {
 
@@ -48,25 +55,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mExamAdapter);
 
-        Exam exam1 = new Exam("EDB", "SPR1");
-        final Event ev1 = createNewEvent(2016, 11, 14, exam1);
-        compactCalendarView.addEvent(ev1, false);
-
-        Exam exam2 = new Exam("FIZYKA", "JĄDROWA");
-        Event ev2 = createNewEvent(2016, 11, 25, exam2);
-        compactCalendarView.addEvent(ev2, false);
-
-        Exam exam3 = new Exam("MATEMATYKA", "SPR1");
-        Event ev3 = createNewEvent(2016, 11, 25, exam3);
-        compactCalendarView.addEvent(ev3, false);
-
-        Exam exam4 = new Exam("PODSTAWY PRZEDSIĘBIORCZOŚCI", "spr1");
-        Event ev4 = createNewEvent(2016, 11, 25, exam4);
-        compactCalendarView.addEvent(ev4, false);
-
-        Exam exam5 = new Exam("EDUKACJA DLA BEZPIECZEŃSTWA", "Test z działu 2 - Banki i giełda");
-        Event ev5 = createNewEvent(2016, 11, 25, exam5);
-        compactCalendarView.addEvent(ev5, false);
+        new GetEventsTask().execute();
 
         date_tv.setText(dateFormat.format(new Date()));
 
@@ -94,13 +83,45 @@ public class TestsCalendarActivity extends AppCompatActivity {
         });
     }
 
-    public Event createNewEvent(int year, int month, int day, Exam exam)
-    {
-        calendar.set(year, month, day);
-        Date date = calendar.getTime();
+    public void setEvents(String JSONString) {
+        try {
+            JSONArray json = new JSONArray(JSONString);
 
-        return new Event(Color.GREEN, date.getTime(), exam);
+            List<Exam> arrayList = new ArrayList<>();
 
+            for(int i=0; i < json.length(); i++) {
+                JSONObject obj = json.getJSONObject(i);
+                Exam exam = new Exam(obj.getString("subject"), obj.getString("desc"), obj.getInt("year"),
+                        obj.getInt("month"), obj.getInt("day"));
+                arrayList.add(exam);
+            }
+
+            ArrayList<Event> eventArrayList = new ArrayList<>();
+            for(Exam e : arrayList) {
+                eventArrayList.add(e.createEvent());
+            }
+
+            compactCalendarView.addEvents(eventArrayList);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private class GetEventsTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            return NetworkUtilities.getExams();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s != null && !s.equals("")) {
+                setEvents(s);
+            }
+        }
     }
 
 }
