@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class DownloadNewVersionDialog extends DialogFragment {
 
-    private String TAG = DownloadNewVersionDialog.class.getName();
+    private final String TAG = DownloadNewVersionDialog.class.getName();
 
 
     @Override
