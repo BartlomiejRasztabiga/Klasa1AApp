@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,7 +59,32 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
         new GetEventsTask().execute();
 
+        //Show date and events for actual day
         date_tv.setText(dateFormat.format(new Date()));
+
+        //TODO USE JODA TIME
+
+/*        //Workaround for showing events for actual day
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date today = new Date();
+        Date todayWithZeroTime = null;
+        try {
+            todayWithZeroTime = formatter.parse(formatter.format(today));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, today.toString());
+
+        List<Event> events = compactCalendarView.getEvents(todayWithZeroTime);
+
+        ArrayList<Exam> examArrayList = new ArrayList<>();
+        for(Event e : events) {
+            examArrayList.add((Exam) e.getData());
+        }
+
+        Log.d(TAG, examArrayList.toString());
+        mExamAdapter.setExamsData(examArrayList);*/
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
