@@ -540,5 +540,89 @@ public class DatabaseController {
         }
     }
 
+    static List<String> getEmailsWithoutApiCodeList() {
+        Connection connection = getConnection();
+        Statement stmt = null;
+        List<String> addressList = new ArrayList<>();
+        try {
+            stmt = connection.createStatement();
+            String sql = "SELECT * FROM API_KEYS WHERE api_key ISNULL";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                addressList.add(rs.getString("email"));
+            }
+
+            return addressList;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static List<String> getApiCodesList() {
+        Connection connection = getConnection();
+        Statement stmt = null;
+        List<String> apiCodesList = new ArrayList<>();
+        try {
+            stmt = connection.createStatement();
+            String sql = "SELECT * FROM API_KEYS WHERE api_key NOT NULL";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                apiCodesList.add(rs.getString("api_key"));
+            }
+
+            return apiCodesList;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static void setApiCode(String apiCode, String email) {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "UPDATE API_KEYS SET api_key = ? WHERE email = ?";
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, apiCode);
+            stmt.setString(2, email);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 

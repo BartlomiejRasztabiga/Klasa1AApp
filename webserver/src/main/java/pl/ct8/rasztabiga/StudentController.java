@@ -1,12 +1,12 @@
 package pl.ct8.rasztabiga;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.ct8.rasztabiga.models.Dyzurni;
-import pl.ct8.rasztabiga.models.Exam;
-import pl.ct8.rasztabiga.models.LuckyNumbers;
-import pl.ct8.rasztabiga.models.Student;
+import pl.ct8.rasztabiga.models.*;
+import pl.ct8.rasztabiga.utils.ApiCodeGenerator;
+import pl.ct8.rasztabiga.utils.EmailUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,11 @@ import java.util.Map;
 
 @RestController
 public class StudentController {
+
+    @ModelAttribute()
+    public void initialize() {
+        System.out.println("ok xD");
+    }
 
     @RequestMapping("/dyzurni")
     public Dyzurni getDyzurniOld() {
@@ -72,6 +77,26 @@ public class StudentController {
     @RequestMapping("/setversion")
     public void setVersionCode(@RequestParam("ver") int versionCode) {
         DatabaseController.setActualVersionCode(versionCode);
+    }
+
+    @RequestMapping("/sendApiKeys")
+    public void sendApiKeys() {
+        List<String> addressList = DatabaseController.getEmailsWithoutApiCodeList();
+        List<String> apiKeysList = DatabaseController.getApiCodesList();
+        if (addressList != null && apiKeysList != null) {
+            //System.out.println(DatabaseController.getEmailsWithoutApiCodeList().toString());
+            //System.out.println(DatabaseController.getApiCodesList());
+            for (String address : addressList) {
+                String apiCode;
+                while (true) {
+                    apiCode = ApiCodeGenerator.nextApiCode();
+                    if(!apiKeysList.contains(apiCode)) break;
+                }
+                DatabaseController.setApiCode(apiCode, address);
+                EmailUtils.sendEmail(address, apiCode);
+                System.out.println("Succesfully sent " + apiCode + " to " + address);
+            }
+        }
     }
 
     //Na gorze sa nowe metody
