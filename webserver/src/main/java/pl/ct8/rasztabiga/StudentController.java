@@ -1,6 +1,7 @@
 package pl.ct8.rasztabiga;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.ct8.rasztabiga.models.Dyzurni;
@@ -15,32 +16,32 @@ import java.util.Map;
 @RestController
 public class StudentController {
 
-    @RequestMapping("/dyzurni")
+    @RequestMapping(value = "/dyzurni", method = RequestMethod.GET)
     public Dyzurni getDyzurniOld() {
         return DatabaseController.getDyzurni();
     }
 
-    @RequestMapping("/getdyzurni")
+    @RequestMapping(value = "/getdyzurni", method = RequestMethod.GET)
     public Dyzurni getDyzurni() {
         return DatabaseController.getDyzurni();
     }
 
-    @RequestMapping("/setdyzurni")
+    @RequestMapping(value = "/setdyzurni", method = RequestMethod.POST)
     public void setDyzurni(@RequestParam("first") int first, @RequestParam("second") int second) {
         DatabaseController.setDyzurni(first, second);
     }
 
-    @RequestMapping("/nextdyzurni")
+    @RequestMapping(value = "/nextdyzurni", method = RequestMethod.GET)
     public void nextDyzurni() {
         App.nextDuzyrni();
     }
 
-    @RequestMapping("/getluckynumbers")
+    @RequestMapping(value = "/getluckynumbers", method = RequestMethod.GET)
     public LuckyNumbers getLuckyNumbers() {
         return DatabaseController.getLuckyNumbers();
     }
 
-    @RequestMapping("/setluckynumbers")
+    @RequestMapping(value = "/setluckynumbers", method = RequestMethod.POST)
     public void setLuckyNumbers(@RequestParam Map<String, String> numbers) {
         ArrayList<Integer> list = new ArrayList<>(5);
         list.add(Integer.valueOf(numbers.get("a")));
@@ -51,12 +52,12 @@ public class StudentController {
         DatabaseController.setLuckyNumbers(list);
     }
 
-    @RequestMapping("/getexams")
+    @RequestMapping(value = "/getexams", method = RequestMethod.GET)
     public List<Exam> getExams() {
         return DatabaseController.getExams();
     }
 
-    @RequestMapping("/addexam")
+    @RequestMapping(value = "/addexam", method = RequestMethod.POST)
     public void addExam(@RequestParam Map<String, String> list) {
         Exam exam = new Exam(list.get("subject"), list.get("desc"), Integer.valueOf(list.get("year")),
                 Integer.valueOf(list.get("month")), Integer.valueOf(list.get("day")));
@@ -64,12 +65,12 @@ public class StudentController {
         DatabaseController.addExam(exam);
     }
 
-    @RequestMapping("/getversion")
+    @RequestMapping(value = "/getversion", method = RequestMethod.GET)
     public int getVersionCode() {
         return DatabaseController.getActualVersionCode();
     }
 
-    @RequestMapping("/setversion")
+    @RequestMapping(value = "/setversion", method = RequestMethod.POST)
     public void setVersionCode(@RequestParam("ver") int versionCode) {
         DatabaseController.setActualVersionCode(versionCode);
     }
@@ -79,33 +80,33 @@ public class StudentController {
     // Na dole metody testowe do tworzenia tabel
 
 
-    @RequestMapping("/createstudentstable")
+    @RequestMapping(value = "/createstudentstable", method = RequestMethod.POST)
     public void createStudentsTable() {
         DatabaseController.createStudentsTable();
     }
 
-    @RequestMapping("/addstudentstotable")
+    @RequestMapping(value = "/addstudentstotable", method = RequestMethod.POST)
     public void addStudents() {
         DatabaseController.addStudents(App.LIST);
     }
 
-    @RequestMapping("/getstudentsfromdb")
+    @RequestMapping(value = "/getstudentsfromdb", method = RequestMethod.GET)
     public List<Student> getStudentsFromDB() {
         return DatabaseController.getStudents();
     }
 
-    @RequestMapping("/createexamstable")
+    @RequestMapping(value = "/createexamstable", method = RequestMethod.POST)
     public void createExamsTable() {
         DatabaseController.createExamsTable();
     }
 
-    @RequestMapping("/createsettingstable")
+    @RequestMapping(value = "/createsettingstable", method = RequestMethod.POST)
     public void createSettingsTable() {
         DatabaseController.createSettingsTable();
         DatabaseController.initializeSettingsTable();
     }
 
-    @RequestMapping("/createNeededTables")
+    @RequestMapping(value = "/createNeededTables", method = RequestMethod.POST)
     public void createAllTables() {
         DatabaseController.createStudentsTable();
         DatabaseController.createExamsTable();
