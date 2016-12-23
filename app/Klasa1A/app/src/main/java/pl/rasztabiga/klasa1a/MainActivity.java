@@ -304,8 +304,14 @@ public class MainActivity extends AppCompatActivity {
             //TODO CHANGE THIS TO SDK 25, http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
 
             //File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "klasa1a.apk");
+
+            Log.d(TAG, String.valueOf(Build.VERSION.SDK_INT));
+            Log.d(TAG, String.valueOf(Build.VERSION_CODES.N));
+            
             File file = new File(Environment.getExternalStorageDirectory(), "klasa1a.apk");
-            final Uri uri = FileProvider.getUriForFile(MainActivity.this, getApplicationContext().getPackageName() + ".provider", file);
+            final Uri uri = (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.N) ?
+                    FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", file) :
+                    Uri.fromFile(file);
 
             //Delete update file if exists
             //File file = new File(destination);
