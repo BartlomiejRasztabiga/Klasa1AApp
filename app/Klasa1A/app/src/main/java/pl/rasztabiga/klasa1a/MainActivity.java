@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -295,15 +297,16 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
 
-            Log.v(TAG, "Inside DownloadNewVersion");
             //get destination to update file and set Uri
             //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
             //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
             //solution, please inform us in comment
             //TODO CHANGE THIS TO SDK 25, http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
 
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "klasa1a.apk");
-            final Uri uri = Uri.fromFile(file);
+            //File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "klasa1a.apk");
+            File file = new File(Environment.getExternalStorageDirectory(), "klasa1a.apk");
+            final Uri uri = FileProvider.getUriForFile(MainActivity.this, getApplicationContext().getPackageName() + ".provider", file);
+
             //Delete update file if exists
             //File file = new File(destination);
             if (file.exists())
@@ -330,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onReceive(Context ctxt, Intent intent) {
                     Intent install = new Intent(Intent.ACTION_VIEW);
                     install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     install.setDataAndType(uri,
                             manager.getMimeTypeForDownloadedFile(downloadId));
                     startActivity(install);
