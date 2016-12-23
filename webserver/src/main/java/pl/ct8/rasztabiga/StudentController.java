@@ -150,7 +150,7 @@ public class StudentController {
                     String apiKey;
                     while (true) {
                         apiKey = ApiCodeGenerator.nextApiCode();
-                        if(!apiKeysList.contains(apiKey) && apiKeysList.isEmpty()) break;
+                        if(!apiKeysList.contains(apiKey) || apiKeysList.isEmpty()) break;
                     }
                     apiKeysList.add(apiKey);
                     DatabaseController.setApiCode(apiKey, address);
