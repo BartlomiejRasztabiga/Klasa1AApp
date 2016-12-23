@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.ct8.rasztabiga.models.Dyzurni;
-import pl.ct8.rasztabiga.models.LuckyNumbers;
 import pl.ct8.rasztabiga.models.Student;
 
-import java.io.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @Configuration
 @ComponentScan
@@ -21,9 +23,9 @@ import java.util.*;
 @EnableScheduling
 public class App {
 
+    static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
     private static final String CRON_EXPRESSION = "0 0 1 * * 1";
     private static final String RESET_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
-    static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -66,7 +68,7 @@ public class App {
         LIST.add(new Student("Karol", "Wyrębkiewicz", 33));
     }
 
-    static void nextDuzyrni() {
+    static void nextDuzyrni() throws SQLException {
 
         int number1, number2;
         Dyzurni dyzurni = DatabaseController.getDyzurni();
@@ -88,13 +90,21 @@ public class App {
 
     @Scheduled(cron = CRON_EXPRESSION)
     private static void scheduleSetDyzurni() {
-        nextDuzyrni();
+        try {
+            nextDuzyrni();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         System.out.println("Set dyzurni: at " + new Date());
     }
 
     @Scheduled(cron = RESET_LUCKY_NUMBERS_CRON_EXPRESSION)
     private static void resetLuckyNumbers() {
-        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0,0,0,0,0));
-        DatabaseController.setLuckyNumbers(list);
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0, 0, 0, 0, 0));
+        try {
+            DatabaseController.setLuckyNumbers(list);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -113,7 +113,7 @@ public class DatabaseController {
         }
     }
 
-    static void addExam(Exam exam) {
+    static void addExam(Exam exam) throws SQLException {
         String sql = "INSERT INTO EXAMS (YEAR, MONTH, DAY, SUBJECT, DESCRIPTION, VISIBLE) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 
@@ -125,8 +125,6 @@ public class DatabaseController {
             stmt.setInt(6, 1);
 
             stmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -165,7 +163,7 @@ public class DatabaseController {
 
     }
 
-    static List<Exam> getExams() {
+    static List<Exam> getExams() throws SQLException {
         List<Exam> examsList = new ArrayList<>();
         String sql = "SELECT * FROM EXAMS WHERE VISIBLE = 1";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -178,9 +176,6 @@ public class DatabaseController {
             }
 
             return examsList;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
@@ -200,7 +195,7 @@ public class DatabaseController {
 
     }
 
-    static Dyzurni getDyzurni() {
+    static Dyzurni getDyzurni() throws SQLException {
         int first, second;
         String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -220,13 +215,10 @@ public class DatabaseController {
 
             return new Dyzurni(getStudent(first), getStudent(second));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
-    static void setDyzurni(int first, int second) {
+    static void setDyzurni(int first, int second) throws SQLException {
         String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 
@@ -240,12 +232,10 @@ public class DatabaseController {
 
             stmt.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    static LuckyNumbers getLuckyNumbers() {
+    static LuckyNumbers getLuckyNumbers() throws SQLException {
         ArrayList<Integer> list = new ArrayList<>(5);
         String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -276,13 +266,10 @@ public class DatabaseController {
             list.add(Integer.valueOf(rs.getString("VALUE")));
 
             return new LuckyNumbers(list);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
-    static void setLuckyNumbers(ArrayList<Integer> list) {
+    static void setLuckyNumbers(ArrayList<Integer> list) throws SQLException {
         String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
 
@@ -310,12 +297,10 @@ public class DatabaseController {
             stmt.setString(2, "ln.friday");
 
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    static int getActualVersionCode() {
+    static int getActualVersionCode() throws SQLException {
         String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "actualVersionNumber");
@@ -323,13 +308,10 @@ public class DatabaseController {
             rs.next();
 
             return Integer.valueOf(rs.getString("VALUE"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
         }
     }
 
-    static void setActualVersionCode(int versionCode) {
+    static void setActualVersionCode(int versionCode) throws SQLException {
         String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 
@@ -337,12 +319,10 @@ public class DatabaseController {
             stmt.setString(2, "actualVersionNumber");
 
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    static List<String> getEmailsWithoutApiCodeList() {
+    static List<String> getEmailsWithoutApiCodeList() throws SQLException {
         List<String> addressList = new ArrayList<>();
         String sql = "SELECT * FROM API_KEYS WHERE api_key ISNULL";
         try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
@@ -354,13 +334,10 @@ public class DatabaseController {
 
             return addressList;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
         }
     }
 
-    static List<String> getApiCodesList() {
+    static List<String> getApiCodesList() throws SQLException {
         List<String> apiCodesList = new ArrayList<>();
         String sql = "SELECT * FROM API_KEYS WHERE api_key NOT NULL";
         try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
@@ -371,10 +348,6 @@ public class DatabaseController {
             }
 
             return apiCodesList;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
         }
     }
 
