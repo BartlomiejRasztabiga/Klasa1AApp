@@ -81,20 +81,21 @@ public class StudentController {
 
     @RequestMapping("/sendApiKeys")
     public void sendApiKeys() {
-        List<String> addressList = DatabaseController.getEmailsWithoutApiCodeList();
-        List<String> apiKeysList = DatabaseController.getApiCodesList();
-        if (addressList != null && apiKeysList != null) {
+        List<String> addressList = new ArrayList<>(DatabaseController.getEmailsWithoutApiCodeList());
+        List<String> apiKeysList = new ArrayList<>(DatabaseController.getApiCodesList());
+        if (!addressList.isEmpty()) {
             //System.out.println(DatabaseController.getEmailsWithoutApiCodeList().toString());
             //System.out.println(DatabaseController.getApiCodesList());
             for (String address : addressList) {
-                String apiCode;
+                String apiKey;
                 while (true) {
-                    apiCode = ApiCodeGenerator.nextApiCode();
-                    if(!apiKeysList.contains(apiCode)) break;
+                    apiKey = ApiCodeGenerator.nextApiCode();
+                    if(!apiKeysList.contains(apiKey) && apiKeysList.isEmpty()) break;
                 }
-                DatabaseController.setApiCode(apiCode, address);
-                EmailUtils.sendEmail(address, apiCode);
-                System.out.println("Succesfully sent " + apiCode + " to " + address);
+                apiKeysList.add(apiKey);
+                DatabaseController.setApiCode(apiKey, address);
+                EmailUtils.sendEmail(address, apiKey);
+                System.out.println("Succesfully sent " + apiKey + " to " + address);
             }
         }
     }
