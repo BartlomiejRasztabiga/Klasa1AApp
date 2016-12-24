@@ -125,6 +125,20 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemThatWasClickedId == R.id.action_calendar) {
             Intent newIntent = new Intent(this, TestsCalendarActivity.class);
             startActivity(newIntent);
+        } else if (itemThatWasClickedId == R.id.action_download_app_manually) {
+            int serverVersionCode = 0;
+            try {
+                serverVersionCode = new GetActualAppVersionFromServer().execute().get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            String url = "http://rasztabiga.ct8.pl/klasa1a" + serverVersionCode + ".apk";
+            Uri uri = Uri.parse(url);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -290,6 +304,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             return null;
+        }
+    }
+
+    private class GetActualAppVersionFromServer extends AsyncTask<Void, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return NetworkUtilities.getActualVersion();
         }
     }
 

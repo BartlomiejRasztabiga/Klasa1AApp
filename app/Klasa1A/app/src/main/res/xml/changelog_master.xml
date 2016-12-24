@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="1.3.2" versioncode="8">
+        <change>Dodano: przycisk w menu do ręcznego pobrania nowej wersji apki</change>
+    </release>
     <release version="1.3.1" versioncode="7">
         <change>Dodano: auto aktualizator zgodny z specyfikacją android 7.0</change>
     </release>
