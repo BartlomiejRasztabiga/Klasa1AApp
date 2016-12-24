@@ -45,7 +45,7 @@ public class StudentController {
         }
     }
 
-    @RequestMapping(value = "/setdyzurni", method = RequestMethod.POST)
+    @RequestMapping(value = "/setdyzurni", method = RequestMethod.GET)
     public ResponseEntity<?> setDyzurni(@RequestParam("first") int first, @RequestParam("second") int second) {
         try {
             DatabaseController.setDyzurni(first, second);
@@ -77,7 +77,7 @@ public class StudentController {
         }
     }
 
-    @RequestMapping(value = "/setluckynumbers", method = RequestMethod.POST)
+    @RequestMapping(value = "/setluckynumbers", method = RequestMethod.GET)
     public ResponseEntity<?> setLuckyNumbers(@RequestParam Map<String, String> numbers) {
         ArrayList<Integer> list = new ArrayList<>(5);
         list.add(Integer.valueOf(numbers.get("a")));
@@ -104,7 +104,7 @@ public class StudentController {
         }
     }
 
-    @RequestMapping(value = "/addexam", method = RequestMethod.POST)
+    @RequestMapping(value = "/addexam", method = RequestMethod.GET)
     public ResponseEntity<?> addExam(@RequestParam Map<String, String> list) {
         Exam exam = new Exam(list.get("subject"), list.get("desc"), Integer.valueOf(list.get("year")),
                 Integer.valueOf(list.get("month")), Integer.valueOf(list.get("day")));
@@ -128,7 +128,7 @@ public class StudentController {
         }
     }
 
-    @RequestMapping(value = "/setversion", method = RequestMethod.POST)
+    @RequestMapping(value = "/setversion", method = RequestMethod.GET)
     public ResponseEntity<?> setVersionCode(@RequestParam("ver") int versionCode) {
         try {
             DatabaseController.setActualVersionCode(versionCode);
@@ -139,7 +139,7 @@ public class StudentController {
         }
     }
 
-    @RequestMapping("/sendApiKeys")
+    @RequestMapping(value = "/sendApiKeys", method = RequestMethod.GET)
     public ResponseEntity<?> sendApiKeys() {
         try {
             List<String> addressList = new ArrayList<>(DatabaseController.getEmailsWithoutApiCodeList());
@@ -171,12 +171,12 @@ public class StudentController {
     // Na dole metody testowe do tworzenia tabel
 
 
-    @RequestMapping(value = "/createstudentstable", method = RequestMethod.POST)
+    @RequestMapping(value = "/createstudentstable", method = RequestMethod.GET)
     public void createStudentsTable() {
         DatabaseController.createStudentsTable();
     }
 
-    @RequestMapping(value = "/addstudentstotable", method = RequestMethod.POST)
+    @RequestMapping(value = "/addstudentstotable", method = RequestMethod.GET)
     public void addStudents() {
         DatabaseController.addStudents(App.LIST);
     }
@@ -186,12 +186,12 @@ public class StudentController {
         return DatabaseController.getStudents();
     }
 
-    @RequestMapping(value = "/createexamstable", method = RequestMethod.POST)
+    @RequestMapping(value = "/createexamstable", method = RequestMethod.GET)
     public void createExamsTable() {
         DatabaseController.createExamsTable();
     }
 
-    @RequestMapping(value = "/createsettingstable", method = RequestMethod.POST)
+    @RequestMapping(value = "/createsettingstable", method = RequestMethod.GET)
     public void createSettingsTable() {
         DatabaseController.createSettingsTable();
         DatabaseController.initializeSettingsTable();
