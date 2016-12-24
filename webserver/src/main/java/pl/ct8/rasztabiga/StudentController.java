@@ -197,7 +197,7 @@ public class StudentController {
         DatabaseController.initializeSettingsTable();
     }
 
-    @RequestMapping(value = "/createNeededTables", method = RequestMethod.POST)
+    @RequestMapping(value = "/createNeededTables", method = RequestMethod.GET)
     public void createAllTables() {
         DatabaseController.createStudentsTable();
         DatabaseController.createExamsTable();

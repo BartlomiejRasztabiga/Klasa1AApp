@@ -84,6 +84,8 @@ public class DatabaseController {
             stmt.setString(2, "0");
             stmt.execute();
 
+            //Test change
+
             stmt.setString(1, "ln.monday");
             stmt.setString(2, "0");
             stmt.execute();
