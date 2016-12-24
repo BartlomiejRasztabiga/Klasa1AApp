@@ -29,7 +29,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -84,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG, "New version!");
                 //TODO Dodać pytanie użytkownika czy pobrać
                 if (isStoragePermissionGranted()) {
-                        showDownloadNewVersionDialog();
+                    showDownloadNewVersionDialog();
                 } else {
                     Log.w(TAG, "You didn't give me permission!");
                 }
@@ -303,13 +308,8 @@ public class MainActivity extends AppCompatActivity {
             //solution, please inform us in comment
             //TODO CHANGE THIS TO SDK 25, http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
 
-            //File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "klasa1a.apk");
-
-            Log.d(TAG, String.valueOf(Build.VERSION.SDK_INT));
-            Log.d(TAG, String.valueOf(Build.VERSION_CODES.N));
-            
             File file = new File(Environment.getExternalStorageDirectory(), "klasa1a.apk");
-            final Uri uri = (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.N) ?
+            final Uri uri = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) ?
                     FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", file) :
                     Uri.fromFile(file);
 
@@ -320,39 +320,58 @@ public class MainActivity extends AppCompatActivity {
                 file.delete();
 
             //get url of app on server
-            String url = "http://rasztabiga.ct8.pl/klasa1a.apk";
+            int serverVersionCode = NetworkUtilities.getActualVersion();
+            String url = "http://rasztabiga.ct8.pl/klasa1a";
+            url += serverVersionCode;
+            url += ".apk";
 
-            //set downloadmanager
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setDescription("Downloading new version");
-            request.setTitle(MainActivity.this.getString(R.string.app_name));
+            InputStream input = null;
+            OutputStream output = null;
+            HttpURLConnection connection = null;
+            try {
+                URL sUrl = new URL(url);
+                connection = (HttpURLConnection) sUrl.openConnection();
+                connection.connect();
 
-            //set destination
-            request.setDestinationUri(uri);
+                // download the file
+                input = connection.getInputStream();
+                output = new FileOutputStream(file);
 
-            // get download service and enqueue file
-            final DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-            final long downloadId = manager.enqueue(request);
+                byte data[] = new byte[4096];
+                int count;
+                while ((count = input.read(data)) != -1) {
+                    // allow canceling with back button
+                    if (isCancelled()) {
+                        input.close();
+                        return null;
+                    }
 
-            //set BroadcastReceiver to install app when .apk is downloaded
-            BroadcastReceiver onComplete = new BroadcastReceiver() {
-                public void onReceive(Context ctxt, Intent intent) {
-                    Intent install = new Intent(Intent.ACTION_VIEW);
-                    install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    install.setDataAndType(uri,
-                            manager.getMimeTypeForDownloadedFile(downloadId));
-                    startActivity(install);
-
-                    unregisterReceiver(this);
-                    finish();
+                    output.write(data, 0, count);
                 }
-            };
-            //register receiver for when .apk download is compete
-            registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (output != null)
+                        output.close();
+                    if (input != null)
+                        input.close();
+                } catch (IOException ignored) {
+                }
+
+                if (connection != null)
+                    connection.disconnect();
+            }
+
+            Intent install = new Intent(Intent.ACTION_INSTALL_PACKAGE)
+                    .setData(uri)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(install);
 
             return null;
         }
+
+
     }
 
 

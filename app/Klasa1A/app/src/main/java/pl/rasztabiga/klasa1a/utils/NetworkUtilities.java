@@ -8,8 +8,8 @@ import okhttp3.Response;
 
 public class NetworkUtilities {
 
-    //private static final String SERVER_ADDR = "http://89.36.219.95:8007";
-    private static final String SERVER_ADDR = "http://192.168.1.10:8007";
+    private static final String SERVER_ADDR = "http://89.36.219.95:8007";
+    //private static final String SERVER_ADDR = "http://192.168.1.10:8007";
 
     private static final String DYZURNI_QUERY_URL = SERVER_ADDR + "/getdyzurni";
     private static final String VERSION_QUERY_URL = SERVER_ADDR + "/getversion";
