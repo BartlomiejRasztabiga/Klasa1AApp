@@ -30,7 +30,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".TestsCalendarActivity"></activity>
+        <activity android:name=".ExamsCalendarActivity"></activity>
     </application>
 
 </manifest>

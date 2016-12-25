@@ -1,10 +1,8 @@
 package pl.rasztabiga.klasa1a;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.AsyncListUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,8 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,9 +26,9 @@ import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.utils.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class TestsCalendarActivity extends AppCompatActivity {
+public class ExamsCalendarActivity extends AppCompatActivity {
 
-    private static final String TAG = TestsCalendarActivity.class.getName();
+    private static final String TAG = ExamsCalendarActivity.class.getName();
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     CompactCalendarView compactCalendarView;
@@ -62,29 +58,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
         //Show date and events for actual day
         date_tv.setText(dateFormat.format(new Date()));
 
-        //TODO USE JODA TIME
-
-/*        //Workaround for showing events for actual day
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date today = new Date();
-        Date todayWithZeroTime = null;
-        try {
-            todayWithZeroTime = formatter.parse(formatter.format(today));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, today.toString());
-
-        List<Event> events = compactCalendarView.getEvents(todayWithZeroTime);
-
-        ArrayList<Exam> examArrayList = new ArrayList<>();
-        for(Event e : events) {
-            examArrayList.add((Exam) e.getData());
-        }
-
-        Log.d(TAG, examArrayList.toString());
-        mExamAdapter.setExamsData(examArrayList);*/
+        //TODO Use joda time
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override

@@ -2,11 +2,7 @@ package pl.rasztabiga.klasa1a;
 
 import android.Manifest;
 import android.app.DialogFragment;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -123,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             new GetLuckyNumbersTask().execute();
             return true;
         } else if (itemThatWasClickedId == R.id.action_calendar) {
-            Intent newIntent = new Intent(this, TestsCalendarActivity.class);
+            Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
             startActivity(newIntent);
         } else if (itemThatWasClickedId == R.id.action_download_app_manually) {
             int serverVersionCode = 0;
