@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 ArrayList<String> luckyNumbersArrayList = savedInstanceState.getStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY);
-                if(luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
+                if (luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
                     monday_tv.setText(luckyNumbersArrayList.get(0));
                     tuesday_tv.setText(luckyNumbersArrayList.get(1));
                     wednesday_tv.setText(luckyNumbersArrayList.get(2));
@@ -252,7 +252,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG, "Permission is granted");
                 return true;
             } else {
-
                 Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
@@ -351,17 +350,10 @@ public class MainActivity extends AppCompatActivity {
     private class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-
             if (!isStoragePermissionGranted()) {
                 Log.d(TAG, "You didn't give me permission!");
                 return null;
             }
-
-            //get destination to update file and set Uri
-            //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
-            //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
-            //solution, please inform us in comment
-            //TODO CHANGE THIS TO SDK 25, http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
 
             File file = new File(Environment.getExternalStorageDirectory(), "klasa1a.apk");
             final Uri uri = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) ?
