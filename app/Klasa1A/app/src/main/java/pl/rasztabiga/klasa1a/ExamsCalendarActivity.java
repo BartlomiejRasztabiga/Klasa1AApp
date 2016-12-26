@@ -23,12 +23,13 @@ import java.util.List;
 import java.util.Locale;
 
 import pl.rasztabiga.klasa1a.models.Exam;
-import pl.rasztabiga.klasa1a.utils.ExamAdapter;
+import pl.rasztabiga.klasa1a.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class TestsCalendarActivity extends AppCompatActivity {
+public class ExamsCalendarActivity extends AppCompatActivity {
 
-    private static final String TAG = TestsCalendarActivity.class.getName();
+    private static final String TAG = ExamsCalendarActivity.class.getName();
+    private static final String EXAMS_KEY = "exams";
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     private CompactCalendarView compactCalendarView;
@@ -53,34 +54,24 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mExamAdapter);
 
+        //TODO todo
+        /*if (savedInstanceState != null) {
+            Log.d(TAG, "RETRIEVING SAVED STATE");
+            if (savedInstanceState.containsKey(EXAMS_KEY)) {
+
+            }
+        } else {
+            Log.d(TAG, "EXECUTING NETWORK TASKS");
+            new GetEventsTask().execute();
+        }*/
+
         new GetEventsTask().execute();
+
 
         //Show date and events for actual day
         date_tv.setText(dateFormat.format(new Date()));
 
-        //TODO USE JODA TIME
-
-/*        //Workaround for showing events for actual day
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date today = new Date();
-        Date todayWithZeroTime = null;
-        try {
-            todayWithZeroTime = formatter.parse(formatter.format(today));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, today.toString());
-
-        List<Event> events = compactCalendarView.getEvents(todayWithZeroTime);
-
-        ArrayList<Exam> examArrayList = new ArrayList<>();
-        for(Event e : events) {
-            examArrayList.add((Exam) e.getData());
-        }
-
-        Log.d(TAG, examArrayList.toString());
-        mExamAdapter.setExamsData(examArrayList);*/
+        //TODO Use joda time
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -92,7 +83,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
                 date_tv.setText(dateFormat.format(dateClicked));
 
                 ArrayList<Exam> examArrayList = new ArrayList<>();
-                for(Event e : events) {
+                for (Event e : events) {
                     examArrayList.add((Exam) e.getData());
                 }
 
@@ -112,7 +103,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
             List<Exam> arrayList = new ArrayList<>();
 
-            for(int i=0; i < json.length(); i++) {
+            for (int i = 0; i < json.length(); i++) {
                 JSONObject obj = json.getJSONObject(i);
                 Exam exam = new Exam(obj.getString("subject"), obj.getString("desc"), obj.getInt("year"),
                         obj.getInt("month"), obj.getInt("day"));
@@ -120,7 +111,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
             }
 
             ArrayList<Event> eventArrayList = new ArrayList<>();
-            for(Exam e : arrayList) {
+            for (Exam e : arrayList) {
                 eventArrayList.add(e.createEvent());
             }
 
@@ -132,6 +123,13 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
 
     }
+
+    /*@Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //TODO Add this
+    }*/
 
     private class GetEventsTask extends AsyncTask<Void, Void, String> {
         @Override
