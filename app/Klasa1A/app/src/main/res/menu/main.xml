@@ -20,4 +20,11 @@
         android:orderInCategory="3"
         app:showAsAction="never"
         android:title="@string/pobierz_nowa_wersje_recznie" />
+
+    <item
+        android:id="@+id/action_show_changelog"
+        android:orderInCategory="4"
+        app:showAsAction="never"
+        android:title="@string/whats_new" />
+
 </menu>
