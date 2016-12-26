@@ -11,8 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -43,10 +46,12 @@ import pl.rasztabiga.klasa1a.models.Student;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     //TODO To have numbers and days in one row use linear layout
 
+    private static final int GET_DYZURNI_LOADER = 11;
+    private static final int GET_LUCKY_NUMBERS_LOADER = 22;
     private static final String DYZURNI_ARRAYLIST_KEY = "dyzurni_arraylist";
     private static final String LUCKY_NUMBERS_ARRAYLIST_KEY = "luckynumbers_arraylist";
     private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         changeLog = new ChangeLog(this);
 
-        if (savedInstanceState != null) {
+        /*if (savedInstanceState != null) {
             Log.d(TAG, "RETRIEVING SAVED STATE");
             if (savedInstanceState.containsKey(DYZURNI_ARRAYLIST_KEY) && savedInstanceState.containsKey(LUCKY_NUMBERS_ARRAYLIST_KEY)) {
                 ArrayList<String> dyzurniArrayList = savedInstanceState.getStringArrayList(DYZURNI_ARRAYLIST_KEY);
@@ -105,9 +110,13 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Log.d(TAG, "EXECUTING NETWORK TASKS");
+
             new GetDyzurniTask().execute();
             new GetLuckyNumbersTask().execute();
-        }
+        }*/
+
+        getDyzurni();
+        getLuckyNumbers();
 
         if (changeLog.isFirstRun()) {
             changeLog.getLogDialog().show();
@@ -129,6 +138,130 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void getDyzurni() {
+        Log.d(TAG, "getDyzurni");
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String> getDyzurniLoader = loaderManager.getLoader(GET_DYZURNI_LOADER);
+        if (getDyzurniLoader == null) {
+            loaderManager.initLoader(GET_DYZURNI_LOADER, null, this);
+        } else {
+            loaderManager.restartLoader(GET_DYZURNI_LOADER, null, this);
+        }
+    }
+
+    private void getLuckyNumbers() {
+        Log.d(TAG, "getLuckyNumbers");
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String> getLuckyNumbersLoader = loaderManager.getLoader(GET_LUCKY_NUMBERS_LOADER);
+        if (getLuckyNumbersLoader == null) {
+            loaderManager.initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+        } else {
+            loaderManager.restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+        }
+    }
+
+    @Override
+    public Loader<String> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case GET_DYZURNI_LOADER: {
+                return new AsyncTaskLoader<String>(this) {
+                    String dyzurniJson;
+
+                    @Override
+                    protected void onStartLoading() {
+                        loadingIndicator.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "GET_DYZURNI_LOADER:onStartLoading()");
+
+                        if (dyzurniJson != null) {
+                            deliverResult(dyzurniJson);
+                        } else {
+                            forceLoad();
+                        }
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        Log.d(TAG, "GET_DYZURNI_LOADER:loadInBackground()");
+                        return NetworkUtilities.getDyzurni();
+                    }
+
+                    @Override
+                    public void deliverResult(String data) {
+                        loadingIndicator.setVisibility(View.INVISIBLE);
+                        Log.d(TAG, "GET_DYZURNI_LOADER:deliverResult()");
+                        dyzurniJson = data;
+                        super.deliverResult(data);
+                    }
+                };
+            }
+
+            case GET_LUCKY_NUMBERS_LOADER: {
+                return new AsyncTaskLoader<String>(this) {
+                    String luckyNumbersString;
+
+                    @Override
+                    protected void onStartLoading() {
+                        Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onStartLoading()");
+                        if (luckyNumbersString != null) {
+                            deliverResult(luckyNumbersString);
+                        } else {
+                            forceLoad();
+                        }
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:loadInBackground()");
+                        return NetworkUtilities.getLuckyNumbers();
+                    }
+
+                    @Override
+                    public void deliverResult(String data) {
+                        Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
+                        loadingIndicator.setVisibility(View.INVISIBLE);
+                        luckyNumbersString = data;
+                        super.deliverResult(data);
+                    }
+                };
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String data) {
+        switch (loader.getId()) {
+            case GET_DYZURNI_LOADER: {
+                Log.d(TAG, "GET_DYZURNI_LOADER:onLoadFinished()");
+                loadingIndicator.setVisibility(View.INVISIBLE);
+                if (data != null && !data.equals("")) {
+                    showOnDutiesDataView();
+                    setDyzurni(data);
+                } else {
+                    showErrorMessage();
+                }
+                break;
+            }
+
+            case GET_LUCKY_NUMBERS_LOADER: {
+                Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onLoadFinished()");
+                loadingIndicator.setVisibility(View.INVISIBLE);
+                if (data != null && !data.equals("")) {
+                    showOnDutiesDataView();
+                    setLuckyNumbers(data);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {
+
+    }
+
+
+
     private void showDownloadNewVersionDialog() {
         DialogFragment dialog = new DownloadNewVersionDialog();
         dialog.show(getFragmentManager(), "DownloadNewVersionDialog");
@@ -145,8 +278,8 @@ public class MainActivity extends AppCompatActivity {
         int itemThatWasClickedId = item.getItemId();
         switch (itemThatWasClickedId) {
             case R.id.action_refresh: {
-                new GetDyzurniTask().execute();
-                new GetLuckyNumbersTask().execute();
+                getDyzurni();
+                getLuckyNumbers();
                 return true;
             }
             case R.id.action_calendar: {
@@ -290,12 +423,12 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        ArrayList<String> dyzurniArrayList = new ArrayList<>(Arrays.asList(name1.getText().toString(), name2.getText().toString()));
+        /*ArrayList<String> dyzurniArrayList = new ArrayList<>(Arrays.asList(name1.getText().toString(), name2.getText().toString()));
         outState.putStringArrayList(DYZURNI_ARRAYLIST_KEY, dyzurniArrayList);
 
         ArrayList<String> luckyNumbersArrayList = new ArrayList<>(Arrays.asList(monday_tv.getText().toString(), tuesday_tv.getText().toString(),
                 wednesday_tv.getText().toString(), thursday_tv.getText().toString(), friday_tv.getText().toString()));
-        outState.putStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY, luckyNumbersArrayList);
+        outState.putStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY, luckyNumbersArrayList);*/
 
     }
 
@@ -382,8 +515,9 @@ public class MainActivity extends AppCompatActivity {
             File file = new File(Environment.getExternalStorageDirectory(), "klasa1a.apk");
             final Uri uri = getDownloadedApkUri(file);
 
-            if (file.exists())
+            if (file.exists()) {
                 file.delete();
+            }
 
             downloadApk(file);
             installApk(uri);
