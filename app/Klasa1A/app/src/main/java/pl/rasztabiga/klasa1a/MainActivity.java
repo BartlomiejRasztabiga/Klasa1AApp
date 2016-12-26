@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import de.cketti.library.changelog.ChangeLog;
@@ -44,6 +45,9 @@ import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 public class MainActivity extends AppCompatActivity {
 
     //TODO To have numbers and days in one row use linear layout
+
+    private static final String DYZURNI_ARRAYLIST_KEY = "dyzurni_arraylist";
+    private static final String LUCKY_NUMBERS_ARRAYLIST_KEY = "luckynumbers_arraylist";
 
     private final String TAG = MainActivity.class.getName();
 
@@ -75,6 +79,30 @@ public class MainActivity extends AppCompatActivity {
         errorMessageTextView = (TextView) findViewById(R.id.error_message_display);
         loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
 
+        if (savedInstanceState != null) {
+            Log.d(TAG, "RETRIEVING SAVED STATE");
+            if (savedInstanceState.containsKey(DYZURNI_ARRAYLIST_KEY) && savedInstanceState.containsKey(LUCKY_NUMBERS_ARRAYLIST_KEY)) {
+                ArrayList<String> dyzurniArrayList = savedInstanceState.getStringArrayList(DYZURNI_ARRAYLIST_KEY);
+                if (dyzurniArrayList != null && !dyzurniArrayList.isEmpty()) {
+                    name1.setText(dyzurniArrayList.get(0));
+                    name2.setText(dyzurniArrayList.get(1));
+                }
+
+                ArrayList<String> luckyNumbersArrayList = savedInstanceState.getStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY);
+                if(luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
+                    monday_tv.setText(luckyNumbersArrayList.get(0));
+                    tuesday_tv.setText(luckyNumbersArrayList.get(1));
+                    wednesday_tv.setText(luckyNumbersArrayList.get(2));
+                    thursday_tv.setText(luckyNumbersArrayList.get(3));
+                    friday_tv.setText(luckyNumbersArrayList.get(4));
+                }
+            }
+        } else {
+            Log.d(TAG, "EXECUTING NETWORK TASKS");
+            new GetDyzurniTask().execute();
+            new GetLuckyNumbersTask().execute();
+        }
+
         ChangeLog cl = new ChangeLog(this);
         if (cl.isFirstRun()) {
             cl.getLogDialog().show();
@@ -93,9 +121,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-
-        new GetDyzurniTask().execute();
-        new GetLuckyNumbersTask().execute();
 
     }
 
@@ -236,6 +261,19 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, "Permission is granted");
             return true;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        ArrayList<String> dyzurniArrayList = new ArrayList<>(Arrays.asList(name1.getText().toString(), name2.getText().toString()));
+        outState.putStringArrayList(DYZURNI_ARRAYLIST_KEY, dyzurniArrayList);
+
+        ArrayList<String> luckyNumbersArrayList = new ArrayList<>(Arrays.asList(monday_tv.getText().toString(), tuesday_tv.getText().toString(),
+                wednesday_tv.getText().toString(), thursday_tv.getText().toString(), friday_tv.getText().toString()));
+        outState.putStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY, luckyNumbersArrayList);
+
     }
 
     private class GetDyzurniTask extends AsyncTask<Void, Void, String> {

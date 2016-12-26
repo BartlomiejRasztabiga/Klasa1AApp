@@ -31,10 +31,10 @@ public class ExamsCalendarActivity extends AppCompatActivity {
     private static final String TAG = ExamsCalendarActivity.class.getName();
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-    CompactCalendarView compactCalendarView;
-    TextView date_tv;
-    RecyclerView mRecyclerView;
-    ExamAdapter mExamAdapter;
+    private CompactCalendarView compactCalendarView;
+    private TextView date_tv;
+    private RecyclerView mRecyclerView;
+    private ExamAdapter mExamAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class ExamsCalendarActivity extends AppCompatActivity {
         });
     }
 
-    public void setEvents(String JSONString) {
+    private void setEvents(String JSONString) {
         try {
             JSONArray json = new JSONArray(JSONString);
 
