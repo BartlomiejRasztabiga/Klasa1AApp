@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             case R.id.action_calendar: {
-ntent newIntent = new Intent(this, ExamsCalendarActivity.class);
+                Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
                 startActivity(newIntent);
                 return true;
             }
@@ -380,33 +380,29 @@ ntent newIntent = new Intent(this, ExamsCalendarActivity.class);
             }
 
             File file = new File(Environment.getExternalStorageDirectory(), "klasa1a.apk");
-            final Uri uri = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) ?
-                    FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", file) :
-                    Uri.fromFile(file);
+            final Uri uri = getDownloadedApkUri(file);
 
-            //Delete update file if exists
-            //File file = new File(destination);
             if (file.exists())
-                //file.delete() - test this, I think sometimes it doesnt work
                 file.delete();
 
-            //get url of app on server
-            int serverVersionCode = NetworkUtilities.getActualVersion();
-            String url = "http://rasztabiga.ct8.pl/klasa1a";
-            url += serverVersionCode;
-            url += ".apk";
+            downloadApk(file);
+            installApk(uri);
 
+            return null;
+        }
+
+        private void downloadApk(File apkFile) {
             InputStream input = null;
             OutputStream output = null;
             HttpURLConnection connection = null;
             try {
-                URL sUrl = new URL(url);
+                URL sUrl = new URL(getApkUrl());
                 connection = (HttpURLConnection) sUrl.openConnection();
                 connection.connect();
 
                 // download the file
                 input = connection.getInputStream();
-                output = new FileOutputStream(file);
+                output = new FileOutputStream(apkFile);
 
                 byte data[] = new byte[4096];
                 int count;
@@ -414,7 +410,7 @@ ntent newIntent = new Intent(this, ExamsCalendarActivity.class);
                     // allow canceling with back button
                     if (isCancelled()) {
                         input.close();
-                        return null;
+                        return;
                     }
 
                     output.write(data, 0, count);
@@ -433,15 +429,30 @@ ntent newIntent = new Intent(this, ExamsCalendarActivity.class);
                 if (connection != null)
                     connection.disconnect();
             }
-
-            Intent install = new Intent(Intent.ACTION_INSTALL_PACKAGE)
-                    .setData(uri)
-                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(install);
-
-            return null;
         }
 
+        private String getApkUrl() {
+            int serverVersionCode = NetworkUtilities.getActualVersion();
+            String url = APK_QUERY_URL;
+            url += serverVersionCode;
+            url += ".apk";
+
+            return url;
+        }
+
+
+        private Uri getDownloadedApkUri(File apkFile) {
+            return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) ?
+                    FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", apkFile) :
+                    Uri.fromFile(apkFile);
+        }
+
+        private void installApk(Uri apkUri) {
+            Intent install = new Intent(Intent.ACTION_INSTALL_PACKAGE)
+                    .setData(apkUri)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(install);
+        }
 
     }
 
