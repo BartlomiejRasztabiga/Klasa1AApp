@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String DYZURNI_ARRAYLIST_KEY = "dyzurni_arraylist";
     private static final String LUCKY_NUMBERS_ARRAYLIST_KEY = "luckynumbers_arraylist";
+    private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
 
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar loadingIndicator;
 
+    private ChangeLog changeLog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         errorMessageTextView = (TextView) findViewById(R.id.error_message_display);
         loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
 
+        changeLog = new ChangeLog(this);
+
         if (savedInstanceState != null) {
             Log.d(TAG, "RETRIEVING SAVED STATE");
             if (savedInstanceState.containsKey(DYZURNI_ARRAYLIST_KEY) && savedInstanceState.containsKey(LUCKY_NUMBERS_ARRAYLIST_KEY)) {
@@ -89,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 ArrayList<String> luckyNumbersArrayList = savedInstanceState.getStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY);
-                if(luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
+                if (luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
                     monday_tv.setText(luckyNumbersArrayList.get(0));
                     tuesday_tv.setText(luckyNumbersArrayList.get(1));
                     wednesday_tv.setText(luckyNumbersArrayList.get(2));
@@ -103,9 +109,8 @@ public class MainActivity extends AppCompatActivity {
             new GetLuckyNumbersTask().execute();
         }
 
-        ChangeLog cl = new ChangeLog(this);
-        if (cl.isFirstRun()) {
-            cl.getLogDialog().show();
+        if (changeLog.isFirstRun()) {
+            changeLog.getLogDialog().show();
         }
 
         try {
@@ -129,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show(getFragmentManager(), "DownloadNewVersionDialog");
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -139,29 +143,45 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
-        if (itemThatWasClickedId == R.id.action_refresh) {
-            new GetDyzurniTask().execute();
-            new GetLuckyNumbersTask().execute();
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_calendar) {
-            Intent newIntent = new Intent(this, TestsCalendarActivity.class);
-            startActivity(newIntent);
-        } else if (itemThatWasClickedId == R.id.action_download_app_manually) {
-            int serverVersionCode = 0;
-            try {
-                serverVersionCode = new GetActualAppVersionFromServer().execute().get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+        switch (itemThatWasClickedId) {
+            case R.id.action_refresh: {
+                new GetDyzurniTask().execute();
+                new GetLuckyNumbersTask().execute();
+                return true;
             }
-            String url = "http://rasztabiga.ct8.pl/klasa1a" + serverVersionCode + ".apk";
-            Uri uri = Uri.parse(url);
+            case R.id.action_calendar: {
+                Intent newIntent = new Intent(this, TestsCalendarActivity.class);
+                startActivity(newIntent);
+                return true;
+            }
+            case R.id.action_download_app_manually: {
+                int serverVersionCode = 0;
+                try {
+                    serverVersionCode = new GetActualAppVersionFromServer().execute().get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                openWebsiteWithApkToDownload(serverVersionCode);
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
+                return true;
+            }
+            case R.id.action_show_changelog: {
+                changeLog.getFullLogDialog().show();
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);
+
+    }
+
+    private void openWebsiteWithApkToDownload(int serverVersionCode) {
+        String url = APK_QUERY_URL + serverVersionCode + ".apk";
+        Uri uri = Uri.parse(url);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     private void showOnDutiesDataView() {
@@ -192,11 +212,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject dyzurny1 = json.getJSONObject("dyzurny1");
             JSONObject dyzurny2 = json.getJSONObject("dyzurny2");
 
-            //Only for tests
-            name1.setText("");
-            name2.setText("");
-            //End
-
+            resetDyzurniTextViews();
             //TODO I don't know if it's really needed (below)
             Dyzurni dyzurni = new Dyzurni(new Student(dyzurny1.getString("name"), dyzurny1.getString("surname"), dyzurny1.getInt("number")), new Student(dyzurny2.getString("name"), dyzurny2.getString("surname"), dyzurny2.getInt("number")));
             name1.setText(dyzurni.getDyzurny1().getName() + " " + dyzurni.getDyzurny1().getSurname());
@@ -207,38 +223,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void resetDyzurniTextViews() {
+        name1.setText("");
+        name2.setText("");
+    }
+
     private void setLuckyNumbers(String JSONString) {
         try {
             JSONObject json = new JSONObject(JSONString);
             JSONArray list = json.getJSONArray("numbersList");
-            ArrayList<Integer> arrayList = new ArrayList<>(5);
+            ArrayList<Integer> luckyNumbersList = new ArrayList<>(5);
 
             for (int i = 0; i < list.length(); i++) {
-                arrayList.add(Integer.valueOf(list.get(i).toString()));
+                luckyNumbersList.add(Integer.valueOf(list.get(i).toString()));
             }
 
-            LuckyNumbers luckyNumbers = new LuckyNumbers(arrayList);
-            ArrayList<Integer> luckyNumbersList = luckyNumbers.getNumbersList();
-
-            //Only for tests
-            monday_tv.setText("");
-            tuesday_tv.setText("");
-            wednesday_tv.setText("");
-            thursday_tv.setText("");
-            friday_tv.setText("");
-            //End
+            resetLuckyNumbersTextViews();
 
             if (luckyNumbersList.get(0) != 0) {
-                monday_tv.setText(String.valueOf(luckyNumbersList.get(0)));
-                tuesday_tv.setText(String.valueOf(luckyNumbersList.get(1)));
-                wednesday_tv.setText(String.valueOf(luckyNumbersList.get(2)));
-                thursday_tv.setText(String.valueOf(luckyNumbersList.get(3)));
-                friday_tv.setText(String.valueOf(luckyNumbersList.get(4)));
+                setLuckyNumbersTextViews(luckyNumbersList);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setLuckyNumbersTextViews(ArrayList<Integer> luckyNumbersList) {
+        monday_tv.setText(String.valueOf(luckyNumbersList.get(0)));
+        tuesday_tv.setText(String.valueOf(luckyNumbersList.get(1)));
+        wednesday_tv.setText(String.valueOf(luckyNumbersList.get(2)));
+        thursday_tv.setText(String.valueOf(luckyNumbersList.get(3)));
+        friday_tv.setText(String.valueOf(luckyNumbersList.get(4)));
+    }
+
+    private void resetLuckyNumbersTextViews() {
+        monday_tv.setText("");
+        tuesday_tv.setText("");
+        wednesday_tv.setText("");
+        thursday_tv.setText("");
+        friday_tv.setText("");
     }
 
     void downloadNewVersion() {
