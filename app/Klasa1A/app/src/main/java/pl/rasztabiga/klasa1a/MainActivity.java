@@ -36,12 +36,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.models.Dyzurni;
-import pl.rasztabiga.klasa1a.models.LuckyNumbers;
 import pl.rasztabiga.klasa1a.models.Student;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
@@ -52,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int GET_DYZURNI_LOADER = 11;
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
-    private static final String DYZURNI_ARRAYLIST_KEY = "dyzurni_arraylist";
-    private static final String LUCKY_NUMBERS_ARRAYLIST_KEY = "luckynumbers_arraylist";
     private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
@@ -89,31 +85,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
 
         changeLog = new ChangeLog(this);
-
-        /*if (savedInstanceState != null) {
-            Log.d(TAG, "RETRIEVING SAVED STATE");
-            if (savedInstanceState.containsKey(DYZURNI_ARRAYLIST_KEY) && savedInstanceState.containsKey(LUCKY_NUMBERS_ARRAYLIST_KEY)) {
-                ArrayList<String> dyzurniArrayList = savedInstanceState.getStringArrayList(DYZURNI_ARRAYLIST_KEY);
-                if (dyzurniArrayList != null && !dyzurniArrayList.isEmpty()) {
-                    name1.setText(dyzurniArrayList.get(0));
-                    name2.setText(dyzurniArrayList.get(1));
-                }
-
-                ArrayList<String> luckyNumbersArrayList = savedInstanceState.getStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY);
-                if (luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
-                    monday_tv.setText(luckyNumbersArrayList.get(0));
-                    tuesday_tv.setText(luckyNumbersArrayList.get(1));
-                    wednesday_tv.setText(luckyNumbersArrayList.get(2));
-                    thursday_tv.setText(luckyNumbersArrayList.get(3));
-                    friday_tv.setText(luckyNumbersArrayList.get(4));
-                }
-            }
-        } else {
-            Log.d(TAG, "EXECUTING NETWORK TASKS");
-
-            new GetDyzurniTask().execute();
-            new GetLuckyNumbersTask().execute();
-        }*/
 
         getDyzurni();
         getLuckyNumbers();
@@ -256,11 +227,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {
-
-    }
-
-
+    public void onLoaderReset(Loader<String> loader) {}
 
     private void showDownloadNewVersionDialog() {
         DialogFragment dialog = new DownloadNewVersionDialog();
@@ -430,47 +397,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 wednesday_tv.getText().toString(), thursday_tv.getText().toString(), friday_tv.getText().toString()));
         outState.putStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY, luckyNumbersArrayList);*/
 
-    }
-
-    private class GetDyzurniTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return NetworkUtilities.getDyzurni();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            loadingIndicator.setVisibility(View.INVISIBLE);
-            if (s != null && !s.equals("")) {
-                showOnDutiesDataView();
-                setDyzurni(s);
-            } else {
-                showErrorMessage();
-            }
-        }
-    }
-
-    private class GetLuckyNumbersTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return NetworkUtilities.getLuckyNumbers();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s != null && !s.equals("")) {
-                showOnDutiesDataView();
-                setLuckyNumbers(s);
-            }
-        }
     }
 
     private class CheckNewUpdatesTask extends AsyncTask<Void, Void, Boolean> {

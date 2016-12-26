@@ -2,6 +2,9 @@ package pl.rasztabiga.klasa1a;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,10 +29,10 @@ import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class ExamsCalendarActivity extends AppCompatActivity {
+public class ExamsCalendarActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     private static final String TAG = ExamsCalendarActivity.class.getName();
-    private static final String EXAMS_KEY = "exams";
+    private static final int GET_EXAMS_LOADER = 33;
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     private CompactCalendarView compactCalendarView;
@@ -54,19 +57,7 @@ public class ExamsCalendarActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mExamAdapter);
 
-        //TODO todo
-        /*if (savedInstanceState != null) {
-            Log.d(TAG, "RETRIEVING SAVED STATE");
-            if (savedInstanceState.containsKey(EXAMS_KEY)) {
-
-            }
-        } else {
-            Log.d(TAG, "EXECUTING NETWORK TASKS");
-            new GetEventsTask().execute();
-        }*/
-
-        new GetEventsTask().execute();
-
+        getEvents();
 
         //Show date and events for actual day
         date_tv.setText(dateFormat.format(new Date()));
@@ -97,6 +88,72 @@ public class ExamsCalendarActivity extends AppCompatActivity {
         });
     }
 
+    private void getEvents() {
+        Log.d(TAG, "getEvents");
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String> getDyzurniLoader = loaderManager.getLoader(GET_EXAMS_LOADER);
+        if (getDyzurniLoader == null) {
+            loaderManager.initLoader(GET_EXAMS_LOADER, null, this);
+        } else {
+            loaderManager.restartLoader(GET_EXAMS_LOADER, null, this);
+        }
+    }
+
+    @Override
+    public Loader<String> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case GET_EXAMS_LOADER: {
+                return new AsyncTaskLoader<String>(this) {
+                    String examsJson;
+
+                    @Override
+                    protected void onStartLoading() {
+                        Log.d(TAG, "onStartLoading()");
+                        if (examsJson != null) {
+                            deliverResult(examsJson);
+                        } else {
+                            forceLoad();
+                        }
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        Log.d(TAG, "loadInBackground()");
+                        return NetworkUtilities.getExams();
+                    }
+
+                    @Override
+                    public void deliverResult(String data) {
+                        Log.d(TAG, "deliverResult()");
+                        examsJson = data;
+                        super.deliverResult(data);
+                    }
+                };
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String data) {
+        Log.d(TAG, "onLoadFinished()");
+        switch (loader.getId()) {
+            case GET_EXAMS_LOADER: {
+                if (data != null && !data.equals("")) {
+                    setEvents(data);
+                }
+
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {
+
+    }
+
     private void setEvents(String JSONString) {
         try {
             JSONArray json = new JSONArray(JSONString);
@@ -122,27 +179,6 @@ public class ExamsCalendarActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    /*@Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        //TODO Add this
-    }*/
-
-    private class GetEventsTask extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            return NetworkUtilities.getExams();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s != null && !s.equals("")) {
-                setEvents(s);
-            }
-        }
     }
 
 }
