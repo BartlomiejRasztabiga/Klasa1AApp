@@ -2,11 +2,7 @@ package pl.rasztabiga.klasa1a;
 
 import android.Manifest;
 import android.app.DialogFragment;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +29,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -89,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "RETRIEVING SAVED STATE");
             if (savedInstanceState.containsKey(DYZURNI_ARRAYLIST_KEY) && savedInstanceState.containsKey(LUCKY_NUMBERS_ARRAYLIST_KEY)) {
                 ArrayList<String> dyzurniArrayList = savedInstanceState.getStringArrayList(DYZURNI_ARRAYLIST_KEY);
-                if (!dyzurniArrayList.isEmpty()) {
+                if (dyzurniArrayList != null && !dyzurniArrayList.isEmpty()) {
                     name1.setText(dyzurniArrayList.get(0));
                     name2.setText(dyzurniArrayList.get(1));
                 }
 
                 ArrayList<String> luckyNumbersArrayList = savedInstanceState.getStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY);
-                if(!luckyNumbersArrayList.isEmpty()) {
+                if(luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
                     monday_tv.setText(luckyNumbersArrayList.get(0));
                     tuesday_tv.setText(luckyNumbersArrayList.get(1));
                     wednesday_tv.setText(luckyNumbersArrayList.get(2));

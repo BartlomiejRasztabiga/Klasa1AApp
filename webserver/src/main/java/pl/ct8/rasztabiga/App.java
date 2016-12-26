@@ -8,13 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.ct8.rasztabiga.models.Dyzurni;
-import pl.ct8.rasztabiga.models.Student;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 @Configuration
 @ComponentScan
@@ -23,16 +21,17 @@ import java.util.List;
 @EnableScheduling
 public class App {
 
-    static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
+    //static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
     private static final String CRON_EXPRESSION = "0 0 1 * * 1";
     private static final String RESET_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
 
+
     }
 
-    private static void fillListWithRealNames() {
+    /*private static void fillListWithRealNames() {
         LIST.add(new Student("Jakub", "Bębacz", 1));
         LIST.add(new Student("Karol", "Brożyna", 2));
         LIST.add(new Student("Przemysław", "Cedro", 3));
@@ -66,7 +65,7 @@ public class App {
         LIST.add(new Student("Wiktor", "Wdowin", 31));
         LIST.add(new Student("Barbara", "Winkler", 32));
         LIST.add(new Student("Karol", "Wyrębkiewicz", 33));
-    }
+    }*/
 
     static void nextDuzyrni() throws SQLException {
 

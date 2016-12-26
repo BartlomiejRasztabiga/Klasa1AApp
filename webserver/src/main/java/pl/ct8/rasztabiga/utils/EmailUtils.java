@@ -1,26 +1,25 @@
 package pl.ct8.rasztabiga.utils;
 
 
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Properties;
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 
 public class EmailUtils {
 
-    private static Properties properties = System.getProperties();
+    private static final Properties properties = System.getProperties();
 
     private final static String username = "admin@klasa1a.ct8.pl";
     private final static String password = "Gallendors5";
 
     static {
-            properties.setProperty("mail.smtp.auth", "true");
-            properties.put("mail.smtp.starttls.enable", "true");
-            properties.put("mail.smtp.host", "s1.ct8.pl");
-            properties.put("mail.smtp.port", "587");
+        properties.setProperty("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "s1.ct8.pl");
+        properties.put("mail.smtp.port", "587");
     }
 
     public static void sendEmail(String address, String message) {
@@ -37,11 +36,7 @@ public class EmailUtils {
             msg.setSubject("Your private Api key");
             msg.setText(message);
             Transport.send(msg);
-        } catch (AddressException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
+        } catch (UnsupportedEncodingException | MessagingException e) {
             e.printStackTrace();
         }
 

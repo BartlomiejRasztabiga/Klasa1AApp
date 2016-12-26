@@ -1,10 +1,8 @@
 package pl.rasztabiga.klasa1a;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.AsyncListUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,8 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,10 +31,10 @@ public class TestsCalendarActivity extends AppCompatActivity {
     private static final String TAG = TestsCalendarActivity.class.getName();
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-    CompactCalendarView compactCalendarView;
-    TextView date_tv;
-    RecyclerView mRecyclerView;
-    ExamAdapter mExamAdapter;
+    private CompactCalendarView compactCalendarView;
+    private TextView date_tv;
+    private RecyclerView mRecyclerView;
+    private ExamAdapter mExamAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +106,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
         });
     }
 
-    public void setEvents(String JSONString) {
+    private void setEvents(String JSONString) {
         try {
             JSONArray json = new JSONArray(JSONString);
 

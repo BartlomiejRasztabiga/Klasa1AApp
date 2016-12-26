@@ -2,16 +2,12 @@ package pl.ct8.rasztabiga;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import pl.ct8.rasztabiga.models.*;
+import org.springframework.web.bind.annotation.*;
+import pl.ct8.rasztabiga.models.Exam;
+import pl.ct8.rasztabiga.models.Student;
 import pl.ct8.rasztabiga.utils.ApiCodeGenerator;
 import pl.ct8.rasztabiga.utils.EmailUtils;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +21,7 @@ public class StudentController {
         System.out.println("ok xD");
     }
 
-@RequestMapping(value = "/dyzurni", method = RequestMethod.GET)
+    @RequestMapping(value = "/dyzurni", method = RequestMethod.GET)
     public ResponseEntity<?> getDyzurniOld() {
         try {
             return new ResponseEntity<>(DatabaseController.getDyzurni(), HttpStatus.OK);
@@ -57,7 +53,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/nextdyzurni", method = RequestMethod.GET)
-    public  ResponseEntity<?> nextDyzurni() {
+    public ResponseEntity<?> nextDyzurni() {
         try {
             App.nextDuzyrni();
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -145,18 +141,16 @@ public class StudentController {
             List<String> addressList = new ArrayList<>(DatabaseController.getEmailsWithoutApiCodeList());
             List<String> apiKeysList = new ArrayList<>(DatabaseController.getApiCodesList());
             if (!addressList.isEmpty()) {
-                //System.out.println(DatabaseController.getEmailsWithoutApiCodeList().toString());
-                //System.out.println(DatabaseController.getApiCodesList());
                 for (String address : addressList) {
                     String apiKey;
                     while (true) {
                         apiKey = ApiCodeGenerator.nextApiCode();
-                        if(!apiKeysList.contains(apiKey) || apiKeysList.isEmpty()) break;
+                        if (!apiKeysList.contains(apiKey) || apiKeysList.isEmpty()) break;
                     }
                     apiKeysList.add(apiKey);
                     DatabaseController.setApiCode(apiKey, address);
                     EmailUtils.sendEmail(address, apiKey);
-                    System.out.println("Succesfully sent " + apiKey + " to " + address);
+                    System.out.println("Successfully sent " + apiKey + " to " + address);
                 }
             }
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -176,10 +170,10 @@ public class StudentController {
         DatabaseController.createStudentsTable();
     }
 
-    @RequestMapping(value = "/addstudentstotable", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/addstudentstotable", method = RequestMethod.GET)
     public void addStudents() {
         DatabaseController.addStudents(App.LIST);
-    }
+    }*/
 
     @RequestMapping(value = "/getstudentsfromdb", method = RequestMethod.GET)
     public List<Student> getStudentsFromDB() {
