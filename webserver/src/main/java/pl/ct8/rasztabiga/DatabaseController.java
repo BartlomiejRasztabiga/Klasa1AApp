@@ -1,11 +1,11 @@
 package pl.ct8.rasztabiga;
 
 import pl.ct8.rasztabiga.models.*;
-import pl.ct8.rasztabiga.utils.ApiKeyNotFoundException;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseController {
@@ -371,11 +371,17 @@ public class DatabaseController {
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, apiKey);
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()) {
-               User user = new User(rs.getInt("id"), rs.getString("email"), rs.getString("api_key"),
-                       rs.getString("name"), rs.getString("surname"), rs.getString("role"));
+            if (rs.next()) {
+                String roles = rs.getString("roles");
+                List<String> rolesStringList = Arrays.asList(roles.split(","));
+                List<SecurityUtils.Role> rolesList = new ArrayList<>();
+                for(String s : rolesStringList) {
+                    rolesList.add(SecurityUtils.resolveRole(s));
+                }
+                User user = new User(rs.getInt("id"), rs.getString("email"), rs.getString("api_key"),
+                        rs.getString("name"), rs.getString("surname"), rolesList);
 
-               return user;
+                return user;
             } else {
                 return null;
             }

@@ -12,7 +12,11 @@ public class SecurityUtils {
         if (user == null) {
             throw new ApiKeyNotFoundException("Nie znaleziono takiego klucza api. Skontaktuj się z administratorem, jeżeli uważasz, że wystąpił błąd.");
         }
-        if (user.getRole().getVal() < role.getVal()) {
+        /*if (user.getRole().getVal() < role.getVal()) {
+            throw new NoPermissionsException("Masz za małe uprawnienia!");
+        }*/
+
+        if (!user.getRoleList().contains(role)) {
             throw new NoPermissionsException("Masz za małe uprawnienia!");
         }
 
@@ -20,25 +24,36 @@ public class SecurityUtils {
     }
 
     public enum Role {
-        USER(1) {
+        USER("user") {
             @Override
             public String toString() {
                 return "user";
             }
         },
 
-        ADMIN(10) {
+        ADMIN("admin") {
             @Override
             public String toString() {
                 return "admin";
             }
         };
 
-        private final int val;
-        private Role(int v) { val = v; }
+        private final String val;
+        private Role(String v) { val = v; }
 
-        public int getVal() {
+        public String getVal() {
             return val;
+        }
+    }
+
+    public static Role resolveRole(String role) {
+        switch (role) {
+            case "user":
+                return Role.USER;
+            case "admin":
+                return Role.ADMIN;
+            default:
+                return null;
         }
     }
 }

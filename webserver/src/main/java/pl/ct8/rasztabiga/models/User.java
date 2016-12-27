@@ -2,6 +2,8 @@ package pl.ct8.rasztabiga.models;
 
 import pl.ct8.rasztabiga.utils.SecurityUtils;
 
+import java.util.List;
+
 public class User {
 
     private int id;
@@ -9,25 +11,15 @@ public class User {
     private String apiKey;
     private String name;
     private String surname;
-    private SecurityUtils.Role role;
+    private List<SecurityUtils.Role> roleList;
 
-    public User(int id, String email, String apiKey, String name, String surname, String role) {
+    public User(int id, String email, String apiKey, String name, String surname, List<SecurityUtils.Role> roleList) {
         this.id = id;
         this.email = email;
         this.apiKey = apiKey;
         this.name = name;
         this.surname = surname;
-        switch (role) {
-            case "user":
-                this.role = SecurityUtils.Role.USER;
-                break;
-            case "admin":
-                this.role = SecurityUtils.Role.ADMIN;
-                break;
-            default:
-                this.role = null;
-                break;
-        }
+        this.roleList = roleList;
     }
 
     public int getId() {
@@ -50,7 +42,7 @@ public class User {
         return surname;
     }
 
-    public SecurityUtils.Role getRole() {
-        return role;
+    public List<SecurityUtils.Role> getRoleList() {
+        return roleList;
     }
 }
