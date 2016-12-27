@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="1.3.4" versioncode="10">
+        <change>Dodano: jeszcze bardziej zmniejszone użycie sieci</change>
+        <change>Dodano: przycisk w menu do wyświetlania tej listy zmian</change>
+        <change>Zoptymalizowano: ogólne działanie interfejsu użytkownika</change>
+        <change>Naprawiono: błędy z pobieraniem danych</change>
+    </release>
     <release version="1.3.3" versioncode="9">
         <change>Dodano: zmniejszone użycie sieci</change>
     </release>
