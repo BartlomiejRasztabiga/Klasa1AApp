@@ -2,7 +2,6 @@ package pl.rasztabiga.klasa1a.models;
 
 
 import android.graphics.Color;
-import android.graphics.Interpolator;
 
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
@@ -30,18 +29,6 @@ public class Exam {
 
     public String getDesc() {
         return desc;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getDay() {
-        return day;
     }
 
     public Event createEvent() {

@@ -1,10 +1,11 @@
 package pl.rasztabiga.klasa1a;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.AsyncListUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,8 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,18 +26,19 @@ import java.util.List;
 import java.util.Locale;
 
 import pl.rasztabiga.klasa1a.models.Exam;
-import pl.rasztabiga.klasa1a.utils.ExamAdapter;
+import pl.rasztabiga.klasa1a.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class TestsCalendarActivity extends AppCompatActivity {
+public class ExamsCalendarActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
-    private static final String TAG = TestsCalendarActivity.class.getName();
+    private static final String TAG = ExamsCalendarActivity.class.getName();
+    private static final int GET_EXAMS_LOADER = 33;
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-    CompactCalendarView compactCalendarView;
-    TextView date_tv;
-    RecyclerView mRecyclerView;
-    ExamAdapter mExamAdapter;
+    private CompactCalendarView compactCalendarView;
+    private TextView date_tv;
+    private RecyclerView mRecyclerView;
+    private ExamAdapter mExamAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,34 +57,14 @@ public class TestsCalendarActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mExamAdapter);
 
-        new GetEventsTask().execute();
+        getSupportLoaderManager().initLoader(GET_EXAMS_LOADER, null, this);
+
+        //getEvents();
 
         //Show date and events for actual day
         date_tv.setText(dateFormat.format(new Date()));
 
-        //TODO USE JODA TIME
-
-/*        //Workaround for showing events for actual day
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date today = new Date();
-        Date todayWithZeroTime = null;
-        try {
-            todayWithZeroTime = formatter.parse(formatter.format(today));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, today.toString());
-
-        List<Event> events = compactCalendarView.getEvents(todayWithZeroTime);
-
-        ArrayList<Exam> examArrayList = new ArrayList<>();
-        for(Event e : events) {
-            examArrayList.add((Exam) e.getData());
-        }
-
-        Log.d(TAG, examArrayList.toString());
-        mExamAdapter.setExamsData(examArrayList);*/
+        //TODO Use joda time
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -96,7 +76,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
                 date_tv.setText(dateFormat.format(dateClicked));
 
                 ArrayList<Exam> examArrayList = new ArrayList<>();
-                for(Event e : events) {
+                for (Event e : events) {
                     examArrayList.add((Exam) e.getData());
                 }
 
@@ -110,13 +90,79 @@ public class TestsCalendarActivity extends AppCompatActivity {
         });
     }
 
-    public void setEvents(String JSONString) {
+    private void getEvents() {
+        Log.d(TAG, "getEvents");
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String> getDyzurniLoader = loaderManager.getLoader(GET_EXAMS_LOADER);
+        if (getDyzurniLoader == null) {
+            loaderManager.initLoader(GET_EXAMS_LOADER, null, this);
+        } else {
+            loaderManager.restartLoader(GET_EXAMS_LOADER, null, this);
+        }
+    }
+
+    @Override
+    public Loader<String> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case GET_EXAMS_LOADER: {
+                return new AsyncTaskLoader<String>(this) {
+                    String examsJson;
+
+                    @Override
+                    protected void onStartLoading() {
+                        Log.d(TAG, "onStartLoading()");
+                        if (examsJson != null) {
+                            deliverResult(examsJson);
+                        } else {
+                            forceLoad();
+                        }
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        Log.d(TAG, "loadInBackground()");
+                        return NetworkUtilities.getExams();
+                    }
+
+                    @Override
+                    public void deliverResult(String data) {
+                        Log.d(TAG, "deliverResult()");
+                        examsJson = data;
+                        super.deliverResult(data);
+                    }
+                };
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String data) {
+        Log.d(TAG, "onLoadFinished()");
+        switch (loader.getId()) {
+            case GET_EXAMS_LOADER: {
+                if (data != null && !data.equals("")) {
+                    setEvents(data);
+                }
+
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {
+
+    }
+
+    private void setEvents(String JSONString) {
         try {
             JSONArray json = new JSONArray(JSONString);
 
             List<Exam> arrayList = new ArrayList<>();
 
-            for(int i=0; i < json.length(); i++) {
+            for (int i = 0; i < json.length(); i++) {
                 JSONObject obj = json.getJSONObject(i);
                 Exam exam = new Exam(obj.getString("subject"), obj.getString("desc"), obj.getInt("year"),
                         obj.getInt("month"), obj.getInt("day"));
@@ -124,7 +170,7 @@ public class TestsCalendarActivity extends AppCompatActivity {
             }
 
             ArrayList<Event> eventArrayList = new ArrayList<>();
-            for(Exam e : arrayList) {
+            for (Exam e : arrayList) {
                 eventArrayList.add(e.createEvent());
             }
 
@@ -135,20 +181,6 @@ public class TestsCalendarActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    private class GetEventsTask extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            return NetworkUtilities.getExams();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s != null && !s.equals("")) {
-                setEvents(s);
-            }
-        }
     }
 
 }

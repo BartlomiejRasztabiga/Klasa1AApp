@@ -30,7 +30,13 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".TestsCalendarActivity"></activity>
+        <activity android:name=".ExamsCalendarActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
     </application>
 
 </manifest>

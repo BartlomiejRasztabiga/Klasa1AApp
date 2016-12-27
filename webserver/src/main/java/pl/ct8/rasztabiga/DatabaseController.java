@@ -168,7 +168,7 @@ public class DatabaseController {
     static List<Exam> getExams() throws SQLException {
         List<Exam> examsList = new ArrayList<>();
         String sql = "SELECT * FROM EXAMS WHERE VISIBLE = 1";
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Exam exam = new Exam(rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
@@ -181,9 +181,9 @@ public class DatabaseController {
         }
     }
 
-    static Student getStudent(int number) {
+    private static Student getStudent(int number) {
         String sql = "SELECT * FROM STUDENTS WHERE NUMBER = ?";
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, number);
 
             ResultSet rs = stmt.executeQuery();
@@ -273,7 +273,7 @@ public class DatabaseController {
 
     static void setLuckyNumbers(ArrayList<Integer> list) throws SQLException {
         String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, String.valueOf(list.get(0)));
             stmt.setString(2, "ln.monday");
