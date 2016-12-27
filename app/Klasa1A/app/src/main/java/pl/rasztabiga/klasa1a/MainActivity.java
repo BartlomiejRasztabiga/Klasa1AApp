@@ -68,9 +68,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar loadingIndicator;
 
     private ChangeLog changeLog;
-
-    private LoaderManager loaderManager = getSupportLoaderManager();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         changeLog = new ChangeLog(this);
 
-        loaderManager.initLoader(GET_DYZURNI_LOADER, null, this);
-        loaderManager.initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+        getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
+        getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
 
         if (changeLog.isFirstRun()) {
             changeLog.getLogDialog().show();
@@ -111,41 +108,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private void getDyzurni() {
-        Log.d(TAG, "getDyzurni");
-        Loader<String> getDyzurniLoader = loaderManager.getLoader(GET_DYZURNI_LOADER);
-        if (getDyzurniLoader == null) {
-            loaderManager.initLoader(GET_DYZURNI_LOADER, null, this);
-        } else {
-            loaderManager.restartLoader(GET_DYZURNI_LOADER, null, this);
-        }
-    }
-
-    private void getLuckyNumbers() {
-        //Log.d(TAG, "getLuckyNumbers");
-        Loader<String> getLuckyNumbersLoader = loaderManager.getLoader(GET_LUCKY_NUMBERS_LOADER);
-        if (getLuckyNumbersLoader == null) {
-            loaderManager.initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-        } else {
-            loaderManager.restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-        }
-    }
-
     @Override
     public Loader<String> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case GET_DYZURNI_LOADER: {
                 return new AsyncTaskLoader<String>(this) {
-                    String dyzurniJson;
+                    String dyzurniJson = null;
 
                     @Override
                     protected void onStartLoading() {
-                        loadingIndicator.setVisibility(View.VISIBLE);
                         Log.d(TAG, "GET_DYZURNI_LOADER:onStartLoading()");
 
                         if (dyzurniJson != null) {
                             deliverResult(dyzurniJson);
                         } else {
+                            loadingIndicator.setVisibility(View.VISIBLE);
                             forceLoad();
                         }
                     }
@@ -158,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     public void deliverResult(String data) {
-                        loadingIndicator.setVisibility(View.INVISIBLE);
                         Log.d(TAG, "GET_DYZURNI_LOADER:deliverResult()");
                         dyzurniJson = data;
                         super.deliverResult(data);
@@ -168,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             case GET_LUCKY_NUMBERS_LOADER: {
                 return new AsyncTaskLoader<String>(this) {
-                    String luckyNumbersString;
+                    String luckyNumbersString = null;
 
                     @Override
                     protected void onStartLoading() {
@@ -189,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     @Override
                     public void deliverResult(String data) {
                         //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
-                        loadingIndicator.setVisibility(View.INVISIBLE);
                         luckyNumbersString = data;
                         super.deliverResult(data);
                     }
@@ -222,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     showOnDutiesDataView();
                     setLuckyNumbers(data);
                 }
+                break;
             }
         }
     }
@@ -245,8 +221,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         int itemThatWasClickedId = item.getItemId();
         switch (itemThatWasClickedId) {
             case R.id.action_refresh: {
-                getDyzurni();
-                getLuckyNumbers();
+                resetDyzurniTextViews();
+                resetLuckyNumbersTextViews();
+                getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
+                getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
                 return true;
             }
             case R.id.action_calendar: {
