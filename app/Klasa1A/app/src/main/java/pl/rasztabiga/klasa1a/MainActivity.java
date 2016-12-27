@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private ChangeLog changeLog;
 
+    private LoaderManager loaderManager = getSupportLoaderManager();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         changeLog = new ChangeLog(this);
 
-        getDyzurni();
-        getLuckyNumbers();
+        loaderManager.initLoader(GET_DYZURNI_LOADER, null, this);
+        loaderManager.initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
 
         if (changeLog.isFirstRun()) {
             changeLog.getLogDialog().show();
@@ -111,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void getDyzurni() {
         Log.d(TAG, "getDyzurni");
-        LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> getDyzurniLoader = loaderManager.getLoader(GET_DYZURNI_LOADER);
         if (getDyzurniLoader == null) {
             loaderManager.initLoader(GET_DYZURNI_LOADER, null, this);
@@ -121,8 +122,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void getLuckyNumbers() {
-        Log.d(TAG, "getLuckyNumbers");
-        LoaderManager loaderManager = getSupportLoaderManager();
+        //Log.d(TAG, "getLuckyNumbers");
         Loader<String> getLuckyNumbersLoader = loaderManager.getLoader(GET_LUCKY_NUMBERS_LOADER);
         if (getLuckyNumbersLoader == null) {
             loaderManager.initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     protected void onStartLoading() {
-                        Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onStartLoading()");
+                        //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onStartLoading()");
                         if (luckyNumbersString != null) {
                             deliverResult(luckyNumbersString);
                         } else {
@@ -182,13 +182,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     public String loadInBackground() {
-                        Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:loadInBackground()");
+                        //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:loadInBackground()");
                         return NetworkUtilities.getLuckyNumbers();
                     }
 
                     @Override
                     public void deliverResult(String data) {
-                        Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
+                        //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
                         loadingIndicator.setVisibility(View.INVISIBLE);
                         luckyNumbersString = data;
                         super.deliverResult(data);
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
 
             case GET_LUCKY_NUMBERS_LOADER: {
-                Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onLoadFinished()");
+                //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onLoadFinished()");
                 loadingIndicator.setVisibility(View.INVISIBLE);
                 if (data != null && !data.equals("")) {
                     showOnDutiesDataView();

@@ -57,7 +57,9 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
         mRecyclerView.setAdapter(mExamAdapter);
 
-        getEvents();
+        getSupportLoaderManager().initLoader(GET_EXAMS_LOADER, null, this);
+
+        //getEvents();
 
         //Show date and events for actual day
         date_tv.setText(dateFormat.format(new Date()));
