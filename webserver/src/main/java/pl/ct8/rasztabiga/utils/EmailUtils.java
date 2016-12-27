@@ -1,6 +1,8 @@
 package pl.ct8.rasztabiga.utils;
 
 
+import org.hibernate.validator.constraints.Email;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -41,4 +43,5 @@ public class EmailUtils {
         }
 
     }
+
 }

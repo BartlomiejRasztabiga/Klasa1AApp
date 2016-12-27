@@ -1,9 +1,8 @@
 package pl.ct8.rasztabiga;
 
-import pl.ct8.rasztabiga.models.Dyzurni;
-import pl.ct8.rasztabiga.models.Exam;
-import pl.ct8.rasztabiga.models.LuckyNumbers;
-import pl.ct8.rasztabiga.models.Student;
+import pl.ct8.rasztabiga.models.*;
+import pl.ct8.rasztabiga.utils.ApiKeyNotFoundException;
+import pl.ct8.rasztabiga.utils.SecurityUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -364,6 +363,22 @@ public class DatabaseController {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static User getUser(String apiKey) throws SQLException {
+        String sql = "SELECT * FROM API_KEYS WHERE api_key = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, apiKey);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+               User user = new User(rs.getInt("id"), rs.getString("email"), rs.getString("api_key"),
+                       rs.getString("name"), rs.getString("surname"), rs.getString("role"));
+
+               return user;
+            } else {
+                return null;
+            }
         }
     }
 }
