@@ -19,4 +19,5 @@
     <string name="kalendarz">Kalendarz</string>
     <string name="pobierz_nowa_wersje_recznie">Pobierz nową wersję ręcznie</string>
     <string name="whats_new">Co nowego…</string>
+    <string name="tests_calendar">Kalendarz testów</string>
 </resources>
