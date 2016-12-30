@@ -32,6 +32,7 @@
 
         <activity android:name=".ExamsCalendarActivity"
             android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"
             android:label="@string/tests_calendar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

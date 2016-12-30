@@ -95,7 +95,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        // When the home button is pressed, take the user back to the VisualizerActivity
+        // When the home button is pressed, take the user back to the MainActivity
         if (id == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
         }
