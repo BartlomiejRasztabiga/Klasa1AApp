@@ -217,6 +217,24 @@ public class StudentController {
         }
     }
 
+    @RequestMapping(value = "/checkApiKey", method = RequestMethod.GET)
+    public ResponseEntity<?> checkApiKey(@RequestParam("apiKey") String apiKey) {
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
+
+
     //Na gorze sa nowe metody
 
     // Na dole metody testowe do tworzenia tabel

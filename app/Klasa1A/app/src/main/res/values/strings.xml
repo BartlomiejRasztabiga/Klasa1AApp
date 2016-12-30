@@ -20,4 +20,8 @@
     <string name="pobierz_nowa_wersje_recznie">Pobierz nową wersję ręcznie</string>
     <string name="whats_new">Co nowego…</string>
     <string name="tests_calendar">Kalendarz testów</string>
+    <string name="klucz_api_z_emaila">Klucz api</string>
+    <string name="continue_label">Kontynuuj</string>
+    <string name="cancel_label">Anuluj</string>
+    <string name="enter_api_key_you_got_on_your_email">Wprowadź klucz api, który otrzymałeś/aś na Twój adres email. Bez tego, normalne działanie aplikacji będzie niemożliwe</string>
 </resources>

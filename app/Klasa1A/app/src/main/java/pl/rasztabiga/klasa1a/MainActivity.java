@@ -3,6 +3,7 @@ package pl.rasztabiga.klasa1a;
 import android.Manifest;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar loadingIndicator;
 
     private ChangeLog changeLog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
 
         changeLog = new ChangeLog(this);
+
+        Log.d(TAG, String.valueOf(checkFirstRun()));
 
         getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
         getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
@@ -105,6 +110,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
+        if(checkFirstRun()) {
+            showEnterApiKeyDialog();
+        }
+
+    }
+
+    public boolean checkFirstRun() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getBoolean("isFirstRun", true);
 
     }
 
@@ -204,6 +219,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<String> loader) {}
+
+    private void showEnterApiKeyDialog() {
+        DialogFragment dialogFragment = new EnterApiKeyDialog();
+        dialogFragment.show(getFragmentManager(), "EnterApiKeyDialog");
+    }
 
     private void showDownloadNewVersionDialog() {
         DialogFragment dialog = new DownloadNewVersionDialog();
