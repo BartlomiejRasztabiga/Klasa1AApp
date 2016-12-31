@@ -1,7 +1,9 @@
 package pl.rasztabiga.klasa1a;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
@@ -42,6 +44,9 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     private RecyclerView mRecyclerView;
     private ExamAdapter mExamAdapter;
 
+    private SharedPreferences preferences;
+    private String apiKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,9 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         date_tv = (TextView) findViewById(R.id.date_tv);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_exams);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -122,7 +130,12 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                     @Override
                     public String loadInBackground() {
                         Log.d(TAG, "loadInBackground()");
-                        return NetworkUtilities.getExams();
+                        try {
+                            return NetworkUtilities.getExams(apiKey);
+                        } catch (RequestException e) {
+                            Log.d(TAG, e.getMessage());
+                            return null;
+                        }
                     }
 
                     @Override
