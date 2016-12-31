@@ -1,5 +1,6 @@
 package pl.ct8.rasztabiga.utils;
 
+import pl.ct8.rasztabiga.Analytics;
 import pl.ct8.rasztabiga.DatabaseController;
 import pl.ct8.rasztabiga.models.User;
 
@@ -50,6 +51,7 @@ public class SecurityUtils {
         }
 
         writeUserToLog(user);
+        Analytics.updateUserRequestsAmountByOne(user);
 
         return true;
     }

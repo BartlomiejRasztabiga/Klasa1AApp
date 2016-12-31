@@ -386,5 +386,13 @@ public class DatabaseController {
             }
         }
     }
+
+    public static void bumpUserAnalitycsField(User user) throws SQLException {
+        String sql = "UPDATE API_KEYS SET requestsAmount = requestsAmount + 1 WHERE api_key = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, user.getApiKey());
+            stmt.executeUpdate();
+        }
+    }
 }
 
