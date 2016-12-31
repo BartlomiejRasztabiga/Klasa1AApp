@@ -26,7 +26,9 @@ public class SecurityUtils {
         }
 
         writeUserToLog(user);
-        Analytics.updateUserRequestsAmountByOne(user);
+        //TODO add external db for analytics
+        //Analytics.updateUserRequestsAmountByOne(user);
+        //new Thread(new UpdateUserRequestsAmountByOneRunnable(user)).start();
 
         return true;
     }
