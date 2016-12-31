@@ -21,7 +21,6 @@ public class DatabaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Connected to SQLite DB");
         return c;
     }
 
