@@ -1,6 +1,8 @@
 package pl.ct8.rasztabiga.utils;
 
 
+import org.hibernate.validator.constraints.Email;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -33,7 +35,7 @@ public class EmailUtils {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress("admin@klasa1a.ct8.pl", "Klasa1a admin"));
             msg.addRecipient(Message.RecipientType.TO, new InternetAddress(address));
-            msg.setSubject("Your private Api key");
+            msg.setSubject("Twój klucz dostępu");
             msg.setText(message);
             Transport.send(msg);
         } catch (UnsupportedEncodingException | MessagingException e) {
@@ -41,4 +43,5 @@ public class EmailUtils {
         }
 
     }
+
 }

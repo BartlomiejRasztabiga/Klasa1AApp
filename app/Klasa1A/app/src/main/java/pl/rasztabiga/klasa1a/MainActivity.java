@@ -3,6 +3,7 @@ package pl.rasztabiga.klasa1a;
 import android.Manifest;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -10,9 +11,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -33,22 +38,20 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.models.Dyzurni;
-import pl.rasztabiga.klasa1a.models.LuckyNumbers;
 import pl.rasztabiga.klasa1a.models.Student;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     //TODO To have numbers and days in one row use linear layout
 
-    private static final String DYZURNI_ARRAYLIST_KEY = "dyzurni_arraylist";
-    private static final String LUCKY_NUMBERS_ARRAYLIST_KEY = "luckynumbers_arraylist";
+    private static final int GET_DYZURNI_LOADER = 11;
+    private static final int GET_LUCKY_NUMBERS_LOADER = 22;
     private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
@@ -68,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ChangeLog changeLog;
 
+    private SharedPreferences preferences;
+    private String apiKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,48 +91,160 @@ public class MainActivity extends AppCompatActivity {
 
         changeLog = new ChangeLog(this);
 
-        if (savedInstanceState != null) {
-            Log.d(TAG, "RETRIEVING SAVED STATE");
-            if (savedInstanceState.containsKey(DYZURNI_ARRAYLIST_KEY) && savedInstanceState.containsKey(LUCKY_NUMBERS_ARRAYLIST_KEY)) {
-                ArrayList<String> dyzurniArrayList = savedInstanceState.getStringArrayList(DYZURNI_ARRAYLIST_KEY);
-                if (dyzurniArrayList != null && !dyzurniArrayList.isEmpty()) {
-                    name1.setText(dyzurniArrayList.get(0));
-                    name2.setText(dyzurniArrayList.get(1));
-                }
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
-                ArrayList<String> luckyNumbersArrayList = savedInstanceState.getStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY);
-                if (luckyNumbersArrayList != null && !luckyNumbersArrayList.isEmpty()) {
-                    monday_tv.setText(luckyNumbersArrayList.get(0));
-                    tuesday_tv.setText(luckyNumbersArrayList.get(1));
-                    wednesday_tv.setText(luckyNumbersArrayList.get(2));
-                    thursday_tv.setText(luckyNumbersArrayList.get(3));
-                    friday_tv.setText(luckyNumbersArrayList.get(4));
-                }
-            }
-        } else {
-            Log.d(TAG, "EXECUTING NETWORK TASKS");
-            new GetDyzurniTask().execute();
-            new GetLuckyNumbersTask().execute();
+        if(checkFirstRun()) {
+            showEnterApiKeyDialog();
+            apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
         }
 
         if (changeLog.isFirstRun()) {
             changeLog.getLogDialog().show();
         }
 
-        try {
-            if (new CheckNewUpdatesTask().execute().get()) {
-                Log.v(TAG, "New version!");
-                //TODO Dodać pytanie użytkownika czy pobrać
-                if (isStoragePermissionGranted()) {
-                    showDownloadNewVersionDialog();
-                } else {
-                    Log.w(TAG, "You didn't give me permission!");
+        if (!apiKey.isEmpty() || !apiKey.equals("")) {
+            getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
+            getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+
+            try {
+                if (new CheckNewUpdatesTask().execute().get()) {
+                    Log.v(TAG, "New version!");
+                    //TODO Dodać pytanie użytkownika czy pobrać
+                    if (isStoragePermissionGranted()) {
+                        showDownloadNewVersionDialog();
+                    } else {
+                        Log.w(TAG, "You didn't give me permission!");
+                    }
                 }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
         }
 
+    }
+
+    public boolean checkFirstRun() {
+        return preferences.getBoolean("isFirstRun", true);
+
+    }
+
+    public void reloadApiKey() {
+        apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
+    }
+
+    @Override
+    public Loader<String> onCreateLoader(int id, final Bundle args) {
+        switch (id) {
+            case GET_DYZURNI_LOADER: {
+                return new AsyncTaskLoader<String>(this) {
+                    String dyzurniJson = null;
+
+                    @Override
+                    protected void onStartLoading() {
+                        Log.d(TAG, "GET_DYZURNI_LOADER:onStartLoading()");
+
+                        if (dyzurniJson != null) {
+                            deliverResult(dyzurniJson);
+                        } else {
+                            loadingIndicator.setVisibility(View.VISIBLE);
+                            forceLoad();
+                        }
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        reloadApiKey();
+                        Log.d(TAG, "GET_DYZURNI_LOADER:loadInBackground()");
+                        try {
+                            return NetworkUtilities.getDyzurni(apiKey);
+                        } catch (RequestException e) {
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    public void deliverResult(String data) {
+                        Log.d(TAG, "GET_DYZURNI_LOADER:deliverResult()");
+                        dyzurniJson = data;
+                        loadingIndicator.setVisibility(View.INVISIBLE);
+                        super.deliverResult(data);
+                    }
+                };
+            }
+
+            case GET_LUCKY_NUMBERS_LOADER: {
+                return new AsyncTaskLoader<String>(this) {
+                    String luckyNumbersString = null;
+
+                    @Override
+                    protected void onStartLoading() {
+                        //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onStartLoading()");
+                        if (luckyNumbersString != null) {
+                            deliverResult(luckyNumbersString);
+                        } else {
+                            forceLoad();
+                        }
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        reloadApiKey();
+                        //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:loadInBackground()");
+                        try {
+                            return NetworkUtilities.getLuckyNumbers(apiKey);
+                        } catch (RequestException e) {
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    public void deliverResult(String data) {
+                        //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
+                        luckyNumbersString = data;
+                        loadingIndicator.setVisibility(View.INVISIBLE);
+                        super.deliverResult(data);
+                    }
+                };
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String data) {
+        switch (loader.getId()) {
+            case GET_DYZURNI_LOADER: {
+                Log.d(TAG, "GET_DYZURNI_LOADER:onLoadFinished()");
+                loadingIndicator.setVisibility(View.INVISIBLE);
+                if (data != null && !data.equals("")) {
+                    showOnDutiesDataView();
+                    setDyzurni(data);
+                } else {
+                    showErrorMessage();
+                }
+                break;
+            }
+
+            case GET_LUCKY_NUMBERS_LOADER: {
+                //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onLoadFinished()");
+                loadingIndicator.setVisibility(View.INVISIBLE);
+                if (data != null && !data.equals("")) {
+                    showOnDutiesDataView();
+                    setLuckyNumbers(data);
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {}
+
+    private void showEnterApiKeyDialog() {
+        DialogFragment dialogFragment = new EnterApiKeyDialog();
+        dialogFragment.show(getFragmentManager(), "EnterApiKeyDialog");
     }
 
     private void showDownloadNewVersionDialog() {
@@ -145,8 +263,10 @@ public class MainActivity extends AppCompatActivity {
         int itemThatWasClickedId = item.getItemId();
         switch (itemThatWasClickedId) {
             case R.id.action_refresh: {
-                new GetDyzurniTask().execute();
-                new GetLuckyNumbersTask().execute();
+                resetDyzurniTextViews();
+                resetLuckyNumbersTextViews();
+                getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
+                getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
                 return true;
             }
             case R.id.action_calendar: {
@@ -290,63 +410,17 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        ArrayList<String> dyzurniArrayList = new ArrayList<>(Arrays.asList(name1.getText().toString(), name2.getText().toString()));
-        outState.putStringArrayList(DYZURNI_ARRAYLIST_KEY, dyzurniArrayList);
 
-        ArrayList<String> luckyNumbersArrayList = new ArrayList<>(Arrays.asList(monday_tv.getText().toString(), tuesday_tv.getText().toString(),
-                wednesday_tv.getText().toString(), thursday_tv.getText().toString(), friday_tv.getText().toString()));
-        outState.putStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY, luckyNumbersArrayList);
-
-    }
-
-    private class GetDyzurniTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return NetworkUtilities.getDyzurni();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            loadingIndicator.setVisibility(View.INVISIBLE);
-            if (s != null && !s.equals("")) {
-                showOnDutiesDataView();
-                setDyzurni(s);
-            } else {
-                showErrorMessage();
-            }
-        }
-    }
-
-    private class GetLuckyNumbersTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return NetworkUtilities.getLuckyNumbers();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s != null && !s.equals("")) {
-                showOnDutiesDataView();
-                setLuckyNumbers(s);
-            }
-        }
     }
 
     private class CheckNewUpdatesTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
+                reloadApiKey();
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 int installedVersionCode = pInfo.versionCode;
-                int serverVersionCode = NetworkUtilities.getActualVersion();
+                int serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
                 if (installedVersionCode == 0) {
                     throw new Exception("Błędna wersja na serwerze, skontakuj się z administratorem");
                 } else if (serverVersionCode > installedVersionCode) {
@@ -356,6 +430,8 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
 
+            } catch (RequestException e) {
+                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -367,13 +443,19 @@ public class MainActivity extends AppCompatActivity {
     private class GetActualAppVersionFromServer extends AsyncTask<Void, Void, Integer> {
         @Override
         protected Integer doInBackground(Void... voids) {
-            return NetworkUtilities.getActualVersion();
+            reloadApiKey();
+            try {
+                return NetworkUtilities.getActualVersion(apiKey);
+            } catch (RequestException e) {
+                return null;
+            }
         }
     }
 
     private class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
+            reloadApiKey();
             if (!isStoragePermissionGranted()) {
                 Log.d(TAG, "You didn't give me permission!");
                 return null;
@@ -382,8 +464,9 @@ public class MainActivity extends AppCompatActivity {
             File file = new File(Environment.getExternalStorageDirectory(), "klasa1a.apk");
             final Uri uri = getDownloadedApkUri(file);
 
-            if (file.exists())
+            if (file.exists()) {
                 file.delete();
+            }
 
             downloadApk(file);
             installApk(uri);
@@ -432,7 +515,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private String getApkUrl() {
-            int serverVersionCode = NetworkUtilities.getActualVersion();
+            int serverVersionCode = 0;
+            try {
+                serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
+            } catch (RequestException e) {
+            }
             String url = APK_QUERY_URL;
             url += serverVersionCode;
             url += ".apk";

@@ -1,12 +1,11 @@
 package pl.ct8.rasztabiga;
 
-import pl.ct8.rasztabiga.models.Dyzurni;
-import pl.ct8.rasztabiga.models.Exam;
-import pl.ct8.rasztabiga.models.LuckyNumbers;
-import pl.ct8.rasztabiga.models.Student;
+import pl.ct8.rasztabiga.models.*;
+import pl.ct8.rasztabiga.utils.SecurityUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseController {
@@ -22,7 +21,6 @@ public class DatabaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Connected to SQLite DB");
         return c;
     }
 
@@ -364,6 +362,28 @@ public class DatabaseController {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static User getUser(String apiKey) throws SQLException {
+        String sql = "SELECT * FROM API_KEYS WHERE api_key = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, apiKey);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String roles = rs.getString("roles");
+                List<String> rolesStringList = Arrays.asList(roles.split(","));
+                List<SecurityUtils.Role> rolesList = new ArrayList<>();
+                for(String s : rolesStringList) {
+                    rolesList.add(SecurityUtils.resolveRole(s));
+                }
+                User user = new User(rs.getInt("id"), rs.getString("email"), rs.getString("api_key"),
+                        rs.getString("name"), rs.getString("surname"), rolesList);
+
+                return user;
+            } else {
+                return null;
+            }
         }
     }
 }
