@@ -15,11 +15,6 @@ import java.util.Map;
 @RestController
 public class StudentController {
 
-    @ModelAttribute()
-    public void initialize() {
-        System.out.println("ok xD");
-    }
-
     @RequestMapping(value = "/dyzurni", method = RequestMethod.GET)
     public ResponseEntity<?> getDyzurniOld(@RequestParam("apiKey") String apiKey) {
         try {
@@ -152,7 +147,9 @@ public class StudentController {
         }
     }
 
-    @RequestMapping(value = "/getversion", method = RequestMethod.GET)
+
+    //TODO ADD APIKEY LATER, WHEN EVERYONE HAAS THE APP
+    /*@RequestMapping(value = "/getversion", method = RequestMethod.GET)
     public ResponseEntity<?> getVersionCode(@RequestParam("apiKey") String apiKey) {
         try {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
@@ -164,6 +161,16 @@ public class StudentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (NoPermissionsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }*/
+
+    @RequestMapping(value = "/getversion", method = RequestMethod.GET)
+    public ResponseEntity<?> getVersionCode() {
+        try {
+            return new ResponseEntity<>(DatabaseController.getActualVersionCode(), HttpStatus.OK);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -199,8 +206,8 @@ public class StudentController {
                     apiKeysList.add(apiKeyString);
                     DatabaseController.setApiCode(apiKeyString, address);
 
-                    //EmailUtils.sendEmail(address, apiKeyString);
-                    new Thread(new EmailSender(address, apiKeyString)).start();
+                    String message = "Twój klucz dostępu do apki: ";
+                    new Thread(new EmailSender(address, message + apiKeyString)).start();
                     //TODO Move it to new thread
 
                     System.out.println("Successfully sent " + apiKeyString + " to " + address);
@@ -216,6 +223,24 @@ public class StudentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @RequestMapping(value = "/checkApiKey", method = RequestMethod.GET)
+    public ResponseEntity<?> checkApiKey(@RequestParam("apiKey") String apiKey) {
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
+
 
     //Na gorze sa nowe metody
 

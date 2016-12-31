@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="1.4.0" versioncode="12">
+        <change>Dodano: system kluczy dostępu</change>
+    </release>
     <release version="1.3.5" versioncode="11">
         <change>Naprawiono: błędy z pobieraniem danych (ostatecznie)</change>
     </release>

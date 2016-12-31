@@ -3,6 +3,7 @@ package pl.rasztabiga.klasa1a;
 import android.Manifest;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
@@ -68,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar loadingIndicator;
 
     private ChangeLog changeLog;
+
+    private SharedPreferences preferences;
+    private String apiKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,31 +91,50 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         changeLog = new ChangeLog(this);
 
-        getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
-        getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
+
+        if(checkFirstRun()) {
+            showEnterApiKeyDialog();
+            apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
+        }
 
         if (changeLog.isFirstRun()) {
             changeLog.getLogDialog().show();
         }
 
-        try {
-            if (new CheckNewUpdatesTask().execute().get()) {
-                Log.v(TAG, "New version!");
-                //TODO Dodać pytanie użytkownika czy pobrać
-                if (isStoragePermissionGranted()) {
-                    showDownloadNewVersionDialog();
-                } else {
-                    Log.w(TAG, "You didn't give me permission!");
+        if (!apiKey.isEmpty() || !apiKey.equals("")) {
+            getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
+            getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+
+            try {
+                if (new CheckNewUpdatesTask().execute().get()) {
+                    Log.v(TAG, "New version!");
+                    //TODO Dodać pytanie użytkownika czy pobrać
+                    if (isStoragePermissionGranted()) {
+                        showDownloadNewVersionDialog();
+                    } else {
+                        Log.w(TAG, "You didn't give me permission!");
+                    }
                 }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
         }
 
     }
 
+    public boolean checkFirstRun() {
+        return preferences.getBoolean("isFirstRun", true);
+
+    }
+
+    public void reloadApiKey() {
+        apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
+    }
+
     @Override
-    public Loader<String> onCreateLoader(int id, Bundle args) {
+    public Loader<String> onCreateLoader(int id, final Bundle args) {
         switch (id) {
             case GET_DYZURNI_LOADER: {
                 return new AsyncTaskLoader<String>(this) {
@@ -129,14 +154,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     public String loadInBackground() {
+                        reloadApiKey();
                         Log.d(TAG, "GET_DYZURNI_LOADER:loadInBackground()");
-                        return NetworkUtilities.getDyzurni();
+                        try {
+                            return NetworkUtilities.getDyzurni(apiKey);
+                        } catch (RequestException e) {
+                            return null;
+                        }
                     }
 
                     @Override
                     public void deliverResult(String data) {
                         Log.d(TAG, "GET_DYZURNI_LOADER:deliverResult()");
                         dyzurniJson = data;
+                        loadingIndicator.setVisibility(View.INVISIBLE);
                         super.deliverResult(data);
                     }
                 };
@@ -158,14 +189,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     public String loadInBackground() {
+                        reloadApiKey();
                         //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:loadInBackground()");
-                        return NetworkUtilities.getLuckyNumbers();
+                        try {
+                            return NetworkUtilities.getLuckyNumbers(apiKey);
+                        } catch (RequestException e) {
+                            return null;
+                        }
                     }
 
                     @Override
                     public void deliverResult(String data) {
                         //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
                         luckyNumbersString = data;
+                        loadingIndicator.setVisibility(View.INVISIBLE);
                         super.deliverResult(data);
                     }
                 };
@@ -204,6 +241,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<String> loader) {}
+
+    private void showEnterApiKeyDialog() {
+        DialogFragment dialogFragment = new EnterApiKeyDialog();
+        dialogFragment.show(getFragmentManager(), "EnterApiKeyDialog");
+    }
 
     private void showDownloadNewVersionDialog() {
         DialogFragment dialog = new DownloadNewVersionDialog();
@@ -368,12 +410,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        /*ArrayList<String> dyzurniArrayList = new ArrayList<>(Arrays.asList(name1.getText().toString(), name2.getText().toString()));
-        outState.putStringArrayList(DYZURNI_ARRAYLIST_KEY, dyzurniArrayList);
-
-        ArrayList<String> luckyNumbersArrayList = new ArrayList<>(Arrays.asList(monday_tv.getText().toString(), tuesday_tv.getText().toString(),
-                wednesday_tv.getText().toString(), thursday_tv.getText().toString(), friday_tv.getText().toString()));
-        outState.putStringArrayList(LUCKY_NUMBERS_ARRAYLIST_KEY, luckyNumbersArrayList);*/
 
     }
 
@@ -381,9 +417,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
+                reloadApiKey();
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 int installedVersionCode = pInfo.versionCode;
-                int serverVersionCode = NetworkUtilities.getActualVersion();
+                int serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
                 if (installedVersionCode == 0) {
                     throw new Exception("Błędna wersja na serwerze, skontakuj się z administratorem");
                 } else if (serverVersionCode > installedVersionCode) {
@@ -393,6 +430,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     return false;
                 }
 
+            } catch (RequestException e) {
+                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -404,13 +443,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private class GetActualAppVersionFromServer extends AsyncTask<Void, Void, Integer> {
         @Override
         protected Integer doInBackground(Void... voids) {
-            return NetworkUtilities.getActualVersion();
+            reloadApiKey();
+            try {
+                return NetworkUtilities.getActualVersion(apiKey);
+            } catch (RequestException e) {
+                return null;
+            }
         }
     }
 
     private class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
+            reloadApiKey();
             if (!isStoragePermissionGranted()) {
                 Log.d(TAG, "You didn't give me permission!");
                 return null;
@@ -470,7 +515,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         private String getApkUrl() {
-            int serverVersionCode = NetworkUtilities.getActualVersion();
+            int serverVersionCode = 0;
+            try {
+                serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
+            } catch (RequestException e) {
+            }
             String url = APK_QUERY_URL;
             url += serverVersionCode;
             url += ".apk";
