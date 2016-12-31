@@ -1,14 +1,18 @@
 package pl.ct8.rasztabiga;
 
 import pl.ct8.rasztabiga.models.*;
+import pl.ct8.rasztabiga.utils.LoggerUtils;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class DatabaseController {
+
+    private static Logger logger = LoggerUtils.getLogger();
 
     //TODO Add transaction where needed
 
@@ -19,7 +23,7 @@ public class DatabaseController {
             c = DriverManager.getConnection("jdbc:sqlite:main.db");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
         return c;
     }
@@ -36,7 +40,7 @@ public class DatabaseController {
             // closing connection
         } catch (SQLException e) {
             System.out.println("Couldn't create table");
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -56,7 +60,7 @@ public class DatabaseController {
             // closing connection
         } catch (SQLException e) {
             System.out.println("Couldn't create table");
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -67,7 +71,7 @@ public class DatabaseController {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             System.out.println("Couldn't create table");
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -109,7 +113,7 @@ public class DatabaseController {
             stmt.execute();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -139,7 +143,7 @@ public class DatabaseController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -157,7 +161,7 @@ public class DatabaseController {
 
             return studentList;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return null;
         }
 
@@ -189,7 +193,7 @@ public class DatabaseController {
 
             return new Student(rs.getString("NAME"), rs.getString("SURNAME"), rs.getInt("NUMBER"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return null;
         }
 
@@ -361,7 +365,7 @@ public class DatabaseController {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -374,7 +378,7 @@ public class DatabaseController {
                 String roles = rs.getString("roles");
                 List<String> rolesStringList = Arrays.asList(roles.split(","));
                 List<SecurityUtils.Role> rolesList = new ArrayList<>();
-                for(String s : rolesStringList) {
+                for (String s : rolesStringList) {
                     rolesList.add(SecurityUtils.resolveRole(s));
                 }
                 User user = new User(rs.getInt("id"), rs.getString("email"), rs.getString("api_key"),

@@ -8,11 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.ct8.rasztabiga.models.Dyzurni;
+import pl.ct8.rasztabiga.utils.LoggerUtils;
+import pl.ct8.rasztabiga.utils.SecurityUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Logger;
 
 @Configuration
 @ComponentScan
@@ -24,6 +27,7 @@ public class App {
     //static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
     private static final String CRON_EXPRESSION = "0 0 1 * * 1";
     private static final String RESET_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
+    private static Logger logger = LoggerUtils.getLogger();
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -92,7 +96,7 @@ public class App {
         try {
             nextDuzyrni();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
         System.out.println("Set dyzurni: at " + new Date());
     }
@@ -103,7 +107,7 @@ public class App {
         try {
             DatabaseController.setLuckyNumbers(list);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 }

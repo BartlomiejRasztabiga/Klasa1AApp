@@ -1,8 +1,10 @@
 package pl.ct8.rasztabiga.models;
 
+import pl.ct8.rasztabiga.utils.LoggerUtils;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class User {
 
@@ -12,6 +14,9 @@ public class User {
     private String name;
     private String surname;
     private List<SecurityUtils.Role> roleList;
+
+    private static Logger logger = LoggerUtils.getLogger();
+
 
     public User(int id, String email, String apiKey, String name, String surname, List<SecurityUtils.Role> roleList) {
         this.id = id;
