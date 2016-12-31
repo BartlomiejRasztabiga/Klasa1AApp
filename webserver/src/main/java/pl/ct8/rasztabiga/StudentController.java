@@ -15,11 +15,6 @@ import java.util.Map;
 @RestController
 public class StudentController {
 
-    @ModelAttribute()
-    public void initialize() {
-        System.out.println("ok xD");
-    }
-
     @RequestMapping(value = "/dyzurni", method = RequestMethod.GET)
     public ResponseEntity<?> getDyzurniOld(@RequestParam("apiKey") String apiKey) {
         try {
