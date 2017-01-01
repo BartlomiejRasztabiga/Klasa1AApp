@@ -40,7 +40,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     private static final int GET_EXAMS_LOADER = 33;
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("LLLL", Locale.getDefault());
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
     private CompactCalendarView compactCalendarView;
     private TextView date_tv;
     private RecyclerView mRecyclerView;
@@ -69,15 +69,12 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
         mRecyclerView.setAdapter(mExamAdapter);
 
-        getSupportActionBar().setTitle("Lol");
-
         getSupportLoaderManager().initLoader(GET_EXAMS_LOADER, null, this);
 
 
         //Show date and events for actual day
         Date presentDate = new Date();
         date_tv.setText(dateFormat.format(presentDate));
-        //getSupportActionBar().setTitle(android.text.format.DateFormat.format("MMMM", presentDate).toString());
         getSupportActionBar().setTitle(simpleDateFormat.format(presentDate));
 
         //TODO Use joda time
@@ -101,7 +98,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                Log.d(TAG, "Month was scrolled to: " + firstDayOfNewMonth);
+                getSupportActionBar().setTitle(simpleDateFormat.format(firstDayOfNewMonth));
             }
         });
     }
