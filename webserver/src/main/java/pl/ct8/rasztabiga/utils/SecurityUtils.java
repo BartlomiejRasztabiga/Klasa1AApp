@@ -1,39 +1,15 @@
 package pl.ct8.rasztabiga.utils;
 
+import pl.ct8.rasztabiga.Analytics;
 import pl.ct8.rasztabiga.DatabaseController;
 import pl.ct8.rasztabiga.models.User;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class SecurityUtils {
 
-    static Logger logger = Logger.getLogger("Main");
-    static FileHandler fh;
-    static ConsoleHandler ch;
-
-    static {
-        try {
-
-            // This block configure the logger with handler and formatter
-            fh = new FileHandler("LogFile.log");
-            ch = new ConsoleHandler();
-            logger.addHandler(fh);
-            logger.addHandler(ch);
-            ch.setEncoding("UTF8");
-            SimpleFormatter formatter = new SimpleFormatter();
-            fh.setFormatter(formatter);
-            fh.setEncoding("UTF8");
-
-        } catch (SecurityException | IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Logger logger = LoggerUtils.getLogger();
 
 
     public static boolean authenticate(String apiKey, Role role) throws SQLException, ApiKeyNotFoundException, NoPermissionsException {
@@ -50,6 +26,9 @@ public class SecurityUtils {
         }
 
         writeUserToLog(user);
+        //TODO add external db for analytics
+        //Analytics.updateUserRequestsAmountByOne(user);
+        new Thread(new UpdateUserRequestsAmountByOneRunnable(user)).start();
 
         return true;
     }
@@ -74,7 +53,10 @@ public class SecurityUtils {
         };
 
         private final String val;
-        private Role(String v) { val = v; }
+
+        Role(String v) {
+            val = v;
+        }
 
         public String getVal() {
             return val;

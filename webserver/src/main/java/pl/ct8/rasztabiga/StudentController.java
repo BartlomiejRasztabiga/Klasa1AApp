@@ -2,18 +2,23 @@ package pl.ct8.rasztabiga;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pl.ct8.rasztabiga.models.Exam;
-import pl.ct8.rasztabiga.models.Student;
 import pl.ct8.rasztabiga.utils.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 public class StudentController {
+
+    private static Logger logger = LoggerUtils.getLogger();
 
     @RequestMapping(value = "/dyzurni", method = RequestMethod.GET)
     public ResponseEntity<?> getDyzurniOld(@RequestParam("apiKey") String apiKey) {
@@ -21,7 +26,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getDyzurni(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -36,7 +41,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getDyzurni(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -52,7 +57,7 @@ public class StudentController {
             DatabaseController.setDyzurni(first, second);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -68,7 +73,7 @@ public class StudentController {
             App.nextDuzyrni();
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -83,7 +88,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getLuckyNumbers(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -105,7 +110,7 @@ public class StudentController {
             DatabaseController.setLuckyNumbers(list);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -120,7 +125,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getExams(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -138,7 +143,7 @@ public class StudentController {
             DatabaseController.addExam(exam);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -169,7 +174,7 @@ public class StudentController {
         try {
             return new ResponseEntity<>(DatabaseController.getActualVersionCode(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -181,7 +186,7 @@ public class StudentController {
             DatabaseController.setActualVersionCode(versionCode);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -215,7 +220,7 @@ public class StudentController {
             }
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -230,7 +235,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -238,8 +243,6 @@ public class StudentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
-
 
 
     //Na gorze sa nowe metody
