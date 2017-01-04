@@ -16,6 +16,18 @@ public class DatabaseController {
 
     //TODO Add transaction where needed
 
+    private static Connection getConnectionToAnalyticsDB() {
+        Connection c = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:analytics.db");
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+        }
+        return c;
+    }
+
+
     private static Connection getConnection() {
         Connection c = null;
         try {
@@ -392,8 +404,8 @@ public class DatabaseController {
     }
 
     public static void bumpUserAnalitycsField(User user) throws SQLException {
-        String sql = "UPDATE API_KEYS SET requestsAmount = requestsAmount + 1 WHERE api_key = ?";
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+        String sql = "UPDATE USERS_ANALYTICS SET requestsAmount = requestsAmount + 1 WHERE api_key = ?";
+        try (Connection connection = getConnectionToAnalyticsDB(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, user.getApiKey());
             stmt.executeUpdate();
         }
