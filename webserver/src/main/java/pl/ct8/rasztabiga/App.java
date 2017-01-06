@@ -8,11 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.ct8.rasztabiga.models.Dyzurni;
-import pl.ct8.rasztabiga.models.LuckyNumbers;
-import pl.ct8.rasztabiga.models.Student;
+import pl.ct8.rasztabiga.utils.LoggerUtils;
+import pl.ct8.rasztabiga.utils.SecurityUtils;
 
-import java.io.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.logging.Logger;
 
 @Configuration
 @ComponentScan
@@ -21,16 +24,18 @@ import java.util.*;
 @EnableScheduling
 public class App {
 
+    //static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
     private static final String CRON_EXPRESSION = "0 0 1 * * 1";
     private static final String RESET_LUCKY_NUMBERS_CRON_EXPRESSION = "0 0 1 * * 6";
-    static final List<Student> LIST = new ArrayList<>(DatabaseController.getStudents());
+    private static Logger logger = LoggerUtils.getLogger();
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
 
+
     }
 
-    private static void fillListWithRealNames() {
+    /*private static void fillListWithRealNames() {
         LIST.add(new Student("Jakub", "Bębacz", 1));
         LIST.add(new Student("Karol", "Brożyna", 2));
         LIST.add(new Student("Przemysław", "Cedro", 3));
@@ -64,9 +69,9 @@ public class App {
         LIST.add(new Student("Wiktor", "Wdowin", 31));
         LIST.add(new Student("Barbara", "Winkler", 32));
         LIST.add(new Student("Karol", "Wyrębkiewicz", 33));
-    }
+    }*/
 
-    static void nextDuzyrni() {
+    static void nextDuzyrni() throws SQLException {
 
         int number1, number2;
         Dyzurni dyzurni = DatabaseController.getDyzurni();
@@ -88,13 +93,21 @@ public class App {
 
     @Scheduled(cron = CRON_EXPRESSION)
     private static void scheduleSetDyzurni() {
-        nextDuzyrni();
+        try {
+            nextDuzyrni();
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+        }
         System.out.println("Set dyzurni: at " + new Date());
     }
 
     @Scheduled(cron = RESET_LUCKY_NUMBERS_CRON_EXPRESSION)
     private static void resetLuckyNumbers() {
-        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0,0,0,0,0));
-        DatabaseController.setLuckyNumbers(list);
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0, 0, 0, 0, 0));
+        try {
+            DatabaseController.setLuckyNumbers(list);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+        }
     }
 }

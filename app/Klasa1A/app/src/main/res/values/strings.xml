@@ -1,4 +1,7 @@
 <resources>
+
+    <!--MainActivity strings-->
+
     <string name="app_name">Klasa 1A</string>
     <string name="this_week_on_duties">W tym tygodniu dyżurnymi są:</string>
     <string name="refresh">Odśwież</string>
@@ -17,4 +20,19 @@
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">Więcej…</string>
     <string name="kalendarz">Kalendarz</string>
+    <string name="pobierz_nowa_wersje_recznie">Pobierz nową wersję ręcznie</string>
+    <string name="whats_new">Co nowego…</string>
+    <string name="tests_calendar">Kalendarz testów</string>
+
+    <!--EnterApiKeyDialog strings-->
+
+    <string name="klucz_api_z_emaila">Klucz api</string>
+    <string name="continue_label">Kontynuuj</string>
+    <string name="cancel_label">Anuluj</string>
+    <string name="enter_api_key_you_got_on_your_email">Wprowadź klucz api, który otrzymałeś(aś) na Twój adres email. Bez tego, normalne działanie aplikacji będzie niemożliwe</string>
+
+    <!--Preference strings-->
+
+    <string name="isFirstRun_pref_key">isFirstRun</string>
+    <string name="apiKey_pref_key">apiKey</string>
 </resources>

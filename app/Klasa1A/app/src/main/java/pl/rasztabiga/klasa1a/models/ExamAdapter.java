@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.utils;
+package pl.rasztabiga.klasa1a.models;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.rasztabiga.klasa1a.R;
-import pl.rasztabiga.klasa1a.models.Exam;
 
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder> {
 
