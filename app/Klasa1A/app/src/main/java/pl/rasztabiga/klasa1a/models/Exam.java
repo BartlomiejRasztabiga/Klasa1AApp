@@ -37,4 +37,15 @@ public class Exam {
         Date date = calendar.getTime();
         return new Event(Color.RED, date.getTime(), this);
     }
+
+    @Override
+    public String toString() {
+        return "Exam{" +
+                "subject='" + subject + '\'' +
+                ", desc='" + desc + '\'' +
+                ", year=" + year +
+                ", month=" + month +
+                ", day=" + day +
+                '}';
+    }
 }

@@ -16,9 +16,12 @@ import pl.rasztabiga.klasa1a.R;
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder> {
 
     private static final String TAG = ExamAdapter.class.getSimpleName();
+    final private ExamClickListener onClickListener;
     private ArrayList<Exam> examList;
 
-    public ExamAdapter() {}
+    public ExamAdapter(ExamClickListener listener) {
+        this.onClickListener = listener;
+    }
 
     @Override
     public ExamViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,7 +37,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
 
     @Override
     public int getItemCount() {
-        if(examList == null) return 0;
+        if (examList == null) return 0;
         return examList.size();
     }
 
@@ -51,7 +54,11 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
         notifyDataSetChanged();
     }
 
-    class ExamViewHolder extends RecyclerView.ViewHolder {
+    public interface ExamClickListener {
+        void onExamClick(int clickedItemIndex);
+    }
+
+    class ExamViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final LinearLayout mExamData;
         public final TextView mExamSubjectTextView;
@@ -63,9 +70,15 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
             mExamData = (LinearLayout) itemView.findViewById(R.id.exam_data);
             mExamSubjectTextView = (TextView) itemView.findViewById(R.id.tv_exam_subject);
             mExamDescTextView = (TextView) itemView.findViewById(R.id.tv_exam_desc);
+            itemView.setOnClickListener(this);
 
         }
 
+        @Override
+        public void onClick(View v) {
+            int clickedPosition = getAdapterPosition();
+            onClickListener.onExamClick(clickedPosition);
+        }
     }
 
 

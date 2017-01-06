@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -34,7 +35,7 @@ import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class ExamsCalendarActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
+public class ExamsCalendarActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>, ExamAdapter.ExamClickListener {
 
     private static final String TAG = ExamsCalendarActivity.class.getName();
     private static final int GET_EXAMS_LOADER = 33;
@@ -48,6 +49,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
     private SharedPreferences preferences;
     private String apiKey;
+
+    private List<Exam> actualDayExamsArrayList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mExamAdapter = new ExamAdapter();
+        mExamAdapter = new ExamAdapter(this);
 
         mRecyclerView.setAdapter(mExamAdapter);
 
@@ -177,17 +180,17 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         try {
             JSONArray json = new JSONArray(JSONString);
 
-            List<Exam> arrayList = new ArrayList<>();
+            actualDayExamsArrayList = new ArrayList<>();
 
             for (int i = 0; i < json.length(); i++) {
                 JSONObject obj = json.getJSONObject(i);
                 Exam exam = new Exam(obj.getString("subject"), obj.getString("desc"), obj.getInt("year"),
                         obj.getInt("month"), obj.getInt("day"));
-                arrayList.add(exam);
+                actualDayExamsArrayList.add(exam);
             }
 
             ArrayList<Event> eventArrayList = new ArrayList<>();
-            for (Exam e : arrayList) {
+            for (Exam e : actualDayExamsArrayList) {
                 eventArrayList.add(e.createEvent());
             }
 
@@ -200,4 +203,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
     }
 
+    @Override
+    public void onExamClick(int clickedItemIndex) {
+        Toast.makeText(this, actualDayExamsArrayList.get(clickedItemIndex).toString(), Toast.LENGTH_SHORT).show();
+    }
 }
