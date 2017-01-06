@@ -153,7 +153,7 @@ public class StudentController {
     }
 
 
-    //TODO ADD APIKEY LATER, WHEN EVERYONE HAAS THE APP
+    //TODO ADD APIKEY LATER, WHEN EVERYONE HAS THE APP
     /*@RequestMapping(value = "/getversion", method = RequestMethod.GET)
     public ResponseEntity<?> getVersionCode(@RequestParam("apiKey") String apiKey) {
         try {
@@ -234,6 +234,25 @@ public class StudentController {
         try {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
+    /** FEATURE */
+
+
+    @RequestMapping(value = "/getchangingroomstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> getChangingRoomStatus(@RequestParam("apiKey") String apiKey){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            return new ResponseEntity<>(DatabaseController.getChangingRoomStatus(), HttpStatus.OK);
         } catch (SQLException e) {
             logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

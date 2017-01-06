@@ -27,7 +27,6 @@ public class DatabaseController {
         return c;
     }
 
-
     private static Connection getConnection() {
         Connection c = null;
         try {
@@ -124,6 +123,12 @@ public class DatabaseController {
             stmt.setString(2, "0");
             stmt.execute();
 
+            /** FEATURE */
+
+            stmt.setString(1, "changingRoomStatus");
+            stmt.setString(2, "0");
+            stmt.execute();
+
         } catch (SQLException e) {
             logger.warning(e.getMessage());
         }
@@ -209,6 +214,22 @@ public class DatabaseController {
             return null;
         }
 
+    }
+
+    /** FEATURE */
+
+    static String getChangingRoomStatus() throws SQLException {
+        String changingRoomStatus;
+        String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, "changingRoomStatus");
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            changingRoomStatus = rs.getString("VALUE");
+        }
+        return changingRoomStatus;
     }
 
     static Dyzurni getDyzurni() throws SQLException {
