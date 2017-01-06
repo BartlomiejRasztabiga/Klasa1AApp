@@ -262,6 +262,21 @@ public class StudentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
+    @RequestMapping(value = "/setchangingroomstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> setChangingRoomStatus(@RequestParam("apiKey") String apiKey, int changingRoomStatus){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            DatabaseController.setChangingRoomStatus(changingRoomStatus);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
     //Na gorze sa nowe metody

@@ -1,13 +1,12 @@
 package pl.rasztabiga.klasa1a.utils;
 
-import android.util.Log;
+import android.os.Bundle;
 
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import pl.rasztabiga.klasa1a.MainActivity;
 import pl.rasztabiga.klasa1a.RequestException;
 
 public class NetworkUtilities {
@@ -21,7 +20,8 @@ public class NetworkUtilities {
     private static final String EXAMS_QUERY_URL = SERVER_ADDR + "/getexams";
     private static final String CHECK_API_KEY_URL = SERVER_ADDR + "/checkApiKey";
     // is changingRoomOpen feature
-    private static final String CHANGINGROOM_QUERY_URL = SERVER_ADDR + "/getchangingroomstatus";
+    private static final String GETCHANGINGROOM_QUERY_URL = SERVER_ADDR + "/getchangingroomstatus";
+    private static final String SETCHANGINGROOM_QUERY_URL = SERVER_ADDR + "/setchangingroomstatus";
     private static final String DOOR_QUERY_URL = SERVER_ADDR + "/getdoorstatus";
 
     private static final String TAG = NetworkUtilities.class.getName();
@@ -32,7 +32,7 @@ public class NetworkUtilities {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(CHANGINGROOM_QUERY_URL + "?apiKey=" + apiKey)
+                .url(GETCHANGINGROOM_QUERY_URL + "?apiKey=" + apiKey)
                 .build();
 
         try {
@@ -46,6 +46,22 @@ public class NetworkUtilities {
         }
 
         return null;
+    }
+
+    public static void setChangingRoomStatus(String apiKey, int changingRoomStatus) throws RequestException{
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(SETCHANGINGROOM_QUERY_URL + "?apiKey=" + apiKey + "&changingRoomStatus=" + changingRoomStatus)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.code() == 500 || response.code() == 404 || response.code() == 401){
+                throw new RequestException();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getDoorStatus(String apiKey) throws RequestException{

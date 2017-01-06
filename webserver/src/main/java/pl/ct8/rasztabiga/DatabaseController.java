@@ -231,6 +231,17 @@ public class DatabaseController {
         }
         return changingRoomStatus;
     }
+    static void setChangingRoomStatus(int changingRoomStatus) throws SQLException {
+        String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, String.valueOf(changingRoomStatus));
+            stmt.setString(2, "changingRoomStatus");
+
+            stmt.executeUpdate();
+
+        }
+    }
 
     static Dyzurni getDyzurni() throws SQLException {
         int first, second;

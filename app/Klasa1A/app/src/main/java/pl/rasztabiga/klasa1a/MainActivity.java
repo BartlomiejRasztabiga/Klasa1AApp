@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int GET_DYZURNI_LOADER = 11;
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
-    private static final int GET_CHANGING_ROOM_STATUS_LOADER = 33;
+    private static final int SET_CHANGING_ROOM_STATUS_LOADER = 33;
     private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
@@ -100,6 +101,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
         changingRoomButton = (ToggleButton) findViewById(R.id.changingRoomToogleButton);
+        changingRoomButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    new SetChangingRoomStatus().execute(0);
+                } else {
+                    new SetChangingRoomStatus().execute(1);
+                }
+            }
+        });
         doorButton = (ToggleButton) findViewById(R.id.doorToggleButton);
 
         if (checkFirstRun()) {
@@ -115,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
             /** FEATURE */
-            getSupportLoaderManager().initLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
             new GetChangingRoomStatus().execute();
 
             try {
@@ -217,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
                 };
             }
+
         }
 
         return null;
@@ -365,7 +376,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             changingRoomButton.setChecked(false);
         }
 
-
     }
 
 
@@ -494,6 +504,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (s != null && !s.equals("")) {
                 setChangingRoomButton(s);
             }
+        }
+    }
+
+    private class SetChangingRoomStatus extends AsyncTask<Integer, Void, String> {
+        @Override
+        protected String doInBackground(Integer... params) {
+            try {
+                NetworkUtilities.setChangingRoomStatus(apiKey, params[0]);
+            } catch (RequestException e) {
+                return null;
+            }
+            return null;
         }
     }
 
