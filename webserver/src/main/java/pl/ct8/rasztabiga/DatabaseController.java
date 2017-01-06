@@ -220,7 +220,7 @@ public class DatabaseController {
 
     static String getChangingRoomStatus() throws SQLException {
         String changingRoomStatus;
-        String sql = "SELECT * FROM SETTING WHERE KEY = ?";
+        String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setString(1, "changingRoomStatus");
 

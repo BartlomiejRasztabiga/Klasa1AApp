@@ -7,6 +7,7 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import pl.rasztabiga.klasa1a.MainActivity;
 import pl.rasztabiga.klasa1a.RequestException;
 
 public class NetworkUtilities {
@@ -23,8 +24,12 @@ public class NetworkUtilities {
     private static final String CHANGINGROOM_QUERY_URL = SERVER_ADDR + "/getchangingroomstatus";
     private static final String DOOR_QUERY_URL = SERVER_ADDR + "/getdoorstatus";
 
+    private static final String TAG = NetworkUtilities.class.getName();
 
-    public static String getChangingRoomStatus(String apiKey) throws RequestException{
+
+    public static String getChangingRoomStatus(String apiKey) throws RequestException {
+
+        Log.d(TAG, "getChangingRoomStatus");
 
         OkHttpClient client = new OkHttpClient();
 
@@ -37,7 +42,6 @@ public class NetworkUtilities {
             if (response.code() == 500 || response.code() == 404 || response.code() == 401){
                 throw new RequestException();
             }
-            Log.d("klasa1apk", response.body().string());
             return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();

@@ -115,7 +115,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
             /** FEATURE */
+            Log.d(TAG, "front");
             getSupportLoaderManager().initLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
+            new GetChangingRoomStatus().execute();
+            Log.d(TAG, "back");
 
             try {
                 if (new CheckNewUpdatesTask().execute().get()) {
@@ -270,12 +273,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 break;
             }
             case GET_CHANGING_ROOM_STATUS_LOADER: {
+                Log.d(TAG, "onLoadingFinished");
                 loadingIndicator.setVisibility(View.INVISIBLE);
                 if (data != null && !data.equals("")) {
                     setChangingRoomButton(data);
                 }
                 // TODO ? DEFAULT
-
+                break;
             }
         }
     }
@@ -310,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
+                new GetChangingRoomStatus().execute();
                 return true;
             }
             case R.id.action_calendar: {
@@ -390,22 +395,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * FEATURE
      */
 
-    private void setChangingRoomButton(String JSONString) {
-        try {
-            JSONObject json = new JSONObject(JSONString);
-            JSONObject toogleButton = json.getJSONObject("changingroomstatus");
-            if (toogleButton.equals("1")) {
-                changingRoomButton.setChecked(true);
-            } else {
-                changingRoomButton.setChecked(false);
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+    private void setChangingRoomButton(String data) {
+        if (data.equals("1")) {
+            changingRoomButton.setChecked(true);
+        } else {
+            changingRoomButton.setChecked(false);
         }
 
+
     }
+
 
     private void resetDyzurniTextViews() {
         name1.setText("");
@@ -512,6 +511,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
                 return null;
+            }
+        }
+    }
+
+    private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                return NetworkUtilities.getChangingRoomStatus(apiKey);
+            } catch (RequestException e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null && !s.equals("")) {
+                setChangingRoomButton(s);
             }
         }
     }
