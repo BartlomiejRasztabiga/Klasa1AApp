@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         changingRoomButton = (ToggleButton) findViewById(R.id.changingRoomToogleButton);
         changingRoomButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            //TODO change listener to smth else, because it always executes when value is changed, not only when user clicks togglebutton
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
