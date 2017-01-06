@@ -245,6 +245,25 @@ public class StudentController {
     }
 
 
+    /** FEATURE */
+
+
+    @RequestMapping(value = "/getchangingroomstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> getChangingRoomStatus(@RequestParam("apiKey") String apiKey){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            return new ResponseEntity<>(DatabaseController.getChangingRoomStatus(), HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
     //Na gorze sa nowe metody
 
     // Na dole metody testowe do tworzenia tabel

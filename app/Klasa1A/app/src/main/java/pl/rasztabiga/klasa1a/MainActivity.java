@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int GET_DYZURNI_LOADER = 11;
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
+    private static final int GET_CHANGING_ROOM_STATUS_LOADER = 33;
     private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
@@ -74,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private SharedPreferences preferences;
     private String apiKey;
 
+    private ToggleButton changingRoomButton;
+    private ToggleButton doorButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
-        if(checkFirstRun()) {
+        changingRoomButton = (ToggleButton) findViewById(R.id.changingRoomToogleButton);
+        doorButton = (ToggleButton) findViewById(R.id.doorToggleButton);
+
+        if (checkFirstRun()) {
             showEnterApiKeyDialog();
             apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
         }
@@ -106,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!apiKey.isEmpty() || !apiKey.equals("")) {
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+            /** FEATURE */
+            getSupportLoaderManager().initLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
 
             try {
                 if (new CheckNewUpdatesTask().execute().get()) {
@@ -183,6 +193,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         if (luckyNumbersString != null) {
                             deliverResult(luckyNumbersString);
                         } else {
+                            // added visibility
+                            loadingIndicator.setVisibility(View.VISIBLE);
                             forceLoad();
                         }
                     }
@@ -202,6 +214,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     public void deliverResult(String data) {
                         //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
                         luckyNumbersString = data;
+                        loadingIndicator.setVisibility(View.INVISIBLE);
+                        super.deliverResult(data);
+                    }
+                };
+            }
+            /** FEATURE */
+            case GET_CHANGING_ROOM_STATUS_LOADER: {
+                return new AsyncTaskLoader<String>(this) {
+
+                    @Override
+                    public String loadInBackground() {
+                        reloadApiKey();
+                        Log.d(TAG, String.valueOf(GET_CHANGING_ROOM_STATUS_LOADER));
+                        try {
+                            return NetworkUtilities.getChangingRoomStatus(apiKey);
+                        } catch (RequestException e) {
+                            return null;
+                        }
+                    }
+
+                    public void deliverResult(String data) {
                         loadingIndicator.setVisibility(View.INVISIBLE);
                         super.deliverResult(data);
                     }
@@ -236,11 +269,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 break;
             }
+            case GET_CHANGING_ROOM_STATUS_LOADER: {
+                loadingIndicator.setVisibility(View.INVISIBLE);
+                if (data != null && !data.equals("")) {
+                    setChangingRoomButton(data);
+                }
+                // TODO ? DEFAULT
+
+            }
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {}
+    public void onLoaderReset(Loader<String> loader) {
+    }
 
     private void showEnterApiKeyDialog() {
         DialogFragment dialogFragment = new EnterApiKeyDialog();
@@ -267,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 resetLuckyNumbersTextViews();
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+                getSupportLoaderManager().restartLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
                 return true;
             }
             case R.id.action_calendar: {
@@ -341,6 +384,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * FEATURE
+     */
+
+    private void setChangingRoomButton(String JSONString) {
+        try {
+            JSONObject json = new JSONObject(JSONString);
+            JSONObject toogleButton = json.getJSONObject("changingroomstatus");
+            if (toogleButton.equals("1")) {
+                changingRoomButton.setChecked(true);
+            } else {
+                changingRoomButton.setChecked(false);
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void resetDyzurniTextViews() {
