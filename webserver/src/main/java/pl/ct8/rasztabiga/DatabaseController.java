@@ -190,7 +190,7 @@ public class DatabaseController {
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Exam exam = new Exam(rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
+                Exam exam = new Exam(rs.getInt("ID"), rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
                         rs.getInt("YEAR"), rs.getInt("MONTH"), rs.getInt("DAY"));
 
                 examsList.add(exam);

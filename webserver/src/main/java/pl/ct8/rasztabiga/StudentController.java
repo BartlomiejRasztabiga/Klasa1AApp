@@ -246,10 +246,8 @@ public class StudentController {
 
 
     /** FEATURE */
-
-
     @RequestMapping(value = "/getchangingroomstatus", method = RequestMethod.GET)
-    public ResponseEntity<?> getChangingRoomStatus(@RequestParam("apiKey") String apiKey){
+    public ResponseEntity<?> getChangingRoomStatus(@RequestParam("apiKey") String apiKey) {
         try {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getChangingRoomStatus(), HttpStatus.OK);

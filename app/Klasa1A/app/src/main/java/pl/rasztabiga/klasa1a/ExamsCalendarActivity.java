@@ -200,6 +200,10 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onExamClick(int clickedItemIndex) {
-        Toast.makeText(this, actualDayExamsArrayList.get(clickedItemIndex).toString(), Toast.LENGTH_SHORT).show();
+        createImageGallery(clickedItemIndex);
+    }
+
+    public void createImageGallery(int clickedItemIndex) {
+
     }
 }

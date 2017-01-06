@@ -9,18 +9,20 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Exam {
+    private int id;
     private String subject;
     private String desc;
     private int year;
     private int month;
     private int day;
 
-    public Exam(String subject, String desc, int year, int month, int day) {
+    public Exam(int id, String subject, String desc, int year, int month, int day) {
         this.subject = subject;
         this.desc = desc;
         this.year = year;
         this.month = month;
         this.day = day;
+        this.day = id;
     }
 
     public String getSubject() {
@@ -29,6 +31,10 @@ public class Exam {
 
     public String getDesc() {
         return desc;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Event createEvent() {
@@ -41,7 +47,8 @@ public class Exam {
     @Override
     public String toString() {
         return "Exam{" +
-                "subject='" + subject + '\'' +
+                "id=" + id +
+                ", subject='" + subject + '\'' +
                 ", desc='" + desc + '\'' +
                 ", year=" + year +
                 ", month=" + month +
