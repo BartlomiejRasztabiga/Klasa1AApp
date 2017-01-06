@@ -153,7 +153,7 @@ public class StudentController {
     }
 
 
-    //TODO ADD APIKEY LATER, WHEN EVERYONE HAAS THE APP
+    //TODO ADD APIKEY LATER, WHEN EVERYONE HAS THE APP
     /*@RequestMapping(value = "/getversion", method = RequestMethod.GET)
     public ResponseEntity<?> getVersionCode(@RequestParam("apiKey") String apiKey) {
         try {
