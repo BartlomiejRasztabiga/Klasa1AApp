@@ -29,8 +29,6 @@ public class NetworkUtilities {
 
     public static String getChangingRoomStatus(String apiKey) throws RequestException {
 
-        Log.d(TAG, "getChangingRoomStatus");
-
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()

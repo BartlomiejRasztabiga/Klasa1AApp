@@ -83,7 +83,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
             @Override
             public void onDayClick(Date dateClicked) {
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
-                Log.d(TAG, "Day was clicked: " + dateClicked + " with events " + events);
                 calendar.setTime(dateClicked);
 
                 date_tv.setText(dateFormat.format(dateClicked));
@@ -122,7 +121,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
                     @Override
                     protected void onStartLoading() {
-                        Log.d(TAG, "onStartLoading()");
                         if (examsJson != null) {
                             deliverResult(examsJson);
                         } else {
@@ -132,7 +130,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
                     @Override
                     public String loadInBackground() {
-                        Log.d(TAG, "loadInBackground()");
                         try {
                             return NetworkUtilities.getExams(apiKey);
                         } catch (RequestException e) {
@@ -143,7 +140,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
                     @Override
                     public void deliverResult(String data) {
-                        Log.d(TAG, "deliverResult()");
                         examsJson = data;
                         super.deliverResult(data);
                     }
@@ -156,7 +152,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
-        Log.d(TAG, "onLoadFinished()");
         switch (loader.getId()) {
             case GET_EXAMS_LOADER: {
                 if (data != null && !data.equals("")) {

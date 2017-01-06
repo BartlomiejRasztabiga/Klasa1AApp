@@ -115,10 +115,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
             /** FEATURE */
-            Log.d(TAG, "front");
             getSupportLoaderManager().initLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
             new GetChangingRoomStatus().execute();
-            Log.d(TAG, "back");
 
             try {
                 if (new CheckNewUpdatesTask().execute().get()) {
@@ -155,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     protected void onStartLoading() {
-                        Log.d(TAG, "GET_DYZURNI_LOADER:onStartLoading()");
 
                         if (dyzurniJson != null) {
                             deliverResult(dyzurniJson);
@@ -168,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     @Override
                     public String loadInBackground() {
                         reloadApiKey();
-                        Log.d(TAG, "GET_DYZURNI_LOADER:loadInBackground()");
                         try {
                             return NetworkUtilities.getDyzurni(apiKey);
                         } catch (RequestException e) {
@@ -178,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     public void deliverResult(String data) {
-                        Log.d(TAG, "GET_DYZURNI_LOADER:deliverResult()");
                         dyzurniJson = data;
                         loadingIndicator.setVisibility(View.INVISIBLE);
                         super.deliverResult(data);
@@ -222,27 +217,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
                 };
             }
-            /** FEATURE */
-            case GET_CHANGING_ROOM_STATUS_LOADER: {
-                return new AsyncTaskLoader<String>(this) {
-
-                    @Override
-                    public String loadInBackground() {
-                        reloadApiKey();
-                        Log.d(TAG, String.valueOf(GET_CHANGING_ROOM_STATUS_LOADER));
-                        try {
-                            return NetworkUtilities.getChangingRoomStatus(apiKey);
-                        } catch (RequestException e) {
-                            return null;
-                        }
-                    }
-
-                    public void deliverResult(String data) {
-                        loadingIndicator.setVisibility(View.INVISIBLE);
-                        super.deliverResult(data);
-                    }
-                };
-            }
         }
 
         return null;
@@ -252,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<String> loader, String data) {
         switch (loader.getId()) {
             case GET_DYZURNI_LOADER: {
-                Log.d(TAG, "GET_DYZURNI_LOADER:onLoadFinished()");
                 loadingIndicator.setVisibility(View.INVISIBLE);
                 if (data != null && !data.equals("")) {
                     showOnDutiesDataView();
@@ -270,15 +243,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     showOnDutiesDataView();
                     setLuckyNumbers(data);
                 }
-                break;
-            }
-            case GET_CHANGING_ROOM_STATUS_LOADER: {
-                Log.d(TAG, "onLoadingFinished");
-                loadingIndicator.setVisibility(View.INVISIBLE);
-                if (data != null && !data.equals("")) {
-                    setChangingRoomButton(data);
-                }
-                // TODO ? DEFAULT
                 break;
             }
         }
@@ -313,7 +277,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 resetLuckyNumbersTextViews();
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-                getSupportLoaderManager().restartLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
                 new GetChangingRoomStatus().execute();
                 return true;
             }
