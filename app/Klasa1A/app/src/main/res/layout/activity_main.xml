@@ -26,7 +26,8 @@
         android:layout_marginRight="48dp"
         app:layout_constraintTop_toBottomOf="@+id/textView10"
         android:textOff="@string/toggle_button_close"
-        android:textOn="@string/toggle_button_open" />
+        android:textOn="@string/toggle_button_open"
+        android:visibility="invisible"/>
 
     <ToggleButton
         android:text="ToggleButton"
@@ -40,7 +41,8 @@
         android:textOff="@string/toggle_button_close"
         android:textOn="@string/toggle_button_open"
         android:checked="false"
-        android:clickable="false" />
+        android:clickable="false"
+        android:visibility="invisible"/>
 
     <TextView
         android:text="@string/wednesday"
@@ -242,7 +244,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="80dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -253,7 +256,8 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="88dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/friday_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/friday_tv"
+        android:visibility="invisible"/>
 
 </android.support.constraint.ConstraintLayout>
 </ScrollView>
