@@ -1,13 +1,17 @@
 package pl.rasztabiga.klasa1a;
 
+import android.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
@@ -223,7 +227,25 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         Toast.makeText(this, "Nie ma zdjęć tego sprawdzianu!", Toast.LENGTH_SHORT).show();
     }
 
+    private boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted");
+            return true;
+        }
+    }
+
     private void prepareImagesUris(Exam examForGettingImages) {
+        if(!isStoragePermissionGranted()) return;
         ArrayList<String> associatedImagesListStringArrayList = null;
         try {
             associatedImagesListStringArrayList = new GetAssociatedImagesList().execute(examForGettingImages.getId()).get();

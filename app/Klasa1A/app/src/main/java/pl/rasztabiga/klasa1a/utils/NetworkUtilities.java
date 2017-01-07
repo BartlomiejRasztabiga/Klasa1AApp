@@ -11,9 +11,9 @@ import pl.rasztabiga.klasa1a.RequestException;
 
 public class NetworkUtilities {
 
-    //private static final String SERVER_ADDR = "http://89.36.219.95:8007";
+    private static final String SERVER_ADDR = "http://89.36.219.95:8007";
     //private static final String SERVER_ADDR = "http://192.168.1.24:8007";
-    private static final String SERVER_ADDR = "http://94.177.229.18:8007";
+    //private static final String SERVER_ADDR = "http://94.177.229.18:8007";
 
     private static final String DYZURNI_QUERY_URL = SERVER_ADDR + "/getdyzurni";
     private static final String VERSION_QUERY_URL = SERVER_ADDR + "/getversion";
