@@ -196,7 +196,6 @@ public class DatabaseController {
                         rs.getInt("YEAR"), rs.getInt("MONTH"), rs.getInt("DAY"));
                 examsList.add(exam);
             }
-            logger.info(examsList.toString());
             return examsList;
         }
     }
