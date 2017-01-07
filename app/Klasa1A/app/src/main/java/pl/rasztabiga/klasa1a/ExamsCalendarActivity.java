@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.etiennelawlor.imagegallery.library.activities.FullScreenImageGalleryActivity;
 import com.etiennelawlor.imagegallery.library.activities.ImageGalleryActivity;
@@ -133,7 +134,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -220,11 +220,23 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         prepareImagesUris(mExamAdapter.getExamList().get(clickedItemIndex));
     }
 
+    private void showToastNoImagesForExam() {
+        Toast.makeText(this, "Nie ma zdjęć tego sprawdzianu!", Toast.LENGTH_SHORT).show();
+    }
+
     private void prepareImagesUris(Exam examForGettingImages) {
         ArrayList<String> associatedImagesListStringArrayList = null;
         try {
             associatedImagesListStringArrayList = new GetAssociatedImagesList().execute(examForGettingImages.getId()).get();
-            if (associatedImagesListStringArrayList.isEmpty()) return;
+            if (associatedImagesListStringArrayList != null) {
+                if (associatedImagesListStringArrayList.isEmpty()) {
+                    showToastNoImagesForExam();
+                    return;
+                }
+            } else {
+                showToastNoImagesForExam();
+                return;
+            }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -244,15 +256,12 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                     public void onSuccess(Uri uri) {
                         associatedImagesUriList.add(uri);
                         done.addAndGet(1);
-                        if(done.get() == sizeOfImagesListArrayList) createImageGallery(associatedImagesUriList);
+                        if (done.get() == sizeOfImagesListArrayList)
+                            createImageGallery(associatedImagesUriList);
                     }
                 });
             }
         }
-    }
-
-    private int getSizeOfArrayList(ArrayList<String> arrayList) {
-        return arrayList.size();
     }
 
     private void createImageGallery(ArrayList<Uri> associatedImagesUriList) {
