@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
                 new GetChangingRoomStatus().execute();
-                new SetDoorStatus().execute();
+                new GetDoorStatus().execute();
                 return true;
             }
             case R.id.action_calendar: {
