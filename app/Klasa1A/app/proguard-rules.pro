@@ -18,3 +18,7 @@
 -dontwarn java.nio.file.**
 -dontwarn org.codehaus.mojo.**
 -dontwarn java.io.IOException
+-dontwarn com.squareup.picasso.**
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepclassmembers class pl.rasztabiga.klasa1a.models.** { *; }
