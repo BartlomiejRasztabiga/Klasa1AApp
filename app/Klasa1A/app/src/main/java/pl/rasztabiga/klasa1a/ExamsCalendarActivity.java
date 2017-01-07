@@ -56,6 +56,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.models.ExamAdapter;
@@ -68,9 +69,11 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
-    private CompactCalendarView compactCalendarView;
-    private TextView date_tv;
-    private RecyclerView mRecyclerView;
+
+    @BindView(R.id.compactcalendar_view) CompactCalendarView compactCalendarView;
+    @BindView(R.id.date_tv) TextView date_tv;
+    @BindView(R.id.recyclerview_exams) RecyclerView mRecyclerView;
+
     private ExamAdapter mExamAdapter;
 
     private SharedPreferences preferences;
@@ -88,10 +91,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         FullScreenImageGalleryActivity.setFullScreenImageLoader(this);
 
         paletteColorType = PaletteColorType.VIBRANT;
-
-        compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
-        date_tv = (TextView) findViewById(R.id.date_tv);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_exams);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");

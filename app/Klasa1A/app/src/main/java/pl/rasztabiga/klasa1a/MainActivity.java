@@ -41,6 +41,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.models.Dyzurni;
 import pl.rasztabiga.klasa1a.models.Student;
@@ -50,55 +52,46 @@ import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     //TODO To have numbers and days in one row use linear layout
-
     private static final int GET_DYZURNI_LOADER = 11;
+
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
     private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
 
-    private TextView name1;
-    private TextView name2;
+    @BindView(R.id.name1) TextView name1;
 
-    private TextView monday_tv;
-    private TextView tuesday_tv;
-    private TextView wednesday_tv;
-    private TextView thursday_tv;
-    private TextView friday_tv;
+    @BindView(R.id.name2) TextView name2;
 
-    private TextView errorMessageTextView;
+    @BindView(R.id.monday_tv) TextView monday_tv;
+    @BindView(R.id.tuesday_tv) TextView tuesday_tv;
+    @BindView(R.id.wednesday_tv) TextView wednesday_tv;
+    @BindView(R.id.thursday_tv) TextView thursday_tv;
+    @BindView(R.id.friday_tv) TextView friday_tv;
 
-    private ProgressBar loadingIndicator;
+    @BindView(R.id.error_message_display) TextView errorMessageTextView;
 
-    private ChangeLog changeLog;
+    @BindView(R.id.loading_indicator) ProgressBar loadingIndicator;
 
-    private SharedPreferences preferences;
+    @BindView(R.id.changingRoomToggleButton) ToggleButton changingRoomButton;
+    @BindView(R.id.doorToggleButton) ToggleButton doorButton;
     private String apiKey;
-
-    private ToggleButton changingRoomButton;
-    private ToggleButton doorButton;
+    private ChangeLog changeLog;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        name1 = (TextView) findViewById(R.id.name1);
-        name2 = (TextView) findViewById(R.id.name2);
-        monday_tv = (TextView) findViewById(R.id.monday_tv);
-        tuesday_tv = (TextView) findViewById(R.id.tuesday_tv);
-        wednesday_tv = (TextView) findViewById(R.id.wednesday_tv);
-        thursday_tv = (TextView) findViewById(R.id.thursday_tv);
-        friday_tv = (TextView) findViewById(R.id.friday_tv);
-        errorMessageTextView = (TextView) findViewById(R.id.error_message_display);
-        loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
+        ButterKnife.bind(this);
+
 
         changeLog = new ChangeLog(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
-        changingRoomButton = (ToggleButton) findViewById(R.id.changingRoomToogleButton);
         changingRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
-        doorButton = (ToggleButton) findViewById(R.id.doorToggleButton);
         doorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
