@@ -202,8 +202,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
     private void setEvents(String JSONString) {
         Gson gson = new Gson();
-        Type collectionType = new TypeToken<ArrayList<Exam>>() {
-        }.getType();
+        Type collectionType = new TypeToken<ArrayList<Exam>>() {}.getType();
         ArrayList<Exam> examsArrayList = gson.fromJson(JSONString, collectionType);
 
 
