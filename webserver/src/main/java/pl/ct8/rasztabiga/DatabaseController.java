@@ -1,16 +1,33 @@
 package pl.ct8.rasztabiga;
 
 import pl.ct8.rasztabiga.models.*;
+import pl.ct8.rasztabiga.utils.LoggerUtils;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
+import sun.rmi.runtime.Log;
 
+import javax.swing.text.Style;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class DatabaseController {
 
+    private static Logger logger = LoggerUtils.getLogger();
+
     //TODO Add transaction where needed
+
+    private static Connection getConnectionToAnalyticsDB() {
+        Connection c = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:analytics.db");
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+        }
+        return c;
+    }
 
     private static Connection getConnection() {
         Connection c = null;
@@ -19,7 +36,7 @@ public class DatabaseController {
             c = DriverManager.getConnection("jdbc:sqlite:main.db");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
         return c;
     }
@@ -36,7 +53,7 @@ public class DatabaseController {
             // closing connection
         } catch (SQLException e) {
             System.out.println("Couldn't create table");
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -56,7 +73,7 @@ public class DatabaseController {
             // closing connection
         } catch (SQLException e) {
             System.out.println("Couldn't create table");
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -67,7 +84,7 @@ public class DatabaseController {
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             System.out.println("Couldn't create table");
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -108,8 +125,18 @@ public class DatabaseController {
             stmt.setString(2, "0");
             stmt.execute();
 
+            /** FEATURE */
+
+            stmt.setString(1, "changingRoomStatus");
+            stmt.setString(2, "0");
+            stmt.execute();
+
+            stmt.setString(1, "doorStatus");
+            stmt.setString(2, "0");
+            stmt.execute();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -139,7 +166,7 @@ public class DatabaseController {
                 stmt.executeUpdate(sql);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -157,7 +184,7 @@ public class DatabaseController {
 
             return studentList;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return null;
         }
 
@@ -169,13 +196,24 @@ public class DatabaseController {
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Exam exam = new Exam(rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
+                Exam exam = new Exam(rs.getInt("ID"), rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
                         rs.getInt("YEAR"), rs.getInt("MONTH"), rs.getInt("DAY"));
-
                 examsList.add(exam);
             }
-
             return examsList;
+        }
+    }
+
+    static ArrayList<String> getAssociatedImagesList(int examId) throws SQLException {
+        ArrayList<String> associatedImagesList = new ArrayList<>();
+        String sql = "SELECT * FROM EXAMS_PHOTOS WHERE exam_id = ?";
+        try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, examId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                associatedImagesList.add(rs.getString("name"));
+            }
+            return associatedImagesList;
         }
     }
 
@@ -189,10 +227,61 @@ public class DatabaseController {
 
             return new Student(rs.getString("NAME"), rs.getString("SURNAME"), rs.getInt("NUMBER"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return null;
         }
 
+    }
+
+    /** FEATURE */
+
+    static String getChangingRoomStatus() throws SQLException {
+        String changingRoomStatus;
+        String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, "changingRoomStatus");
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            changingRoomStatus = rs.getString("VALUE");
+        }
+        return changingRoomStatus;
+    }
+    static void setChangingRoomStatus(int changingRoomStatus) throws SQLException {
+        String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, String.valueOf(changingRoomStatus));
+            stmt.setString(2, "changingRoomStatus");
+
+            stmt.executeUpdate();
+
+        }
+    }
+    static String getDoorStatus() throws SQLException {
+        String doorStatus;
+        String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, "doorStatus");
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            doorStatus = rs.getString("VALUE");
+        }
+        return doorStatus;
+    }
+    static void setDoorStatus(int doorStatus) throws SQLException {
+        String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, String.valueOf(doorStatus));
+            stmt.setString(2, "doorStatus");
+
+            stmt.executeUpdate();
+
+        }
     }
 
     static Dyzurni getDyzurni() throws SQLException {
@@ -361,7 +450,7 @@ public class DatabaseController {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 
@@ -374,7 +463,7 @@ public class DatabaseController {
                 String roles = rs.getString("roles");
                 List<String> rolesStringList = Arrays.asList(roles.split(","));
                 List<SecurityUtils.Role> rolesList = new ArrayList<>();
-                for(String s : rolesStringList) {
+                for (String s : rolesStringList) {
                     rolesList.add(SecurityUtils.resolveRole(s));
                 }
                 User user = new User(rs.getInt("id"), rs.getString("email"), rs.getString("api_key"),
@@ -384,6 +473,14 @@ public class DatabaseController {
             } else {
                 return null;
             }
+        }
+    }
+
+    public static void bumpUserAnalitycsField(User user) throws SQLException {
+        String sql = "UPDATE USERS_ANALYTICS SET requestsAmount = requestsAmount + 1 WHERE api_key = ?";
+        try (Connection connection = getConnectionToAnalyticsDB(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, user.getApiKey());
+            stmt.executeUpdate();
         }
     }
 }

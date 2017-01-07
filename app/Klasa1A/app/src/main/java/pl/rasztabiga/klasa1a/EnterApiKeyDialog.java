@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -56,7 +55,7 @@ public class EnterApiKeyDialog extends DialogFragment {
         final EditText editText = (EditText) d.findViewById(R.id.api_key);
         final TextView error_text_view = (TextView) d.findViewById(R.id.error_text_view);
         if(d != null) {
-            Button positiveButton = (Button) d.getButton(DialogInterface.BUTTON_POSITIVE);
+            Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,7 +82,7 @@ public class EnterApiKeyDialog extends DialogFragment {
         }
     }
 
-    class CheckApiKeyTask extends AsyncTask<String, Void, String> {
+    private class CheckApiKeyTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {

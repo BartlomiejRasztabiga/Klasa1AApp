@@ -1,21 +1,24 @@
 package pl.ct8.rasztabiga.utils;
 
 
-import org.hibernate.validator.constraints.Email;
-
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 
 public class EmailUtils {
 
     private static final Properties properties = System.getProperties();
-
     private final static String username = "admin@klasa1a.ct8.pl";
     private final static String password = "Gallendors5";
+    private static Logger logger = Logger.getLogger(SecurityUtils.class.getSimpleName());
+
+    static {
+        LoggerUtils.setUpLogger(logger);
+    }
 
     static {
         properties.setProperty("mail.smtp.auth", "true");
@@ -39,7 +42,7 @@ public class EmailUtils {
             msg.setText(message);
             Transport.send(msg);
         } catch (UnsupportedEncodingException | MessagingException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
 
     }

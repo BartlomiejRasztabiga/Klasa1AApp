@@ -23,6 +23,8 @@
     <string name="pobierz_nowa_wersje_recznie">Pobierz nową wersję ręcznie</string>
     <string name="whats_new">Co nowego…</string>
     <string name="tests_calendar">Kalendarz testów</string>
+    <string name="toggle_button_open">Otwarte</string>
+    <string name="toggle_button_close">Zamknięte</string>
 
     <!--EnterApiKeyDialog strings-->
 

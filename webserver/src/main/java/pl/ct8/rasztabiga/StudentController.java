@@ -1,19 +1,23 @@
 package pl.ct8.rasztabiga;
 
+import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.ct8.rasztabiga.models.Exam;
-import pl.ct8.rasztabiga.models.Student;
 import pl.ct8.rasztabiga.utils.*;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 public class StudentController {
+
+    private static Logger logger = LoggerUtils.getLogger();
 
     @RequestMapping(value = "/dyzurni", method = RequestMethod.GET)
     public ResponseEntity<?> getDyzurniOld(@RequestParam("apiKey") String apiKey) {
@@ -21,7 +25,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getDyzurni(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -36,7 +40,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getDyzurni(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -52,7 +56,7 @@ public class StudentController {
             DatabaseController.setDyzurni(first, second);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -68,7 +72,7 @@ public class StudentController {
             App.nextDuzyrni();
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -83,7 +87,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(DatabaseController.getLuckyNumbers(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -105,7 +109,7 @@ public class StudentController {
             DatabaseController.setLuckyNumbers(list);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -118,9 +122,26 @@ public class StudentController {
     public ResponseEntity<?> getExams(@RequestParam("apiKey") String apiKey) {
         try {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
-            return new ResponseEntity<>(DatabaseController.getExams(), HttpStatus.OK);
+            Gson gson = new Gson();
+           return new ResponseEntity<>(gson.toJson(DatabaseController.getExams()), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "/getAssociatedImagesList", method = RequestMethod.GET)
+    public ResponseEntity<?> getAssociatedImagesList(@RequestParam("apiKey") String apiKey, @RequestParam("examId") int examId) {
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            Gson gson = new Gson();
+            return new ResponseEntity<>(gson.toJson(DatabaseController.getAssociatedImagesList(examId)), HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -138,7 +159,7 @@ public class StudentController {
             DatabaseController.addExam(exam);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -148,7 +169,7 @@ public class StudentController {
     }
 
 
-    //TODO ADD APIKEY LATER, WHEN EVERYONE HAAS THE APP
+    //TODO ADD APIKEY LATER, WHEN EVERYONE HAS THE APP
     /*@RequestMapping(value = "/getversion", method = RequestMethod.GET)
     public ResponseEntity<?> getVersionCode(@RequestParam("apiKey") String apiKey) {
         try {
@@ -169,7 +190,7 @@ public class StudentController {
         try {
             return new ResponseEntity<>(DatabaseController.getActualVersionCode(), HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -181,7 +202,7 @@ public class StudentController {
             DatabaseController.setActualVersionCode(versionCode);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -215,7 +236,7 @@ public class StudentController {
             }
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -230,7 +251,7 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiKeyNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -240,6 +261,65 @@ public class StudentController {
     }
 
 
+    /** FEATURE */
+    @RequestMapping(value = "/getchangingroomstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> getChangingRoomStatus(@RequestParam("apiKey") String apiKey) {
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            return new ResponseEntity<>(DatabaseController.getChangingRoomStatus(), HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+    @RequestMapping(value = "/setchangingroomstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> setChangingRoomStatus(@RequestParam("apiKey") String apiKey, int changingRoomStatus){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            DatabaseController.setChangingRoomStatus(changingRoomStatus);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+    @RequestMapping(value = "/getdoorstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> getDoorStatus(@RequestParam("apiKey") String apiKey){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            return new ResponseEntity<>(DatabaseController.getDoorStatus(), HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+    @RequestMapping(value = "/setdoorstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> setDoorStatus(@RequestParam("apiKey") String apiKey, int doorStatus){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            DatabaseController.setDoorStatus(doorStatus);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
     //Na gorze sa nowe metody
