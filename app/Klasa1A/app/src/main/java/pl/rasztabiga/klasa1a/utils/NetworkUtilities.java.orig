@@ -1,7 +1,10 @@
 package pl.rasztabiga.klasa1a.utils;
 
-import android.util.Log;
+<<<<<<< HEAD
+=======
 import android.os.Bundle;
+
+>>>>>>> feature/isChangingRoomOpen_and_isDoorOpen
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -50,6 +53,9 @@ public class NetworkUtilities {
         return null;
     }
 
+<<<<<<< HEAD
+    public static String getDoorStatus(String apiKey) throws RequestException {
+=======
     public static void setChangingRoomStatus(String apiKey, int changingRoomStatus) throws RequestException{
         OkHttpClient client = new OkHttpClient();
 
@@ -66,7 +72,8 @@ public class NetworkUtilities {
         }
     }
 
-    public static String getDoorStatus(String apiKey) throws RequestException {
+    public static String getDoorStatus(String apiKey) throws RequestException{
+>>>>>>> feature/isChangingRoomOpen_and_isDoorOpen
 
         OkHttpClient client = new OkHttpClient();
 
