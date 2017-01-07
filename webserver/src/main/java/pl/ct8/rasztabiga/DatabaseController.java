@@ -3,7 +3,9 @@ package pl.ct8.rasztabiga;
 import pl.ct8.rasztabiga.models.*;
 import pl.ct8.rasztabiga.utils.LoggerUtils;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
+import sun.rmi.runtime.Log;
 
+import javax.swing.text.Style;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +28,6 @@ public class DatabaseController {
         }
         return c;
     }
-
 
     private static Connection getConnection() {
         Connection c = null;
@@ -124,6 +125,12 @@ public class DatabaseController {
             stmt.setString(2, "0");
             stmt.execute();
 
+            /** FEATURE */
+
+            stmt.setString(1, "changingRoomStatus");
+            stmt.setString(2, "0");
+            stmt.execute();
+
         } catch (SQLException e) {
             logger.warning(e.getMessage());
         }
@@ -185,13 +192,24 @@ public class DatabaseController {
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Exam exam = new Exam(rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
+                Exam exam = new Exam(rs.getInt("ID"), rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
                         rs.getInt("YEAR"), rs.getInt("MONTH"), rs.getInt("DAY"));
-
                 examsList.add(exam);
             }
-
             return examsList;
+        }
+    }
+
+    static ArrayList<String> getAssociatedImagesList(int examId) throws SQLException {
+        ArrayList<String> associatedImagesList = new ArrayList<>();
+        String sql = "SELECT * FROM EXAMS_PHOTOS WHERE exam_id = ?";
+        try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, examId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                associatedImagesList.add(rs.getString("name"));
+            }
+            return associatedImagesList;
         }
     }
 
@@ -209,6 +227,22 @@ public class DatabaseController {
             return null;
         }
 
+    }
+
+    /** FEATURE */
+
+    static String getChangingRoomStatus() throws SQLException {
+        String changingRoomStatus;
+        String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, "changingRoomStatus");
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            changingRoomStatus = rs.getString("VALUE");
+        }
+        return changingRoomStatus;
     }
 
     static Dyzurni getDyzurni() throws SQLException {

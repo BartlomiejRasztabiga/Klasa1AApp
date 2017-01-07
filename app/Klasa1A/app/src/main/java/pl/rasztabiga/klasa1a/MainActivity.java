@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
@@ -25,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int GET_DYZURNI_LOADER = 11;
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
+    private static final int GET_CHANGING_ROOM_STATUS_LOADER = 33;
     private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
@@ -74,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private SharedPreferences preferences;
     private String apiKey;
 
+    private ToggleButton changingRoomButton;
+    private ToggleButton doorButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +98,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
-        if(checkFirstRun()) {
+        changingRoomButton = (ToggleButton) findViewById(R.id.changingRoomToogleButton);
+        doorButton = (ToggleButton) findViewById(R.id.doorToggleButton);
+
+        if (checkFirstRun()) {
             showEnterApiKeyDialog();
             apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
         }
@@ -106,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!apiKey.isEmpty() || !apiKey.equals("")) {
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+            /** FEATURE */
+            getSupportLoaderManager().initLoader(GET_CHANGING_ROOM_STATUS_LOADER, null, this);
+            new GetChangingRoomStatus().execute();
 
             try {
                 if (new CheckNewUpdatesTask().execute().get()) {
@@ -124,12 +134,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    public boolean checkFirstRun() {
+    private boolean checkFirstRun() {
         return preferences.getBoolean("isFirstRun", true);
 
     }
 
-    public void reloadApiKey() {
+    private void reloadApiKey() {
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
     }
 
@@ -142,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     protected void onStartLoading() {
-                        Log.d(TAG, "GET_DYZURNI_LOADER:onStartLoading()");
 
                         if (dyzurniJson != null) {
                             deliverResult(dyzurniJson);
@@ -155,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     @Override
                     public String loadInBackground() {
                         reloadApiKey();
-                        Log.d(TAG, "GET_DYZURNI_LOADER:loadInBackground()");
                         try {
                             return NetworkUtilities.getDyzurni(apiKey);
                         } catch (RequestException e) {
@@ -165,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     @Override
                     public void deliverResult(String data) {
-                        Log.d(TAG, "GET_DYZURNI_LOADER:deliverResult()");
                         dyzurniJson = data;
                         loadingIndicator.setVisibility(View.INVISIBLE);
                         super.deliverResult(data);
@@ -183,6 +190,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         if (luckyNumbersString != null) {
                             deliverResult(luckyNumbersString);
                         } else {
+                            // added visibility
+                            loadingIndicator.setVisibility(View.VISIBLE);
                             forceLoad();
                         }
                     }
@@ -216,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<String> loader, String data) {
         switch (loader.getId()) {
             case GET_DYZURNI_LOADER: {
-                Log.d(TAG, "GET_DYZURNI_LOADER:onLoadFinished()");
                 loadingIndicator.setVisibility(View.INVISIBLE);
                 if (data != null && !data.equals("")) {
                     showOnDutiesDataView();
@@ -240,7 +248,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {}
+    public void onLoaderReset(Loader<String> loader) {
+    }
 
     private void showEnterApiKeyDialog() {
         DialogFragment dialogFragment = new EnterApiKeyDialog();
@@ -267,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 resetLuckyNumbersTextViews();
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
+                new GetChangingRoomStatus().execute();
                 return true;
             }
             case R.id.action_calendar: {
@@ -342,6 +352,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             e.printStackTrace();
         }
     }
+
+    /**
+     * FEATURE
+     */
+
+    private void setChangingRoomButton(String data) {
+        if (data.equals("1")) {
+            changingRoomButton.setChecked(true);
+        } else {
+            changingRoomButton.setChecked(false);
+        }
+
+
+    }
+
 
     private void resetDyzurniTextViews() {
         name1.setText("");
@@ -430,8 +455,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     return false;
                 }
 
-            } catch (RequestException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -448,6 +471,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
                 return null;
+            }
+        }
+    }
+
+    private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                return NetworkUtilities.getChangingRoomStatus(apiKey);
+            } catch (RequestException e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null && !s.equals("")) {
+                setChangingRoomButton(s);
             }
         }
     }
@@ -519,6 +561,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                e.printStackTrace();
             }
             String url = APK_QUERY_URL;
             url += serverVersionCode;

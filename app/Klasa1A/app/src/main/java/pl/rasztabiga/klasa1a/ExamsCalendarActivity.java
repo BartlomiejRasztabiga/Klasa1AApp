@@ -1,6 +1,10 @@
 package pl.rasztabiga.klasa1a;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,19 +13,34 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.etiennelawlor.imagegallery.library.activities.FullScreenImageGalleryActivity;
+import com.etiennelawlor.imagegallery.library.activities.ImageGalleryActivity;
+import com.etiennelawlor.imagegallery.library.adapters.FullScreenImageGalleryAdapter;
+import com.etiennelawlor.imagegallery.library.adapters.ImageGalleryAdapter;
+import com.etiennelawlor.imagegallery.library.enums.PaletteColorType;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,12 +48,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class ExamsCalendarActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
+public class ExamsCalendarActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>, ExamAdapter.ExamClickListener, ImageGalleryAdapter.ImageThumbnailLoader, FullScreenImageGalleryAdapter.FullScreenImageLoader {
 
     private static final String TAG = ExamsCalendarActivity.class.getName();
     private static final int GET_EXAMS_LOADER = 33;
@@ -49,10 +71,18 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     private SharedPreferences preferences;
     private String apiKey;
 
+    private PaletteColorType paletteColorType;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests_calendar);
+        ButterKnife.bind(this);
+        ImageGalleryActivity.setImageThumbnailLoader(this);
+        FullScreenImageGalleryActivity.setFullScreenImageLoader(this);
+
+        paletteColorType = PaletteColorType.VIBRANT;
 
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         date_tv = (TextView) findViewById(R.id.date_tv);
@@ -65,7 +95,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mExamAdapter = new ExamAdapter();
+        mExamAdapter = new ExamAdapter(this);
 
         mRecyclerView.setAdapter(mExamAdapter);
 
@@ -83,7 +113,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
             @Override
             public void onDayClick(Date dateClicked) {
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
-                Log.d(TAG, "Day was clicked: " + dateClicked + " with events " + events);
                 calendar.setTime(dateClicked);
 
                 date_tv.setText(dateFormat.format(dateClicked));
@@ -102,6 +131,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
             }
         });
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -122,7 +153,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
                     @Override
                     protected void onStartLoading() {
-                        Log.d(TAG, "onStartLoading()");
                         if (examsJson != null) {
                             deliverResult(examsJson);
                         } else {
@@ -132,7 +162,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
                     @Override
                     public String loadInBackground() {
-                        Log.d(TAG, "loadInBackground()");
                         try {
                             return NetworkUtilities.getExams(apiKey);
                         } catch (RequestException e) {
@@ -143,7 +172,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
                     @Override
                     public void deliverResult(String data) {
-                        Log.d(TAG, "deliverResult()");
                         examsJson = data;
                         super.deliverResult(data);
                     }
@@ -156,7 +184,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
-        Log.d(TAG, "onLoadFinished()");
         switch (loader.getId()) {
             case GET_EXAMS_LOADER: {
                 if (data != null && !data.equals("")) {
@@ -174,29 +201,255 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     }
 
     private void setEvents(String JSONString) {
+        Gson gson = new Gson();
+        Type collectionType = new TypeToken<ArrayList<Exam>>() {
+        }.getType();
+        ArrayList<Exam> examsArrayList = gson.fromJson(JSONString, collectionType);
+
+
+        ArrayList<Event> eventArrayList = new ArrayList<>();
+        for (Exam e : examsArrayList) {
+            eventArrayList.add(e.createEvent());
+        }
+
+        compactCalendarView.addEvents(eventArrayList);
+    }
+
+    @Override
+    public void onExamClick(int clickedItemIndex) {
+        prepareImagesUris(mExamAdapter.getExamList().get(clickedItemIndex));
+    }
+
+    private void prepareImagesUris(Exam examForGettingImages) {
+        ArrayList<String> associatedImagesListStringArrayList = null;
         try {
-            JSONArray json = new JSONArray(JSONString);
-
-            List<Exam> arrayList = new ArrayList<>();
-
-            for (int i = 0; i < json.length(); i++) {
-                JSONObject obj = json.getJSONObject(i);
-                Exam exam = new Exam(obj.getString("subject"), obj.getString("desc"), obj.getInt("year"),
-                        obj.getInt("month"), obj.getInt("day"));
-                arrayList.add(exam);
-            }
-
-            ArrayList<Event> eventArrayList = new ArrayList<>();
-            for (Exam e : arrayList) {
-                eventArrayList.add(e.createEvent());
-            }
-
-            compactCalendarView.addEvents(eventArrayList);
-
-        } catch (JSONException e) {
+            associatedImagesListStringArrayList = new GetAssociatedImagesList().execute(examForGettingImages.getId()).get();
+            if (associatedImagesListStringArrayList.isEmpty()) return;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReferenceFromUrl("gs://klasa1a-app.appspot.com/exams_photos/");
+
+        final ArrayList<Uri> associatedImagesUriList = new ArrayList<>();
+
+        final AtomicInteger done = new AtomicInteger(0);
+        if (associatedImagesListStringArrayList != null) {
+            final int sizeOfImagesListArrayList = associatedImagesListStringArrayList.size();
+            for (String s : associatedImagesListStringArrayList) {
+                StorageReference examStorageRef = storageReference.child(s);
+                examStorageRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        associatedImagesUriList.add(uri);
+                        done.addAndGet(1);
+                        if(done.get() == sizeOfImagesListArrayList) createImageGallery(associatedImagesUriList);
+                    }
+                });
+            }
+        }
+    }
+
+    private int getSizeOfArrayList(ArrayList<String> arrayList) {
+        return arrayList.size();
+    }
+
+    private void createImageGallery(ArrayList<Uri> associatedImagesUriList) {
+
+        ArrayList<String> associatedImagesUriAsStringList = new ArrayList<>();
+        for (Uri u : associatedImagesUriList) {
+            associatedImagesUriAsStringList.add(u.toString());
+        }
+
+        Intent intent = new Intent(ExamsCalendarActivity.this, ImageGalleryActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(ImageGalleryActivity.KEY_IMAGES, associatedImagesUriAsStringList);
+        bundle.putString(ImageGalleryActivity.KEY_TITLE, "Zdjęcia sprawdzianu");
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void loadFullScreenImage(final ImageView iv, String imageUrl, int width, final LinearLayout bglinearLayout) {
+        if (!TextUtils.isEmpty(imageUrl)) {
+            Picasso.with(iv.getContext())
+                    .load(imageUrl)
+                    //.resize(width, 0)
+                    .into(iv, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                                @Override
+                                public void onGenerated(Palette palette) {
+                                    applyPalette(palette, bglinearLayout);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+        } else {
+            iv.setImageDrawable(null);
+        }
+    }
+
+    @Override
+    public void loadImageThumbnail(ImageView iv, String imageUrl, int dimension) {
+        if (!TextUtils.isEmpty(imageUrl)) {
+            Picasso.with(iv.getContext())
+                    .load(imageUrl)
+                    .resize(dimension, dimension)
+                    .centerCrop()
+                    .into(iv);
+        } else {
+            iv.setImageDrawable(null);
+        }
+    }
+
+    private void applyPalette(Palette palette, ViewGroup viewGroup) {
+        int bgColor = getBackgroundColor(palette);
+        if (bgColor != -1)
+            viewGroup.setBackgroundColor(bgColor);
+    }
+
+    private void applyPalette(Palette palette, View view) {
+        int bgColor = getBackgroundColor(palette);
+        if (bgColor != -1)
+            view.setBackgroundColor(bgColor);
+    }
+
+    private int getBackgroundColor(Palette palette) {
+        int bgColor = -1;
+
+        int vibrantColor = palette.getVibrantColor(0x000000);
+        int lightVibrantColor = palette.getLightVibrantColor(0x000000);
+        int darkVibrantColor = palette.getDarkVibrantColor(0x000000);
+
+        int mutedColor = palette.getMutedColor(0x000000);
+        int lightMutedColor = palette.getLightMutedColor(0x000000);
+        int darkMutedColor = palette.getDarkMutedColor(0x000000);
+
+        if (paletteColorType != null) {
+            switch (paletteColorType) {
+                case VIBRANT:
+                    if (vibrantColor != 0) { // primary option
+                        bgColor = vibrantColor;
+                    } else if (lightVibrantColor != 0) { // fallback options
+                        bgColor = lightVibrantColor;
+                    } else if (darkVibrantColor != 0) {
+                        bgColor = darkVibrantColor;
+                    } else if (mutedColor != 0) {
+                        bgColor = mutedColor;
+                    } else if (lightMutedColor != 0) {
+                        bgColor = lightMutedColor;
+                    } else if (darkMutedColor != 0) {
+                        bgColor = darkMutedColor;
+                    }
+                    break;
+                case LIGHT_VIBRANT:
+                    if (lightVibrantColor != 0) { // primary option
+                        bgColor = lightVibrantColor;
+                    } else if (vibrantColor != 0) { // fallback options
+                        bgColor = vibrantColor;
+                    } else if (darkVibrantColor != 0) {
+                        bgColor = darkVibrantColor;
+                    } else if (mutedColor != 0) {
+                        bgColor = mutedColor;
+                    } else if (lightMutedColor != 0) {
+                        bgColor = lightMutedColor;
+                    } else if (darkMutedColor != 0) {
+                        bgColor = darkMutedColor;
+                    }
+                    break;
+                case DARK_VIBRANT:
+                    if (darkVibrantColor != 0) { // primary option
+                        bgColor = darkVibrantColor;
+                    } else if (vibrantColor != 0) { // fallback options
+                        bgColor = vibrantColor;
+                    } else if (lightVibrantColor != 0) {
+                        bgColor = lightVibrantColor;
+                    } else if (mutedColor != 0) {
+                        bgColor = mutedColor;
+                    } else if (lightMutedColor != 0) {
+                        bgColor = lightMutedColor;
+                    } else if (darkMutedColor != 0) {
+                        bgColor = darkMutedColor;
+                    }
+                    break;
+                case MUTED:
+                    if (mutedColor != 0) { // primary option
+                        bgColor = mutedColor;
+                    } else if (lightMutedColor != 0) { // fallback options
+                        bgColor = lightMutedColor;
+                    } else if (darkMutedColor != 0) {
+                        bgColor = darkMutedColor;
+                    } else if (vibrantColor != 0) {
+                        bgColor = vibrantColor;
+                    } else if (lightVibrantColor != 0) {
+                        bgColor = lightVibrantColor;
+                    } else if (darkVibrantColor != 0) {
+                        bgColor = darkVibrantColor;
+                    }
+                    break;
+                case LIGHT_MUTED:
+                    if (lightMutedColor != 0) { // primary option
+                        bgColor = lightMutedColor;
+                    } else if (mutedColor != 0) { // fallback options
+                        bgColor = mutedColor;
+                    } else if (darkMutedColor != 0) {
+                        bgColor = darkMutedColor;
+                    } else if (vibrantColor != 0) {
+                        bgColor = vibrantColor;
+                    } else if (lightVibrantColor != 0) {
+                        bgColor = lightVibrantColor;
+                    } else if (darkVibrantColor != 0) {
+                        bgColor = darkVibrantColor;
+                    }
+                    break;
+                case DARK_MUTED:
+                    if (darkMutedColor != 0) { // primary option
+                        bgColor = darkMutedColor;
+                    } else if (mutedColor != 0) { // fallback options
+                        bgColor = mutedColor;
+                    } else if (lightMutedColor != 0) {
+                        bgColor = lightMutedColor;
+                    } else if (vibrantColor != 0) {
+                        bgColor = vibrantColor;
+                    } else if (lightVibrantColor != 0) {
+                        bgColor = lightVibrantColor;
+                    } else if (darkVibrantColor != 0) {
+                        bgColor = darkVibrantColor;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return bgColor;
+    }
+
+    class GetAssociatedImagesList extends AsyncTask<Integer, Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(Integer... params) {
+            try {
+                Gson gson = new Gson();
+                Type collectionType = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                return gson.fromJson(NetworkUtilities.getAssociatedImagesList(apiKey, params[0]), collectionType);
+            } catch (RequestException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
 
     }
 

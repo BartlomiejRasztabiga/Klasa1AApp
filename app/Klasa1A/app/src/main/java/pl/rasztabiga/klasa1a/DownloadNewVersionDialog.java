@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 
 
 public class DownloadNewVersionDialog extends DialogFragment {
@@ -20,14 +19,12 @@ public class DownloadNewVersionDialog extends DialogFragment {
                 .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d(TAG, "positive");
                         ((MainActivity)getActivity()).downloadNewVersion();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d(TAG, "negative");
 
                     }
                 });
