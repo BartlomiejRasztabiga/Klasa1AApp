@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="1.5.0" versioncode="13">
+        <change>Dodano: nazwę miesiąca i rok w górnej belce kalendarza</change>
+        <change>Dodano: zdjęcia sprawdzianów</change>
+        <change>Dodano: stan szatni i drzwi do sali (eksperymentalne)</change>
+    </release>
     <release version="1.4.0" versioncode="12">
         <change>Dodano: system kluczy dostępu</change>
     </release>
