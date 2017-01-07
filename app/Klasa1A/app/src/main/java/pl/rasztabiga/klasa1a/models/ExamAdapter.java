@@ -41,6 +41,10 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
         return examList.size();
     }
 
+    public ArrayList<Exam> getExamList() {
+        return examList;
+    }
+
     @Override
     public void onBindViewHolder(ExamViewHolder holder, int position) {
         Exam exam = examList.get(position);

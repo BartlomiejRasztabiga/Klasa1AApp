@@ -1,5 +1,7 @@
 package pl.ct8.rasztabiga.models;
 
+import java.util.List;
+
 public class Exam {
     private int id;
     private String subject;
@@ -14,7 +16,7 @@ public class Exam {
         this.year = year;
         this.month = month;
         this.day = day;
-        this.day = id;
+        this.id = id;
     }
 
     public Exam(String subject, String desc, int year, int month, int day) {
@@ -23,7 +25,6 @@ public class Exam {
         this.year = year;
         this.month = month;
         this.day = day;
-        this.day = id;
     }
 
     public String getSubject() {
@@ -50,4 +51,15 @@ public class Exam {
         return id;
     }
 
+    @Override
+    public String toString() {
+        return "Exam{" +
+                "id=" + id +
+                ", subject='" + subject + '\'' +
+                ", desc='" + desc + '\'' +
+                ", year=" + year +
+                ", month=" + month +
+                ", day=" + day +
+                '}';
+    }
 }

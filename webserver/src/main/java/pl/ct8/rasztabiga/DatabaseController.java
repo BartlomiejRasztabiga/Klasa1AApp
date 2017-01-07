@@ -3,7 +3,9 @@ package pl.ct8.rasztabiga;
 import pl.ct8.rasztabiga.models.*;
 import pl.ct8.rasztabiga.utils.LoggerUtils;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
+import sun.rmi.runtime.Log;
 
+import javax.swing.text.Style;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,11 +194,23 @@ public class DatabaseController {
             while (rs.next()) {
                 Exam exam = new Exam(rs.getInt("ID"), rs.getString("SUBJECT"), rs.getString("DESCRIPTION"),
                         rs.getInt("YEAR"), rs.getInt("MONTH"), rs.getInt("DAY"));
-
                 examsList.add(exam);
             }
-
+            logger.info(examsList.toString());
             return examsList;
+        }
+    }
+
+    static ArrayList<String> getAssociatedImagesList(int examId) throws SQLException {
+        ArrayList<String> associatedImagesList = new ArrayList<>();
+        String sql = "SELECT * FROM EXAMS_PHOTOS WHERE exam_id = ?";
+        try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, examId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                associatedImagesList.add(rs.getString("name"));
+            }
+            return associatedImagesList;
         }
     }
 

@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
@@ -135,12 +134,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    public boolean checkFirstRun() {
+    private boolean checkFirstRun() {
         return preferences.getBoolean("isFirstRun", true);
 
     }
 
-    public void reloadApiKey() {
+    private void reloadApiKey() {
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
     }
 
@@ -456,8 +455,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     return false;
                 }
 
-            } catch (RequestException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -564,6 +561,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                e.printStackTrace();
             }
             String url = APK_QUERY_URL;
             url += serverVersionCode;

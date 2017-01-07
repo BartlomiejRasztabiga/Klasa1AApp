@@ -16,13 +16,23 @@ public class Exam {
     private int month;
     private int day;
 
+    public Exam() {}
+
     public Exam(int id, String subject, String desc, int year, int month, int day) {
         this.subject = subject;
         this.desc = desc;
         this.year = year;
         this.month = month;
         this.day = day;
-        this.day = id;
+        this.id = id;
+    }
+
+    public Exam(String subject, String desc, int year, int month, int day) {
+        this.subject = subject;
+        this.desc = desc;
+        this.year = year;
+        this.month = month;
+        this.day = day;
     }
 
     public String getSubject() {
