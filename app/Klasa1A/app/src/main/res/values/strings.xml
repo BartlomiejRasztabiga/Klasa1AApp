@@ -25,6 +25,8 @@
     <string name="tests_calendar">Kalendarz testów</string>
     <string name="toggle_button_open">Otwarte</string>
     <string name="toggle_button_close">Zamknięte</string>
+    <string name="changing_room">Szatnia</string>
+    <string name="door">Drzwi</string>
 
     <!--EnterApiKeyDialog strings-->
 
