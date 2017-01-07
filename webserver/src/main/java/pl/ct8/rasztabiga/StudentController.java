@@ -277,6 +277,35 @@ public class StudentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
+    @RequestMapping(value = "/getdoorstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> getDoorStatus(@RequestParam("apiKey") String apiKey){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            return new ResponseEntity<>(DatabaseController.getDoorStatus(), HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+    @RequestMapping(value = "/setdoorstatus", method = RequestMethod.GET)
+    public ResponseEntity<?> setDoorStatus(@RequestParam("apiKey") String apiKey, int doorStatus){
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            DatabaseController.setDoorStatus(doorStatus);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
     //Na gorze sa nowe metody

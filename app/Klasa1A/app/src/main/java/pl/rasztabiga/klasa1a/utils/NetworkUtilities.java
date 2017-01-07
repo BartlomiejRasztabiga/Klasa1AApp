@@ -23,6 +23,7 @@ public class NetworkUtilities {
     private static final String GETCHANGINGROOM_QUERY_URL = SERVER_ADDR + "/getchangingroomstatus";
     private static final String SETCHANGINGROOM_QUERY_URL = SERVER_ADDR + "/setchangingroomstatus";
     private static final String DOOR_QUERY_URL = SERVER_ADDR + "/getdoorstatus";
+    private static final String SETDOOR_QUERY_URL = SERVER_ADDR + "/setdoorstatus";
 
     private static final String TAG = NetworkUtilities.class.getName();
 
@@ -83,6 +84,22 @@ public class NetworkUtilities {
         }
 
         return null;
+    }
+
+    public static void setDoorStatus(String apiKey, int doorStatus) throws RequestException{
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(SETDOOR_QUERY_URL + "?apiKey=" + apiKey + "&doorStatus=" + doorStatus)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.code() == 500 || response.code() == 404 || response.code() == 401){
+                throw new RequestException();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

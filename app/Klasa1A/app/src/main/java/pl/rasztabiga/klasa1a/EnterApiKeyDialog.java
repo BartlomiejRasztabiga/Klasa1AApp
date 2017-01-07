@@ -56,7 +56,7 @@ public class EnterApiKeyDialog extends DialogFragment {
         final EditText editText = (EditText) d.findViewById(R.id.api_key);
         final TextView error_text_view = (TextView) d.findViewById(R.id.error_text_view);
         if(d != null) {
-            Button positiveButton = (Button) d.getButton(DialogInterface.BUTTON_POSITIVE);
+            Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -129,6 +129,10 @@ public class DatabaseController {
             stmt.setString(2, "0");
             stmt.execute();
 
+            stmt.setString(1, "doorStatus");
+            stmt.setString(2, "0");
+            stmt.execute();
+
         } catch (SQLException e) {
             logger.warning(e.getMessage());
         }
@@ -237,6 +241,30 @@ public class DatabaseController {
 
             stmt.setString(1, String.valueOf(changingRoomStatus));
             stmt.setString(2, "changingRoomStatus");
+
+            stmt.executeUpdate();
+
+        }
+    }
+    static String getDoorStatus() throws SQLException {
+        String doorStatus;
+        String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, "doorStatus");
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            doorStatus = rs.getString("VALUE");
+        }
+        return doorStatus;
+    }
+    static void setDoorStatus(int doorStatus) throws SQLException {
+        String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, String.valueOf(doorStatus));
+            stmt.setString(2, "doorStatus");
 
             stmt.executeUpdate();
 
