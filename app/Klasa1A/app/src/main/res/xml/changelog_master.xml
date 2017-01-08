@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="1.5.1" versioncode="14">
+        <change>Ogólna optymalizacja aplikacji</change>
+        <change>Naprawiono: błąd z uprawnieniami do zapisu zdjęć</change>
+        <change>Naprawiono: błąd z pobieraniem sprawdzianów</change>
+        <change>Dodano: przyciski "drzwi" oraz "szatnia" pobierają teraz dane w czasie rzeczywistym</change>
+        <change>Dodano: zmieniono serwer dostarczania aktualizacji</change>
+    </release>
     <release version="1.5.0" versioncode="13">
         <change>Dodano: nazwę miesiąca i rok w górnej belce kalendarza</change>
         <change>Dodano: zdjęcia sprawdzianów</change>
