@@ -27,6 +27,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,14 +98,48 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference changingRoomStatusRef = database.getReference("changingRoomStatus");
+        final DatabaseReference doorStatusRef = database.getReference("doorStatus");
+
+        changingRoomStatusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean value = dataSnapshot.getValue(Boolean.class);
+                Log.d(TAG, "value: " + value);
+                changingRoomButton.setChecked(value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "error getting value from firebase db");
+            }
+        });
+
+        doorStatusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean value = dataSnapshot.getValue(Boolean.class);
+                Log.d(TAG, "value: " + value);
+                doorButton.setChecked(value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "error getting value from firebase db");
+            }
+        });
+
         changingRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToggleButton toggleButton = (ToggleButton) v;
                 if (toggleButton.isChecked()) {
-                    new SetChangingRoomStatus().execute(1);
+                    //new SetChangingRoomStatus().execute(1);
+                    changingRoomStatusRef.setValue(true);
                 } else {
-                    new SetChangingRoomStatus().execute(0);
+                    //new SetChangingRoomStatus().execute(0);
+                    changingRoomStatusRef.setValue(false);
                 }
             }
         });
@@ -108,12 +148,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onClick(View v) {
                 ToggleButton toggleButton = (ToggleButton) v;
                 if (toggleButton.isChecked()) {
-                    new SetDoorStatus().execute(1);
+                    //new SetDoorStatus().execute(1);
+                    doorStatusRef.setValue(true);
                 } else {
-                    new SetDoorStatus().execute(0);
+                    //new SetDoorStatus().execute(0);
+                    doorStatusRef.setValue(false);
                 }
             }
         });
+
+
 
         if (checkFirstRun()) {
             showEnterApiKeyDialog();
@@ -128,8 +172,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
             /** FEATURE */
-            new GetChangingRoomStatus().execute();
-            new GetDoorStatus().execute();
+            //new GetChangingRoomStatus().execute();
+            //new GetDoorStatus().execute();
 
             try {
                 if (new CheckNewUpdatesTask().execute().get()) {
@@ -291,8 +335,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 resetLuckyNumbersTextViews();
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-                new GetChangingRoomStatus().execute();
-                new GetDoorStatus().execute();
+                //new GetChangingRoomStatus().execute();
+                //new GetDoorStatus().execute();
                 return true;
             }
             case R.id.action_calendar: {
@@ -500,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /** CHANGINGROOM AND DOOR STATUS*/
 
-    private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
+    /*private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
             try {
@@ -559,7 +603,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
             return null;
         }
-    }
+    }*/
 
     private class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
         @Override
