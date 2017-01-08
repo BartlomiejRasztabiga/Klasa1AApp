@@ -25,8 +25,11 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private String apiKey;
     private ChangeLog changeLog;
     private SharedPreferences preferences;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         ButterKnife.bind(this);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         changeLog = new ChangeLog(this);
 
@@ -225,6 +230,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         try {
                             return NetworkUtilities.getDyzurni(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     }
@@ -261,6 +268,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         try {
                             return NetworkUtilities.getLuckyNumbers(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     }
@@ -340,8 +349,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             }
             case R.id.action_calendar: {
-                Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
-                startActivity(newIntent);
+                reloadApiKey();
+                if (apiKey == null && apiKey.isEmpty() && apiKey.equals("")) {
+                    Toast.makeText(this, "Nie podałeś klucza api!", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
+                    startActivity(newIntent);
+                }
                 return true;
             }
             case R.id.action_download_app_manually: {
@@ -409,6 +424,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             name2.setText(dyzurni.getDyzurny2().getName() + " " + dyzurni.getDyzurny2().getSurname());
 
         } catch (JSONException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "JSONException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -457,6 +474,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
 
         } catch (JSONException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "JSONException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -523,6 +542,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
 
             } catch (Exception e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
 
@@ -537,6 +558,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 return NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 return null;
             }
         }
@@ -652,6 +675,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     output.write(data, 0, count);
                 }
             } catch (Exception e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             } finally {
                 try {
@@ -672,6 +697,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
             String url = APK_QUERY_URL;
