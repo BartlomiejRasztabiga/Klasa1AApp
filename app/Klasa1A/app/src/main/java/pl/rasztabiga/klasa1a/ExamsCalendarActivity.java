@@ -1,13 +1,17 @@
 package pl.rasztabiga.klasa1a;
 
+import android.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
@@ -34,6 +38,7 @@ import com.etiennelawlor.imagegallery.library.enums.PaletteColorType;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -52,6 +57,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.models.ExamAdapter;
@@ -64,9 +70,11 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     private final Calendar calendar = Calendar.getInstance();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
-    private CompactCalendarView compactCalendarView;
-    private TextView date_tv;
-    private RecyclerView mRecyclerView;
+
+    @BindView(R.id.compactcalendar_view) CompactCalendarView compactCalendarView;
+    @BindView(R.id.date_tv) TextView date_tv;
+    @BindView(R.id.recyclerview_exams) RecyclerView mRecyclerView;
+
     private ExamAdapter mExamAdapter;
 
     private SharedPreferences preferences;
@@ -84,10 +92,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         FullScreenImageGalleryActivity.setFullScreenImageLoader(this);
 
         paletteColorType = PaletteColorType.VIBRANT;
-
-        compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
-        date_tv = (TextView) findViewById(R.id.date_tv);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_exams);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
@@ -165,6 +169,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                         try {
                             return NetworkUtilities.getExams(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             Log.d(TAG, e.getMessage());
                             return null;
                         }
@@ -223,7 +229,25 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         Toast.makeText(this, "Nie ma zdjęć tego sprawdzianu!", Toast.LENGTH_SHORT).show();
     }
 
+    private boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted");
+            return true;
+        }
+    }
+
     private void prepareImagesUris(Exam examForGettingImages) {
+        if(!isStoragePermissionGranted()) return;
         ArrayList<String> associatedImagesListStringArrayList = null;
         try {
             associatedImagesListStringArrayList = new GetAssociatedImagesList().execute(examForGettingImages.getId()).get();
@@ -453,6 +477,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                 }.getType();
                 return gson.fromJson(NetworkUtilities.getAssociatedImagesList(apiKey, params[0]), collectionType);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
 

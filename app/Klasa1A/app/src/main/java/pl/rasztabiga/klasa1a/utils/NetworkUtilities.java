@@ -2,6 +2,9 @@ package pl.rasztabiga.klasa1a.utils;
 
 import android.util.Log;
 import android.os.Bundle;
+
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -11,9 +14,9 @@ import pl.rasztabiga.klasa1a.RequestException;
 
 public class NetworkUtilities {
 
-    //private static final String SERVER_ADDR = "http://89.36.219.95:8007";
+    private static final String SERVER_ADDR = "http://89.36.219.95:8007";
     //private static final String SERVER_ADDR = "http://192.168.1.24:8007";
-    private static final String SERVER_ADDR = "http://94.177.229.18:8007";
+    //private static final String SERVER_ADDR = "http://94.177.229.18:8007";
 
     private static final String DYZURNI_QUERY_URL = SERVER_ADDR + "/getdyzurni";
     private static final String VERSION_QUERY_URL = SERVER_ADDR + "/getversion";
@@ -45,6 +48,8 @@ public class NetworkUtilities {
             }
             return response.body().string();
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 
@@ -63,6 +68,8 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -82,6 +89,8 @@ public class NetworkUtilities {
             }
             return response.body().string();
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 
@@ -100,6 +109,8 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -120,6 +131,8 @@ public class NetworkUtilities {
             }
             return response.body().string();
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 
@@ -140,6 +153,8 @@ public class NetworkUtilities {
             }
             return response.body().string();
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 
@@ -162,6 +177,8 @@ public class NetworkUtilities {
             }
             return Integer.valueOf(response.body().string());
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 
@@ -182,6 +199,8 @@ public class NetworkUtilities {
             }
             return response.body().string();
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
         return null;
@@ -202,6 +221,8 @@ public class NetworkUtilities {
                 return "Nie znaleziono takiego klucza";
             }
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 
@@ -222,6 +243,8 @@ public class NetworkUtilities {
             }
             return response.body().string();
         } catch (IOException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 

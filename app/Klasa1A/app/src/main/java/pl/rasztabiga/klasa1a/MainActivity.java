@@ -25,7 +25,16 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +50,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.models.Dyzurni;
 import pl.rasztabiga.klasa1a.models.Student;
@@ -50,78 +61,108 @@ import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     //TODO To have numbers and days in one row use linear layout
-
     private static final int GET_DYZURNI_LOADER = 11;
+
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
-    private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
+    private static final String APK_QUERY_URL = "https://klasa1a-app.firebaseapp.com/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
 
-    private TextView name1;
-    private TextView name2;
+    @BindView(R.id.name1) TextView name1;
 
-    private TextView monday_tv;
-    private TextView tuesday_tv;
-    private TextView wednesday_tv;
-    private TextView thursday_tv;
-    private TextView friday_tv;
+    @BindView(R.id.name2) TextView name2;
 
-    private TextView errorMessageTextView;
+    @BindView(R.id.monday_tv) TextView monday_tv;
+    @BindView(R.id.tuesday_tv) TextView tuesday_tv;
+    @BindView(R.id.wednesday_tv) TextView wednesday_tv;
+    @BindView(R.id.thursday_tv) TextView thursday_tv;
+    @BindView(R.id.friday_tv) TextView friday_tv;
 
-    private ProgressBar loadingIndicator;
+    @BindView(R.id.error_message_display) TextView errorMessageTextView;
 
-    private ChangeLog changeLog;
+    @BindView(R.id.loading_indicator) ProgressBar loadingIndicator;
 
-    private SharedPreferences preferences;
+    @BindView(R.id.changingRoomToggleButton) ToggleButton changingRoomButton;
+    @BindView(R.id.doorToggleButton) ToggleButton doorButton;
     private String apiKey;
-
-    private ToggleButton changingRoomButton;
-    private ToggleButton doorButton;
+    private ChangeLog changeLog;
+    private SharedPreferences preferences;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        name1 = (TextView) findViewById(R.id.name1);
-        name2 = (TextView) findViewById(R.id.name2);
-        monday_tv = (TextView) findViewById(R.id.monday_tv);
-        tuesday_tv = (TextView) findViewById(R.id.tuesday_tv);
-        wednesday_tv = (TextView) findViewById(R.id.wednesday_tv);
-        thursday_tv = (TextView) findViewById(R.id.thursday_tv);
-        friday_tv = (TextView) findViewById(R.id.friday_tv);
-        errorMessageTextView = (TextView) findViewById(R.id.error_message_display);
-        loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
+        ButterKnife.bind(this);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         changeLog = new ChangeLog(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
-        changingRoomButton = (ToggleButton) findViewById(R.id.changingRoomToogleButton);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference changingRoomStatusRef = database.getReference("changingRoomStatus");
+        final DatabaseReference doorStatusRef = database.getReference("doorStatus");
+
+        changingRoomStatusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean value = dataSnapshot.getValue(Boolean.class);
+                Log.d(TAG, "value: " + value);
+                changingRoomButton.setChecked(value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "error getting value from firebase db");
+            }
+        });
+
+        doorStatusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean value = dataSnapshot.getValue(Boolean.class);
+                Log.d(TAG, "value: " + value);
+                doorButton.setChecked(value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "error getting value from firebase db");
+            }
+        });
+
         changingRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToggleButton toggleButton = (ToggleButton) v;
                 if (toggleButton.isChecked()) {
-                    new SetChangingRoomStatus().execute(1);
+                    //new SetChangingRoomStatus().execute(1);
+                    changingRoomStatusRef.setValue(true);
                 } else {
-                    new SetChangingRoomStatus().execute(0);
+                    //new SetChangingRoomStatus().execute(0);
+                    changingRoomStatusRef.setValue(false);
                 }
             }
         });
-        doorButton = (ToggleButton) findViewById(R.id.doorToggleButton);
         doorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToggleButton toggleButton = (ToggleButton) v;
                 if (toggleButton.isChecked()) {
-                    new SetDoorStatus().execute(1);
+                    //new SetDoorStatus().execute(1);
+                    doorStatusRef.setValue(true);
                 } else {
-                    new SetDoorStatus().execute(0);
+                    //new SetDoorStatus().execute(0);
+                    doorStatusRef.setValue(false);
                 }
             }
         });
+
+
 
         if (checkFirstRun()) {
             showEnterApiKeyDialog();
@@ -136,8 +177,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
             /** FEATURE */
-            new GetChangingRoomStatus().execute();
-            new GetDoorStatus().execute();
+            //new GetChangingRoomStatus().execute();
+            //new GetDoorStatus().execute();
 
             try {
                 if (new CheckNewUpdatesTask().execute().get()) {
@@ -189,6 +230,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         try {
                             return NetworkUtilities.getDyzurni(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     }
@@ -225,6 +268,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         try {
                             return NetworkUtilities.getLuckyNumbers(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     }
@@ -299,13 +344,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 resetLuckyNumbersTextViews();
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-                new GetChangingRoomStatus().execute();
-                new GetDoorStatus().execute();
+                //new GetChangingRoomStatus().execute();
+                //new GetDoorStatus().execute();
                 return true;
             }
             case R.id.action_calendar: {
-                Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
-                startActivity(newIntent);
+                reloadApiKey();
+                if (apiKey == null && apiKey.isEmpty() && apiKey.equals("")) {
+                    Toast.makeText(this, "Nie podałeś klucza api!", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
+                    startActivity(newIntent);
+                }
                 return true;
             }
             case R.id.action_download_app_manually: {
@@ -373,6 +424,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             name2.setText(dyzurni.getDyzurny2().getName() + " " + dyzurni.getDyzurny2().getSurname());
 
         } catch (JSONException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "JSONException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -421,6 +474,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
 
         } catch (JSONException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "JSONException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -487,6 +542,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
 
             } catch (Exception e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
 
@@ -501,6 +558,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 return NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 return null;
             }
         }
@@ -508,7 +567,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /** CHANGINGROOM AND DOOR STATUS*/
 
-    private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
+    /*private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
             try {
@@ -567,7 +626,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
             return null;
         }
-    }
+    }*/
 
     private class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
         @Override
@@ -616,6 +675,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     output.write(data, 0, count);
                 }
             } catch (Exception e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             } finally {
                 try {
@@ -636,6 +697,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
             String url = APK_QUERY_URL;

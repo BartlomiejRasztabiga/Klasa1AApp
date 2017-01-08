@@ -8,6 +8,6 @@ public class ApiCodeGenerator {
     private static final SecureRandom random = new SecureRandom();
 
     public static String nextApiCode() {
-        return new BigInteger(130, random).toString(32);
+        return new BigInteger(32, random).toString(32);
     }
 }
