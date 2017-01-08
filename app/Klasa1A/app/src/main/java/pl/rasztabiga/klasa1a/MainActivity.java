@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int GET_DYZURNI_LOADER = 11;
 
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
-    private static final String APK_QUERY_URL = "http://rasztabiga.ct8.pl/klasa1a";
+    private static final String APK_QUERY_URL = "https://klasa1a-app.firebaseapp.com/klasa1a";
 
     private final String TAG = MainActivity.class.getName();
 
