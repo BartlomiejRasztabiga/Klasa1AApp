@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -348,8 +349,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             }
             case R.id.action_calendar: {
-                Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
-                startActivity(newIntent);
+                reloadApiKey();
+                if (apiKey == null && apiKey.isEmpty() && apiKey.equals("")) {
+                    Toast.makeText(this, "Nie podałeś klucza api!", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
+                    startActivity(newIntent);
+                }
                 return true;
             }
             case R.id.action_download_app_manually: {
