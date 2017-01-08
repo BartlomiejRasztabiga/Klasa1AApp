@@ -27,6 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private String apiKey;
     private ChangeLog changeLog;
     private SharedPreferences preferences;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         ButterKnife.bind(this);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         changeLog = new ChangeLog(this);
 
@@ -225,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         try {
                             return NetworkUtilities.getDyzurni(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     }
@@ -261,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         try {
                             return NetworkUtilities.getLuckyNumbers(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             return null;
                         }
                     }
@@ -409,6 +417,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             name2.setText(dyzurni.getDyzurny2().getName() + " " + dyzurni.getDyzurny2().getSurname());
 
         } catch (JSONException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "JSONException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -457,6 +467,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
 
         } catch (JSONException e) {
+            FirebaseCrash.logcat(Log.ERROR, TAG, "JSONException caught");
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -523,6 +535,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
 
             } catch (Exception e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
 
@@ -537,6 +551,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 return NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 return null;
             }
         }
@@ -652,6 +668,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     output.write(data, 0, count);
                 }
             } catch (Exception e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             } finally {
                 try {
@@ -672,6 +690,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 serverVersionCode = NetworkUtilities.getActualVersion(apiKey);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
             String url = APK_QUERY_URL;

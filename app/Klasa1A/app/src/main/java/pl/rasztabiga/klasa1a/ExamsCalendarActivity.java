@@ -38,6 +38,7 @@ import com.etiennelawlor.imagegallery.library.enums.PaletteColorType;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -168,6 +169,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                         try {
                             return NetworkUtilities.getExams(apiKey);
                         } catch (RequestException e) {
+                            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                            FirebaseCrash.report(e);
                             Log.d(TAG, e.getMessage());
                             return null;
                         }
@@ -474,6 +477,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                 }.getType();
                 return gson.fromJson(NetworkUtilities.getAssociatedImagesList(apiKey, params[0]), collectionType);
             } catch (RequestException e) {
+                FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
+                FirebaseCrash.report(e);
                 e.printStackTrace();
             }
 
