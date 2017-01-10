@@ -17,8 +17,11 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +38,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +63,8 @@ import butterknife.ButterKnife;
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.models.Dyzurni;
 import pl.rasztabiga.klasa1a.models.Student;
+import pl.rasztabiga.klasa1a.utils.FirebaseUtils;
+import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 
@@ -68,22 +78,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private final String TAG = MainActivity.class.getName();
 
-    @BindView(R.id.name1) TextView name1;
+    @BindView(R.id.name1)
+    TextView name1;
 
-    @BindView(R.id.name2) TextView name2;
+    @BindView(R.id.name2)
+    TextView name2;
 
-    @BindView(R.id.monday_tv) TextView monday_tv;
-    @BindView(R.id.tuesday_tv) TextView tuesday_tv;
-    @BindView(R.id.wednesday_tv) TextView wednesday_tv;
-    @BindView(R.id.thursday_tv) TextView thursday_tv;
-    @BindView(R.id.friday_tv) TextView friday_tv;
+    @BindView(R.id.monday_tv)
+    TextView monday_tv;
+    @BindView(R.id.tuesday_tv)
+    TextView tuesday_tv;
+    @BindView(R.id.wednesday_tv)
+    TextView wednesday_tv;
+    @BindView(R.id.thursday_tv)
+    TextView thursday_tv;
+    @BindView(R.id.friday_tv)
+    TextView friday_tv;
 
-    @BindView(R.id.error_message_display) TextView errorMessageTextView;
+    @BindView(R.id.error_message_display)
+    TextView errorMessageTextView;
 
-    @BindView(R.id.loading_indicator) ProgressBar loadingIndicator;
+    @BindView(R.id.loading_indicator)
+    ProgressBar loadingIndicator;
 
-    @BindView(R.id.changingRoomToggleButton) ToggleButton changingRoomButton;
-    @BindView(R.id.doorToggleButton) ToggleButton doorButton;
+    @BindView(R.id.changingRoomToggleButton)
+    ToggleButton changingRoomButton;
+    @BindView(R.id.doorToggleButton)
+    ToggleButton doorButton;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private String apiKey;
     private ChangeLog changeLog;
     private SharedPreferences preferences;
@@ -93,17 +116,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ButterKnife.bind(this);
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        LayoutUtils.getNavigationDrawer(MainActivity.this, 1, toolbar);
+        //setSupportActionBar(toolbar);
 
         changeLog = new ChangeLog(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseUtils.getDatabase();
         final DatabaseReference changingRoomStatusRef = database.getReference("changingRoomStatus");
         final DatabaseReference doorStatusRef = database.getReference("doorStatus");
 
@@ -163,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
 
-
         if (checkFirstRun()) {
             showEnterApiKeyDialog();
             apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
@@ -194,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 e.printStackTrace();
             }
         }
+
 
     }
 
@@ -442,6 +466,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
     }
+
     private void setDoorButton(String data) {
         if (data.equals("1")) {
             doorButton.setChecked(true);
@@ -565,7 +590,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    /** CHANGINGROOM AND DOOR STATUS*/
+    /**
+     * CHANGINGROOM AND DOOR STATUS
+     */
 
     /*private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
         @Override

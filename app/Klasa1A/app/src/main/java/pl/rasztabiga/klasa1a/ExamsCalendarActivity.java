@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -61,6 +62,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.models.Exam;
 import pl.rasztabiga.klasa1a.models.ExamAdapter;
+import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 public class ExamsCalendarActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>, ExamAdapter.ExamClickListener, ImageGalleryAdapter.ImageThumbnailLoader, FullScreenImageGalleryAdapter.FullScreenImageLoader {
@@ -74,6 +76,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     @BindView(R.id.compactcalendar_view) CompactCalendarView compactCalendarView;
     @BindView(R.id.date_tv) TextView date_tv;
     @BindView(R.id.recyclerview_exams) RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     private ExamAdapter mExamAdapter;
 
@@ -88,8 +91,11 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests_calendar);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
         ImageGalleryActivity.setImageThumbnailLoader(this);
         FullScreenImageGalleryActivity.setFullScreenImageLoader(this);
+
+        LayoutUtils.getNavigationDrawer(ExamsCalendarActivity.this, 2, toolbar);
 
         paletteColorType = PaletteColorType.VIBRANT;
 

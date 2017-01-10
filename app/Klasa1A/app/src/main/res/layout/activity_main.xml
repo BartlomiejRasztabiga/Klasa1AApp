@@ -16,6 +16,12 @@
     tools:context="pl.rasztabiga.klasa1a.MainActivity">
 
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar">
+
+    </include>
+
     <ToggleButton
         android:text="ToggleButton"
         android:layout_width="110dp"
@@ -83,7 +89,7 @@
         android:layout_marginStart="24dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="80dp"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/textView3"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
