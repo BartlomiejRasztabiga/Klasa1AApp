@@ -55,6 +55,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -73,10 +75,14 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
 
-    @BindView(R.id.compactcalendar_view) CompactCalendarView compactCalendarView;
-    @BindView(R.id.date_tv) TextView date_tv;
-    @BindView(R.id.recyclerview_exams) RecyclerView mRecyclerView;
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.compactcalendar_view)
+    CompactCalendarView compactCalendarView;
+    @BindView(R.id.date_tv)
+    TextView date_tv;
+    @BindView(R.id.recyclerview_exams)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private ExamAdapter mExamAdapter;
 
@@ -214,7 +220,8 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
     private void setEvents(String JSONString) {
         Gson gson = new Gson();
-        Type collectionType = new TypeToken<ArrayList<Exam>>() {}.getType();
+        Type collectionType = new TypeToken<ArrayList<Exam>>() {
+        }.getType();
         ArrayList<Exam> examsArrayList = gson.fromJson(JSONString, collectionType);
 
 
@@ -253,7 +260,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     }
 
     private void prepareImagesUris(Exam examForGettingImages) {
-        if(!isStoragePermissionGranted()) return;
+        if (!isStoragePermissionGranted()) return;
         ArrayList<String> associatedImagesListStringArrayList = null;
         try {
             associatedImagesListStringArrayList = new GetAssociatedImagesList().execute(examForGettingImages.getId()).get();
@@ -273,19 +280,19 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://klasa1a-app.appspot.com/exams_photos/");
 
-        final ArrayList<Uri> associatedImagesUriList = new ArrayList<>();
+        //final ArrayList<Uri> associatedImagesUriList = new ArrayList<>();
+        final Map<String, Uri> associatedImagesUriList = new TreeMap<>();
 
-        final AtomicInteger done = new AtomicInteger(0);
         if (associatedImagesListStringArrayList != null) {
             final int sizeOfImagesListArrayList = associatedImagesListStringArrayList.size();
-            for (String s : associatedImagesListStringArrayList) {
+            for (final String s : associatedImagesListStringArrayList) {
                 StorageReference examStorageRef = storageReference.child(s);
                 examStorageRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        associatedImagesUriList.add(uri);
-                        done.addAndGet(1);
-                        if (done.get() == sizeOfImagesListArrayList)
+                        //associatedImagesUriList.add(uri);
+                        associatedImagesUriList.put(s, uri);
+                        if (associatedImagesUriList.size() == sizeOfImagesListArrayList)
                             createImageGallery(associatedImagesUriList);
                     }
                 });
@@ -293,8 +300,9 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         }
     }
 
-    private void createImageGallery(ArrayList<Uri> associatedImagesUriList) {
+    private void createImageGallery(Map<String, Uri> downloadUrlsMap) {
 
+        ArrayList<Uri> associatedImagesUriList = new ArrayList<>(downloadUrlsMap.values());
         ArrayList<String> associatedImagesUriAsStringList = new ArrayList<>();
         for (Uri u : associatedImagesUriList) {
             associatedImagesUriAsStringList.add(u.toString());
