@@ -2,6 +2,7 @@ package pl.rasztabiga.klasa1a;
 
 import android.Manifest;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //setSupportActionBar(toolbar);
 
         changeLog = new ChangeLog(this);
+        LayoutUtils.setMainActivityRef(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
@@ -227,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void reloadApiKey() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
     }
 

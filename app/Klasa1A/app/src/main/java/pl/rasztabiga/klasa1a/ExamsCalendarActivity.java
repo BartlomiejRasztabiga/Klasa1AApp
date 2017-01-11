@@ -280,7 +280,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://klasa1a-app.appspot.com/exams_photos/");
 
-        //final ArrayList<Uri> associatedImagesUriList = new ArrayList<>();
         final Map<String, Uri> associatedImagesUriList = new TreeMap<>();
 
         if (associatedImagesListStringArrayList != null) {
@@ -290,7 +289,6 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                 examStorageRef.getDownloadUrl().addOnSuccessListener(this, new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        //associatedImagesUriList.add(uri);
                         associatedImagesUriList.put(s, uri);
                         if (associatedImagesUriList.size() == sizeOfImagesListArrayList)
                             createImageGallery(associatedImagesUriList);
