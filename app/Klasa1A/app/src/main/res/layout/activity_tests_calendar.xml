@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_tests_calendar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="pl.rasztabiga.klasa1a.ExamsCalendarActivity">
 
-    <com.github.sundeepk.compactcalendarview.CompactCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/compactcalendar_view"
-        android:layout_width="fill_parent"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        android:layout_height="300dp"
-        app:compactCalendarTextSize="18sp"
-        app:compactCalendarBackgroundColor="#efefef"
-        app:compactCalendarTextColor="#212121"
-        app:compactCalendarCurrentSelectedDayBackgroundColor="#1e88e5"
-        app:compactCalendarCurrentDayBackgroundColor="#01579b"
-        app:compactCalendarMultiEventIndicatorColor="#424242" />
+    </include>
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,12 +25,27 @@
         android:layout_centerHorizontal="true"
         android:textSize="18sp" />
 
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView
+        android:id="@+id/compactcalendar_view"
+        android:layout_width="fill_parent"
+
+        android:layout_height="300dp"
+        app:compactCalendarTextSize="18sp"
+        app:compactCalendarBackgroundColor="#efefef"
+        app:compactCalendarTextColor="#212121"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#1e88e5"
+        app:compactCalendarCurrentDayBackgroundColor="#01579b"
+        app:compactCalendarMultiEventIndicatorColor="#424242"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_exams"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/date_tv">
 
     </android.support.v7.widget.RecyclerView>
