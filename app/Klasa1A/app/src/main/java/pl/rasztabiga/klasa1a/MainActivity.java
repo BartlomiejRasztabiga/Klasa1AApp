@@ -372,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 //new GetDoorStatus().execute();
                 return true;
             }
-            case R.id.action_calendar: {
+            /*case R.id.action_calendar: {
                 reloadApiKey();
                 if (apiKey == null && apiKey.isEmpty() && apiKey.equals("")) {
                     Toast.makeText(this, "Nie podałeś klucza api!", Toast.LENGTH_SHORT).show();
@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     startActivity(newIntent);
                 }
                 return true;
-            }
+            }*/
             case R.id.action_download_app_manually: {
                 int serverVersionCode = 0;
                 try {
@@ -403,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private void openWebsiteWithApkToDownload(int serverVersionCode) {
+    public void openWebsiteWithApkToDownload(int serverVersionCode) {
         String url = APK_QUERY_URL + serverVersionCode + ".apk";
         Uri uri = Uri.parse(url);
 
@@ -540,6 +540,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Log.v(TAG, "Permission is granted");
             return true;
         }
+    }
+
+    public int getActualAppVersion() {
+        try {
+            return new GetActualAppVersionFromServer().execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
