@@ -24,7 +24,7 @@ import pl.rasztabiga.klasa1a.ExamsCalendarActivity;
 import pl.rasztabiga.klasa1a.MainActivity;
 import pl.rasztabiga.klasa1a.R;
 
-public class LayoutUtils extends Application {
+public class LayoutUtils {
 
     private static final String TAG = LayoutUtils.class.getName();
     private static final String DOWNLOAD_NEW_VERSION_NAV_DRAWER_TAG = "download_new_version";
@@ -58,7 +58,7 @@ public class LayoutUtils extends Application {
                         if (drawerItemTag != null) {
                             if (drawerItemTag instanceof Class) {
                                 Log.d(TAG, "TAG is class");
-                                if (((Class) drawerItemTag).equals(actualClass.getClass()))
+                                if (drawerItemTag.equals(actualClass.getClass()))
                                     return false;
                                 Intent intent = new Intent(actualClass, (Class) drawerItemTag);
                                 actualClass.startActivity(intent);
@@ -93,6 +93,6 @@ public class LayoutUtils extends Application {
     }
 
     public static void setMainActivityRef(Activity activity) {
-        mainActivityRef = new WeakReference<Activity>(activity);
+        mainActivityRef = new WeakReference<>(activity);
     }
 }

@@ -19,13 +19,14 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="0dp">
+        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_height="0dp"
+        android:layout_width="0dp">
 
     </include>
 
     <ToggleButton
-        android:text="ToggleButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:id="@+id/doorToggleButton"
@@ -37,7 +38,6 @@
         android:textOn="@string/toggle_button_open"/>
 
     <ToggleButton
-        android:text="ToggleButton"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:id="@+id/changingRoomToggleButton"
