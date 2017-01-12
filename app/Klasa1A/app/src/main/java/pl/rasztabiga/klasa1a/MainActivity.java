@@ -2,7 +2,6 @@ package pl.rasztabiga.klasa1a;
 
 import android.Manifest;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -18,18 +17,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -39,11 +34,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -371,21 +361,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 resetLuckyNumbersTextViews();
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-                //new GetChangingRoomStatus().execute();
-                //new GetDoorStatus().execute();
                 return true;
             }
-            /*case R.id.action_calendar: {
-                reloadApiKey();
-                if (apiKey == null && apiKey.isEmpty() && apiKey.equals("")) {
-                    Toast.makeText(this, "Nie podałeś klucza api!", Toast.LENGTH_SHORT).show();
-                    return false;
-                } else {
-                    Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
-                    startActivity(newIntent);
-                }
-                return true;
-            }*/
             case R.id.action_download_app_manually: {
                 int serverVersionCode = 0;
                 try {

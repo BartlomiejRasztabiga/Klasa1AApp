@@ -3,10 +3,8 @@ package pl.rasztabiga.klasa1a.utils;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +17,6 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.ExecutionException;
 
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.CountdownsActivity;
