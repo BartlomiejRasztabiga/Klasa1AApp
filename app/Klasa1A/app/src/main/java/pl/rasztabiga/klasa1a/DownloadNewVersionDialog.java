@@ -19,7 +19,7 @@ public class DownloadNewVersionDialog extends DialogFragment {
                 .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ((MainActivity)getActivity()).downloadNewVersion();
+                        ((MainActivity) getActivity()).downloadNewVersion();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

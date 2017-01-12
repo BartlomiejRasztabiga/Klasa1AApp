@@ -21,6 +21,7 @@ import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 public class EnterApiKeyDialog extends DialogFragment {
     private final String TAG = MainActivity.class.getName();
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -54,7 +55,7 @@ public class EnterApiKeyDialog extends DialogFragment {
         final AlertDialog d = (AlertDialog) getDialog();
         final EditText editText = (EditText) d.findViewById(R.id.api_key);
         final TextView error_text_view = (TextView) d.findViewById(R.id.error_text_view);
-        if(d != null) {
+        if (d != null) {
             Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,11 +68,11 @@ public class EnterApiKeyDialog extends DialogFragment {
                         e.printStackTrace();
                     }
 
-                    if(error_text_view.getText().toString().equals("") || error_text_view.getText().toString().isEmpty()) {
+                    if (error_text_view.getText().toString().equals("") || error_text_view.getText().toString().isEmpty()) {
                         wantToCloseDialog = true;
                     }
 
-                    if(wantToCloseDialog)
+                    if (wantToCloseDialog)
                         d.dismiss();
 
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());

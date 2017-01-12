@@ -16,7 +16,8 @@ public class Exam {
     private int month;
     private int day;
 
-    public Exam() {}
+    public Exam() {
+    }
 
     public Exam(int id, String subject, String desc, int year, int month, int day) {
         this.subject = subject;

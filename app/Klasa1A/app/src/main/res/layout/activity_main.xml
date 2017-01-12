@@ -18,7 +18,9 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar">
+        layout="@layout/toolbar"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="0dp">
 
     </include>
 
