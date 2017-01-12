@@ -18,14 +18,13 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -55,6 +54,8 @@ import butterknife.ButterKnife;
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.models.Dyzurni;
 import pl.rasztabiga.klasa1a.models.Student;
+import pl.rasztabiga.klasa1a.utils.FirebaseUtils;
+import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 
@@ -68,22 +69,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private final String TAG = MainActivity.class.getName();
 
-    @BindView(R.id.name1) TextView name1;
+    @BindView(R.id.name1)
+    TextView name1;
 
-    @BindView(R.id.name2) TextView name2;
+    @BindView(R.id.name2)
+    TextView name2;
 
-    @BindView(R.id.monday_tv) TextView monday_tv;
-    @BindView(R.id.tuesday_tv) TextView tuesday_tv;
-    @BindView(R.id.wednesday_tv) TextView wednesday_tv;
-    @BindView(R.id.thursday_tv) TextView thursday_tv;
-    @BindView(R.id.friday_tv) TextView friday_tv;
+    @BindView(R.id.monday_tv)
+    TextView monday_tv;
+    @BindView(R.id.tuesday_tv)
+    TextView tuesday_tv;
+    @BindView(R.id.wednesday_tv)
+    TextView wednesday_tv;
+    @BindView(R.id.thursday_tv)
+    TextView thursday_tv;
+    @BindView(R.id.friday_tv)
+    TextView friday_tv;
 
-    @BindView(R.id.error_message_display) TextView errorMessageTextView;
+    @BindView(R.id.error_message_display)
+    TextView errorMessageTextView;
 
-    @BindView(R.id.loading_indicator) ProgressBar loadingIndicator;
+    @BindView(R.id.loading_indicator)
+    ProgressBar loadingIndicator;
 
-    @BindView(R.id.changingRoomToggleButton) ToggleButton changingRoomButton;
-    @BindView(R.id.doorToggleButton) ToggleButton doorButton;
+    @BindView(R.id.changingRoomToggleButton)
+    ToggleButton changingRoomButton;
+    @BindView(R.id.doorToggleButton)
+    ToggleButton doorButton;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private String apiKey;
     private ChangeLog changeLog;
     private SharedPreferences preferences;
@@ -93,17 +107,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ButterKnife.bind(this);
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        LayoutUtils.getNavigationDrawer(MainActivity.this, 1, toolbar);
+        //setSupportActionBar(toolbar);
 
         changeLog = new ChangeLog(this);
+        LayoutUtils.setMainActivityRef(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseUtils.getDatabase();
         final DatabaseReference changingRoomStatusRef = database.getReference("changingRoomStatus");
         final DatabaseReference doorStatusRef = database.getReference("doorStatus");
 
@@ -163,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
 
-
         if (checkFirstRun()) {
             showEnterApiKeyDialog();
             apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
@@ -195,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }
 
+
     }
 
     private boolean checkFirstRun() {
@@ -203,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void reloadApiKey() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
     }
 
@@ -344,19 +361,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 resetLuckyNumbersTextViews();
                 getSupportLoaderManager().restartLoader(GET_DYZURNI_LOADER, null, this);
                 getSupportLoaderManager().restartLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-                //new GetChangingRoomStatus().execute();
-                //new GetDoorStatus().execute();
-                return true;
-            }
-            case R.id.action_calendar: {
-                reloadApiKey();
-                if (apiKey == null && apiKey.isEmpty() && apiKey.equals("")) {
-                    Toast.makeText(this, "Nie podałeś klucza api!", Toast.LENGTH_SHORT).show();
-                    return false;
-                } else {
-                    Intent newIntent = new Intent(this, ExamsCalendarActivity.class);
-                    startActivity(newIntent);
-                }
                 return true;
             }
             case R.id.action_download_app_manually: {
@@ -379,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private void openWebsiteWithApkToDownload(int serverVersionCode) {
+    public void openWebsiteWithApkToDownload(int serverVersionCode) {
         String url = APK_QUERY_URL + serverVersionCode + ".apk";
         Uri uri = Uri.parse(url);
 
@@ -442,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
     }
+
     private void setDoorButton(String data) {
         if (data.equals("1")) {
             doorButton.setChecked(true);
@@ -517,6 +522,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    public int getActualAppVersion() {
+        try {
+            return new GetActualAppVersionFromServer().execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -565,7 +579,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    /** CHANGINGROOM AND DOOR STATUS*/
+    /**
+     * CHANGINGROOM AND DOOR STATUS
+     */
 
     /*private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
         @Override

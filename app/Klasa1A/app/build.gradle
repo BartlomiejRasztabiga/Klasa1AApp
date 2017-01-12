@@ -16,8 +16,8 @@ android {
         applicationId "pl.rasztabiga.klasa1a"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 14
-        versionName "1.5.1"
+        versionCode 15
+        versionName "1.6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -63,6 +63,9 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:10.0.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+        transitive = true
+    }
 }
 
 

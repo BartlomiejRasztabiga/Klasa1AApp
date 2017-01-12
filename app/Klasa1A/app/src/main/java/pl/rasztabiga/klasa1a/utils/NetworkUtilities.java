@@ -1,7 +1,6 @@
 package pl.rasztabiga.klasa1a.utils;
 
 import android.util.Log;
-import android.os.Bundle;
 
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -56,7 +55,7 @@ public class NetworkUtilities {
         return null;
     }
 
-    public static void setChangingRoomStatus(String apiKey, int changingRoomStatus) throws RequestException{
+    public static void setChangingRoomStatus(String apiKey, int changingRoomStatus) throws RequestException {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -64,7 +63,7 @@ public class NetworkUtilities {
                 .build();
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401){
+            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
                 throw new RequestException();
             }
         } catch (IOException e) {
@@ -97,7 +96,7 @@ public class NetworkUtilities {
         return null;
     }
 
-    public static void setDoorStatus(String apiKey, int doorStatus) throws RequestException{
+    public static void setDoorStatus(String apiKey, int doorStatus) throws RequestException {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -105,7 +104,7 @@ public class NetworkUtilities {
                 .build();
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401){
+            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
                 throw new RequestException();
             }
         } catch (IOException e) {

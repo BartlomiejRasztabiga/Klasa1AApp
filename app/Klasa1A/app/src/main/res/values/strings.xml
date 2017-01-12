@@ -39,4 +39,6 @@
 
     <string name="isFirstRun_pref_key">isFirstRun</string>
     <string name="apiKey_pref_key">apiKey</string>
+    <string name="countdown">Odliczanie</string>
+    <string name="zero_time">00h:00m:00s</string>
 </resources>

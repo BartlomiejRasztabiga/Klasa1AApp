@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="1.6.0" versioncode="15">
+        <change>Naprawiono: Błąd z niepoprawną kolejnością zdjęć sprawdzianu</change>
+        <change>Dodano: wysuwane menu z lewej strony</change>
+        <change>Dodano: odliczanie do ferii i wakacji</change>
+    </release>
     <release version="1.5.1" versioncode="14">
         <change>Ogólna optymalizacja aplikacji</change>
         <change>Naprawiono: błąd z uprawnieniami do zapisu zdjęć</change>

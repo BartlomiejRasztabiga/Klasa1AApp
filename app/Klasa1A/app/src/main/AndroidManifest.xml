@@ -32,22 +32,21 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".ExamsCalendarActivity"
-            android:parentActivityName=".MainActivity"
-            android:launchMode="singleTop"
-            android:label="@string/tests_calendar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+        <activity
+            android:name=".ExamsCalendarActivity"
+            android:label="@string/tests_calendar"
+            android:launchMode="singleTop">
         </activity>
-
         <activity
             android:name="com.etiennelawlor.imagegallery.library.activities.ImageGalleryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label=""
-            android:theme="@style/Theme.ImageGallery"/>
-
-
+            android:theme="@style/Theme.ImageGallery" />
+        <activity
+            android:name=".CountdownsActivity"
+            android:label="@string/countdown"
+            android:launchMode="singleTop">
+        </activity>
     </application>
 
 </manifest>
