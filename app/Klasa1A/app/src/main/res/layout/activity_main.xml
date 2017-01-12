@@ -19,10 +19,10 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
-        tools:layout_editor_absoluteY="25dp"
+        tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="0dp"
-        android:layout_height="0dp"
-        android:layout_width="0dp">
+        android:layout_height="wrap_content"
+        android:layout_width="360dp">
 
     </include>
 
