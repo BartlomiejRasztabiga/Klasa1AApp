@@ -33,7 +33,6 @@ public class CountdownsActivity extends AppCompatActivity {
 
         inflateCountDownTimer(2017, 5, 23, 0, 0, "Wakacje");
         inflateCountDownTimer(2017, 0, 28, 0, 50, "Ferie");
-        inflateCountDownTimer(2017, 0, 12, 21, 54, "Coś");
 
     }
 
