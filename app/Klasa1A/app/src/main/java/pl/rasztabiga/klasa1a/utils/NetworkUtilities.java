@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -46,8 +47,9 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
             return response.body().string();
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -66,8 +68,9 @@ public class NetworkUtilities {
             if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
                 throw new RequestException();
             }
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -87,8 +90,9 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
             return response.body().string();
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -107,8 +111,9 @@ public class NetworkUtilities {
             if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
                 throw new RequestException();
             }
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -129,8 +134,9 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
             return response.body().string();
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -151,8 +157,9 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
             return response.body().string();
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -175,8 +182,9 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
             return Integer.valueOf(response.body().string());
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -197,8 +205,9 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
             return response.body().string();
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -219,8 +228,9 @@ public class NetworkUtilities {
             } else if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
                 return "Nie znaleziono takiego klucza";
             }
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
@@ -241,8 +251,9 @@ public class NetworkUtilities {
                 throw new RequestException();
             }
             return response.body().string();
+        } catch (ConnectException e) {
+            //ignore
         } catch (IOException e) {
-            FirebaseCrash.logcat(Log.ERROR, TAG, "Exception caught");
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
