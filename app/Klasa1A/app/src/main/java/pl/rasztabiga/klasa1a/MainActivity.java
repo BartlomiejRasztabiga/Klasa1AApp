@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean value = dataSnapshot.getValue(Boolean.class);
-                Log.d(TAG, "value: " + value);
+                //Log.d(TAG, "value: " + value);
                 changingRoomButton.setChecked(value);
             }
 
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean value = dataSnapshot.getValue(Boolean.class);
-                Log.d(TAG, "value: " + value);
+                //Log.d(TAG, "value: " + value);
                 doorButton.setChecked(value);
             }
 
