@@ -1,5 +1,7 @@
 package pl.ct8.rasztabiga;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +13,8 @@ import pl.ct8.rasztabiga.models.Dyzurni;
 import pl.ct8.rasztabiga.utils.LoggerUtils;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +36,18 @@ public class App {
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
 
+        FirebaseOptions options = null;
+        try {
+            options = new FirebaseOptions.Builder()
+                    .setServiceAccount(
+                            new FileInputStream("klasa1a-app-firebase-adminsdk-aylvv-9d76e74718.json"))
+                    .setDatabaseUrl("https://klasa1a-app.firebaseio.com")
+                    .build();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
+        FirebaseApp.initializeApp(options);
     }
 
     /*private static void fillListWithRealNames() {
