@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -90,6 +91,9 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     private PaletteColorType paletteColorType;
 
 
+    //TODO remove calendar.set()
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,9 +122,10 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
 
         //Show date and events for actual day
-        Date presentDate = new Date();
+        /*Date presentDate = new Date();
         date_tv.setText(dateFormat.format(presentDate));
         getSupportActionBar().setTitle(simpleDateFormat.format(presentDate));
+        List<Event> events = compactCalendarView.getEvents()*/
 
         //TODO Use joda time
 
@@ -229,6 +234,19 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
         }
 
         compactCalendarView.addEvents(eventArrayList);
+
+        Date presentDate = new Date();
+        date_tv.setText(dateFormat.format(presentDate));
+        getSupportActionBar().setTitle(simpleDateFormat.format(presentDate));
+
+        List<Event> events = compactCalendarView.getEvents(presentDate);
+
+        ArrayList<Exam> examArrayList = new ArrayList<>();
+        for (Event e : events) {
+            examArrayList.add((Exam) e.getData());
+        }
+
+        mExamAdapter.setExamsData(examArrayList);
     }
 
     @Override
