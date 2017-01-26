@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -26,15 +25,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -109,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ChangeLog changeLog;
     private SharedPreferences preferences;
     private FirebaseAnalytics mFirebaseAnalytics;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,20 +112,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setSupportActionBar(toolbar);
         LayoutUtils.getNavigationDrawer(MainActivity.this, 1, toolbar);
         //setSupportActionBar(toolbar);
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
 
         changeLog = new ChangeLog(this);
         LayoutUtils.setMainActivityRef(this);
@@ -205,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (checkFirstRun()) {
             showEnterApiKeyDialog();
             apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
-
         }
 
         if (changeLog.isFirstRun()) {
@@ -213,11 +189,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         if (!apiKey.isEmpty() || !apiKey.equals("")) {
-            String customToken = getCustomToken();
-            startSignIn(customToken);
-            FirebaseUser user = mAuth.getCurrentUser();
-            //Log.d(TAG, user.getUid());
-
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
             /** FEATURE */
@@ -240,54 +211,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
 
-    }
-
-    private String getCustomToken() {
-        String customToken = null;
-        try {
-            customToken = new GetCustomToken().execute().get();
-            //Log.d(TAG, customToken);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return customToken;
-    }
-
-    private void startSignIn(String customToken) {
-        // Initiate sign in with custom token
-        // [START sign_in_custom]
-        mAuth.signInWithCustomToken(customToken)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCustomToken:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCustomToken", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
-                });
-        // [END sign_in_custom]
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 
     private boolean checkFirstRun() {
@@ -653,14 +576,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 FirebaseCrash.report(e);
                 return null;
             }
-        }
-    }
-
-    private class GetCustomToken extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            reloadApiKey();
-            return NetworkUtilities.getCustomToken(apiKey);
         }
     }
 

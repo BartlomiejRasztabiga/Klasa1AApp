@@ -3,7 +3,6 @@ package pl.rasztabiga.klasa1a.utils;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -15,8 +14,8 @@ import pl.rasztabiga.klasa1a.RequestException;
 
 public class NetworkUtilities {
 
-    //private static final String SERVER_ADDR = "http://89.36.219.95:8007";
-    private static final String SERVER_ADDR = "http://192.168.1.24:8007";
+    private static final String SERVER_ADDR = "http://89.36.219.95:8007";
+    //private static final String SERVER_ADDR = "http://192.168.1.24:8007";
     //private static final String SERVER_ADDR = "http://94.177.229.18:8007";
 
     private static final String DYZURNI_QUERY_URL = SERVER_ADDR + "/getdyzurni";
@@ -30,42 +29,9 @@ public class NetworkUtilities {
     private static final String SETCHANGINGROOM_QUERY_URL = SERVER_ADDR + "/setchangingroomstatus";
     private static final String DOOR_QUERY_URL = SERVER_ADDR + "/getdoorstatus";
     private static final String SETDOOR_QUERY_URL = SERVER_ADDR + "/setdoorstatus";
-    private static final String GET_CUSTOM_TOKEN_URL = SERVER_ADDR + "/getCustomToken";
-
 
     private static final String TAG = NetworkUtilities.class.getName();
 
-    public static String getCustomToken(String apiKey) {
-
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url(GET_CUSTOM_TOKEN_URL + "?apiKey=" + apiKey)
-                .build();
-
-        Log.d(TAG, "customToken");
-        try {
-            Response response = client.newCall(request).execute();
-            Log.d(TAG, String.valueOf(response.code()));
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
-                throw new RequestException();
-            }
-            Gson gson = new Gson();
-            Log.d(TAG, "gson");
-            String string = gson.fromJson(response.body().string(), String.class);
-            Log.d(TAG, string);
-            return string;
-        } catch (ConnectException e) {
-            //ignore
-        } catch (IOException e) {
-            FirebaseCrash.report(e);
-            e.printStackTrace();
-        } catch (RequestException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     public static String getChangingRoomStatus(String apiKey) throws RequestException {
 
