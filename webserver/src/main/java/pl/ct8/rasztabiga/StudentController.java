@@ -1,5 +1,10 @@
 package pl.ct8.rasztabiga;
 
+import com.firebase.security.token.TokenGenerator;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +13,11 @@ import pl.ct8.rasztabiga.models.Exam;
 import pl.ct8.rasztabiga.utils.*;
 
 import javax.xml.crypto.Data;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -242,6 +250,36 @@ public class StudentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (NoPermissionsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "/getCustomToken", method = RequestMethod.GET)
+    public ResponseEntity<?> getCustomToken(@RequestParam("apiKey") String apiKey) {
+        try {
+            logger.info("TRYING HARD");
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            final String[] customTokenToSend = new String[1];
+
+            FirebaseAuth.getInstance().createCustomToken(apiKey)
+                    .addOnSuccessListener(new OnSuccessListener<String>() {
+                        @Override
+                        public void onSuccess(String customToken) {
+                            //logger.info(customToken);
+                            customTokenToSend[0] = customToken;
+                        }
+                    });
+            Gson gson = new Gson();
+            logger.info(customTokenToSend[0]);
+            return new ResponseEntity<>(gson.toJson(customTokenToSend[0]), HttpStatus.OK);
+
+
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 

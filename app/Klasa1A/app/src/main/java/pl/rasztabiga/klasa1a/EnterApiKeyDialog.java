@@ -1,10 +1,14 @@
 package pl.rasztabiga.klasa1a;
 
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -73,7 +77,9 @@ public class EnterApiKeyDialog extends DialogFragment {
                     }
 
                     if (wantToCloseDialog)
+                    {
                         d.dismiss();
+                    }
 
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     preferences.edit().putBoolean(getString(R.string.isFirstRun_pref_key), false).apply();
