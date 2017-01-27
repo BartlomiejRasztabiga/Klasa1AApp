@@ -1,3 +1,4 @@
+/*
 package pl.rasztabiga.klasa1a;
 
 import android.Manifest;
@@ -59,7 +60,7 @@ import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
+public class MainActivity_old extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     //TODO To have numbers and days in one row use linear layout
     private static final int GET_DYZURNI_LOADER = 11;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int GET_LUCKY_NUMBERS_LOADER = 22;
     private static final String APK_QUERY_URL = "https://klasa1a-app.firebaseapp.com/klasa1a";
 
-    private final String TAG = MainActivity.class.getName();
+    private final String TAG = MainActivity_old.class.getName();
 
     @BindView(R.id.name1)
     TextView name1;
@@ -86,11 +87,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.friday_tv)
     TextView friday_tv;
 
-    @BindView(R.id.error_message_display)
-    TextView errorMessageTextView;
-
-    @BindView(R.id.loading_indicator)
-    ProgressBar loadingIndicator;
 
     @BindView(R.id.changingRoomToggleButton)
     ToggleButton changingRoomButton;
@@ -110,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        LayoutUtils.getNavigationDrawer(MainActivity.this, 1, toolbar);
+        LayoutUtils.getNavigationDrawer(MainActivity_old.this, 1, toolbar);
         //setSupportActionBar(toolbar);
 
         changeLog = new ChangeLog(this);
@@ -191,7 +187,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!apiKey.isEmpty() || !apiKey.equals("")) {
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
-            /** FEATURE */
+            */
+/** FEATURE *//*
+
             //new GetChangingRoomStatus().execute();
             //new GetDoorStatus().execute();
 
@@ -236,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         if (dyzurniJson != null) {
                             deliverResult(dyzurniJson);
                         } else {
-                            loadingIndicator.setVisibility(View.VISIBLE);
                             forceLoad();
                         }
                     }
@@ -256,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     @Override
                     public void deliverResult(String data) {
                         dyzurniJson = data;
-                        loadingIndicator.setVisibility(View.INVISIBLE);
                         super.deliverResult(data);
                     }
                 };
@@ -273,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             deliverResult(luckyNumbersString);
                         } else {
                             // added visibility
-                            loadingIndicator.setVisibility(View.VISIBLE);
                             forceLoad();
                         }
                     }
@@ -295,7 +290,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     public void deliverResult(String data) {
                         //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:deliverResult()");
                         luckyNumbersString = data;
-                        loadingIndicator.setVisibility(View.INVISIBLE);
                         super.deliverResult(data);
                     }
                 };
@@ -310,7 +304,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<String> loader, String data) {
         switch (loader.getId()) {
             case GET_DYZURNI_LOADER: {
-                loadingIndicator.setVisibility(View.INVISIBLE);
                 if (data != null && !data.equals("")) {
                     showOnDutiesDataView();
                     setDyzurni(data);
@@ -322,7 +315,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             case GET_LUCKY_NUMBERS_LOADER: {
                 //Log.d(TAG, "GET_LUCKY_NUMBERS_LOADER:onLoadFinished()");
-                loadingIndicator.setVisibility(View.INVISIBLE);
                 if (data != null && !data.equals("")) {
                     showOnDutiesDataView();
                     setLuckyNumbers(data);
@@ -394,7 +386,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void showOnDutiesDataView() {
-        errorMessageTextView.setVisibility(View.INVISIBLE);
         name1.setVisibility(View.VISIBLE);
         name2.setVisibility(View.VISIBLE);
         monday_tv.setVisibility(View.VISIBLE);
@@ -412,7 +403,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         wednesday_tv.setVisibility(View.INVISIBLE);
         thursday_tv.setVisibility(View.INVISIBLE);
         friday_tv.setVisibility(View.INVISIBLE);
-        errorMessageTextView.setVisibility(View.VISIBLE);
     }
 
     private void setDyzurni(String JSONString) {
@@ -434,9 +424,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    /**
+    */
+/**
      * FEATURE
-     */
+     *//*
+
 
     private void setChangingRoomButton(String data) {
         if (data.equals("1")) {
@@ -579,11 +571,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    /**
+    */
+/**
      * CHANGINGROOM AND DOOR STATUS
-     */
+     *//*
 
-    /*private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
+
+    */
+/*private class GetChangingRoomStatus extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
             try {
@@ -642,7 +637,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
             return null;
         }
-    }*/
+    }*//*
+
 
     private class DownloadNewVersion extends AsyncTask<Void, Void, Void> {
         @Override
@@ -727,7 +723,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         private Uri getDownloadedApkUri(File apkFile) {
             return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) ?
-                    FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", apkFile) :
+                    FileProvider.getUriForFile(MainActivity_old.this, BuildConfig.APPLICATION_ID + ".provider", apkFile) :
                     Uri.fromFile(apkFile);
         }
 
@@ -742,3 +738,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
 }
+*/

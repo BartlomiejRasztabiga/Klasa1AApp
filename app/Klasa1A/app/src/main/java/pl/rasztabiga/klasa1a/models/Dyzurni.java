@@ -1,6 +1,8 @@
 package pl.rasztabiga.klasa1a.models;
 
 
+import pl.rasztabiga.klasa1a.data.Student;
+
 public class Dyzurni {
     private final Student dyzurny1;
     private final Student dyzurny2;

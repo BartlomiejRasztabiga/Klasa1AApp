@@ -1,3 +1,4 @@
+/*
 package pl.rasztabiga.klasa1a;
 
 import android.app.AlertDialog;
@@ -19,7 +20,7 @@ public class DownloadNewVersionDialog extends DialogFragment {
                 .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ((MainActivity) getActivity()).downloadNewVersion();
+                        ((MainActivity_old) getActivity()).downloadNewVersion();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -33,3 +34,4 @@ public class DownloadNewVersionDialog extends DialogFragment {
 
 
 }
+*/

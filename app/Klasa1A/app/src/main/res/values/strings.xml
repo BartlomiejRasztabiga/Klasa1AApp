@@ -1,6 +1,6 @@
 <resources>
 
-    <!--MainActivity strings-->
+    <!--MainActivity_old strings-->
 
     <string name="app_name">Klasa 1A</string>
     <string name="this_week_on_duties">W tym tygodniu dyżurnymi są:</string>
