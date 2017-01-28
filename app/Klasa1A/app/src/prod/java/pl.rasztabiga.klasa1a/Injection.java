@@ -3,7 +3,6 @@ package pl.rasztabiga.klasa1a;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import pl.rasztabiga.klasa1a.data.OnDuties;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesDataSource;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
 import pl.rasztabiga.klasa1a.data.source.local.OnDutiesLocalDataSource;

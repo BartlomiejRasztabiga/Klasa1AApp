@@ -5,8 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.Calendar;
-
 import pl.rasztabiga.klasa1a.data.OnDuties;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesDataSource;
 

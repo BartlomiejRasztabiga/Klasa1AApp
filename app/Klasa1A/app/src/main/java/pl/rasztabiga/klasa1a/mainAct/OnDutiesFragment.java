@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,6 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
     @BindView(R.id.onDuty1) TextView mFirstOnDuty;
     @BindView(R.id.onDuty2) TextView mSecondOnDuty;
     @BindView(R.id.progress_indicator) ProgressBar mProgressBar;
-    //ProgressBar mProgressBar;
 
     public OnDutiesFragment() {
 
@@ -42,7 +39,6 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(getActivity());
 
     }
 
@@ -68,9 +64,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.onduties_fragment, container, false);
-
-        mFirstOnDuty = (TextView) root.findViewById(R.id.onDuty1);
-        mSecondOnDuty = (TextView) root.findViewById(R.id.onDuty2);
+        ButterKnife.bind(this, root);
 
         //setHasOptionsMenu(true);
         return root;

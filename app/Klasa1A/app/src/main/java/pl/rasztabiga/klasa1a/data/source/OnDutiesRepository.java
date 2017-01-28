@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import pl.rasztabiga.klasa1a.data.OnDuties;
 import static com.google.common.base.Preconditions.checkNotNull;

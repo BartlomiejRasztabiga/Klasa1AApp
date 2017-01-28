@@ -1,7 +1,5 @@
 package pl.rasztabiga.klasa1a.utils;
 
-import android.util.Log;
-
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.IOException;

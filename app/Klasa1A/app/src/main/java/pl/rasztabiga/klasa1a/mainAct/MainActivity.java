@@ -13,9 +13,6 @@ import pl.rasztabiga.klasa1a.Injection;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesLoader;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
-import pl.rasztabiga.klasa1a.data.source.local.OnDutiesLocalDataSource;
-import pl.rasztabiga.klasa1a.data.source.remote.OnDutiesRemoteDataSource;
-import pl.rasztabiga.klasa1a.utils.ActivityUtils;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 
 

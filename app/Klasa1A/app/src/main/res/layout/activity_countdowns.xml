@@ -27,68 +27,6 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
 
-        <!--<android.support.v7.widget.CardView android:layout_margin="20dp"
-            android:layout_width="match_parent">
-
-            <TextView
-                android:id="@+id/tv1_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:layout_margin="12dp" />
-
-            <TextView
-                android:id="@+id/tv1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:text="@string/zero_time"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:paddingTop="10dp" />
-
-        </android.support.v7.widget.CardView>
-
-
-        <android.support.v7.widget.CardView android:layout_margin="20dp"
-            android:layout_width="match_parent">
-
-            <TextView
-                android:id="@+id/tv2_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:layout_margin="12dp"/>
-
-            <TextView
-                android:id="@+id/tv2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:text="@string/zero_time"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:paddingTop="10dp"/>
-        </android.support.v7.widget.CardView>-->
-
-        <!--<include
-            android:layout_margin="20dp"
-            android:id="@+id/countdown"
-            layout="@layout/countdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </include>
-
-        <include
-            android:layout_margin="20dp"
-            android:id="@+id/countdown"
-            layout="@layout/countdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-        </include>-->
-
-
     </GridLayout>
 
 </android.support.constraint.ConstraintLayout>

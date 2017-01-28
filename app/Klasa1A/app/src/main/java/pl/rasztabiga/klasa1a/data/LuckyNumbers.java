@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.models;
+package pl.rasztabiga.klasa1a.data;
 
 import java.util.ArrayList;
 

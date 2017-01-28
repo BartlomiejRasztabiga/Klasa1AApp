@@ -2,7 +2,6 @@ package pl.rasztabiga.klasa1a.data.source.remote;
 
 
 import android.content.Context;
-import android.content.ServiceConnection;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -29,7 +28,7 @@ public class OnDutiesRemoteDataSource implements OnDutiesDataSource {
         return instance;
     }
 
-    private OnDutiesRemoteDataSource() {};
+    private OnDutiesRemoteDataSource() {}
 
     public OnDuties getOnDuties() {
         String response = null;
