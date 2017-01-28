@@ -50,7 +50,7 @@ public class OnDutiesRepository implements OnDutiesDataSource  {
         }
     }
 
-    public void removeContentObserver(OnDutiesDataSource observer) {
+    public void removeContentObserver(OnDutiesRepositoryObserver observer) {
         if (mObservers.contains(observer)) {
             mObservers.remove(observer);
         }
@@ -68,7 +68,8 @@ public class OnDutiesRepository implements OnDutiesDataSource  {
 
         OnDuties onDuties = null;
 
-        if (!mCacheIsDirty) {
+        //TODO Uncomment later
+        /*if (!mCacheIsDirty) {
             // Respond immediately with cache if available and not dirty
             if (mCachedOnDuties != null) {
                 onDuties = getCachedOnDuties();
@@ -77,14 +78,21 @@ public class OnDutiesRepository implements OnDutiesDataSource  {
                 // Query the local storage if available.
                 onDuties = mOnDutiesLocalDataSource.getOnDuties();
             }
-        }
+        }*/
+
+
         // To simplify, we'll consider the local data source fresh when it has data.
         if (onDuties == null) {
             // Grab remote data if cache is dirty or local data not available.
             onDuties = mOnDutiesRemoteDataSource.getOnDuties();
             // We copy the data to the device so we don't need to query the network next time
-            saveOnDutiesInLocalDataSource(onDuties);
+
+            //TODO Uncomment
+            //saveOnDutiesInLocalDataSource(onDuties);
         }
+
+        //TODO Remove later
+        onDuties = mOnDutiesRemoteDataSource.getOnDuties();
 
         processLoadedOnDuties(onDuties);
         return getCachedOnDuties();

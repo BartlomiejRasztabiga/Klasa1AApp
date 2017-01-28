@@ -3,9 +3,7 @@ package pl.ct8.rasztabiga;
 import pl.ct8.rasztabiga.models.*;
 import pl.ct8.rasztabiga.utils.LoggerUtils;
 import pl.ct8.rasztabiga.utils.SecurityUtils;
-import sun.rmi.runtime.Log;
 
-import javax.swing.text.Style;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -307,6 +305,29 @@ public class DatabaseController {
         }
     }
 
+    static OnDuties getOnDuties() throws SQLException {
+        int first, second;
+        String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, "dyzurni.first");
+
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            first = Integer.valueOf(rs.getString("VALUE"));
+
+            stmt.setString(1, "dyzurni.second");
+
+            rs = stmt.executeQuery();
+            rs.next();
+
+            second = Integer.valueOf(rs.getString("VALUE"));
+            //getStudent(first), getStudent(second)
+            return new OnDuties(new ArrayList<>(Arrays.asList(getStudent(first), getStudent(second))));
+
+        }
+    }
+
     static void setDyzurni(int first, int second) throws SQLException {
         String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -483,5 +504,6 @@ public class DatabaseController {
             stmt.executeUpdate();
         }
     }
+
 }
 

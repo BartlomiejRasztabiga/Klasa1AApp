@@ -64,6 +64,11 @@ public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderMana
         }
     }
 
+    @Override
+    public void onLoaderReset(Loader<OnDuties> loader) {
+        //ignore
+    }
+
     private void showOnDuties() {
         OnDuties onDutiesToDisplay = mCurrentOnDuties;
         processOnDuties(onDutiesToDisplay);

@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data;
+package pl.ct8.rasztabiga.models;
 
 import java.util.List;
 

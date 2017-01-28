@@ -49,6 +49,23 @@ public class StudentController {
         }
     }
 
+    @RequestMapping(value = "/getOnDuties", method = RequestMethod.GET)
+    public ResponseEntity<?> getOnDuties(@RequestParam("apiKey") String apiKey) {
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            Gson gson = new Gson();
+            return new ResponseEntity<>(gson.toJson(DatabaseController.getOnDuties()), HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
     @RequestMapping(value = "/setdyzurni", method = RequestMethod.GET)
     public ResponseEntity<?> setDyzurni(@RequestParam("first") int first, @RequestParam("second") int second, @RequestParam("apiKey") String apiKey) {
         try {

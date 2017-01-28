@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.data.OnDuties;
+import pl.rasztabiga.klasa1a.data.Student;
 
 public class OnDutiesFragment extends Fragment implements OnDutiesContract.View {
 
@@ -21,9 +25,9 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
     private LinearLayout mOnDutiesView;
 
-    private TextView mFirstOnDuty;
-
-    private TextView mSecondOnDuty;
+    @BindView(R.id.onDuty1) TextView mFirstOnDuty;
+    @BindView(R.id.onDuty2) TextView mSecondOnDuty;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
 
     public OnDutiesFragment() {
 
@@ -64,7 +68,6 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
         mFirstOnDuty = (TextView) root.findViewById(R.id.onDuty1);
         mSecondOnDuty = (TextView) root.findViewById(R.id.onDuty2);
-        Log.d("OnDutiesFragment", "Jestem tu");
 
         //setHasOptionsMenu(true);
         return root;
@@ -72,11 +75,28 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
     @Override
     public void setLoadingIndicator(boolean active) {
+        if (getView() == null) {
+            return;
+        }
 
+        //mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showOnDuties(OnDuties onDuties) {
+        //mProgressBar.setVisibility(View.INVISIBLE);
+
+        if(onDuties != null) {
+            Student[] students = onDuties.getStudentsArray();
+            Student first = students[0];
+            Student second = students[1];
+
+            mFirstOnDuty.setText(first.getName() + " " + first.getSurname());
+            mSecondOnDuty.setText(second.getName() + " " + second.getSurname());
+            mFirstOnDuty.setVisibility(View.VISIBLE);
+            mSecondOnDuty.setVisibility(View.VISIBLE);
+        }
+
 
     }
 
