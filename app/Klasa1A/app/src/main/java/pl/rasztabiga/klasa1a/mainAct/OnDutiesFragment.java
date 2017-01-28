@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.data.OnDuties;
 import pl.rasztabiga.klasa1a.data.Student;
@@ -27,7 +28,8 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
     @BindView(R.id.onDuty1) TextView mFirstOnDuty;
     @BindView(R.id.onDuty2) TextView mSecondOnDuty;
-    @BindView(R.id.progressBar) ProgressBar mProgressBar;
+    @BindView(R.id.progress_indicator) ProgressBar mProgressBar;
+    //ProgressBar mProgressBar;
 
     public OnDutiesFragment() {
 
@@ -40,6 +42,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(getActivity());
 
     }
 
@@ -79,12 +82,16 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
             return;
         }
 
-        //mProgressBar.setVisibility(View.VISIBLE);
+        if(active) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public void showOnDuties(OnDuties onDuties) {
-        //mProgressBar.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         if(onDuties != null) {
             Student[] students = onDuties.getStudentsArray();
