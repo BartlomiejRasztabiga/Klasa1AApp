@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         changeLog = new ChangeLog(this);
         LayoutUtils.setMainActivityRef(this);
 
-        //Test branch to show how merge request works
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         apiKey = preferences.getString(getString(R.string.apiKey_pref_key), "");
 
