@@ -1,6 +1,7 @@
 package pl.rasztabiga.klasa1a.data.source;
 
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import butterknife.BindView;
@@ -17,6 +18,8 @@ public interface OnDutiesDataSource {
 
     @Nullable
     OnDuties getOnDuties();
+
+    void saveOnDuties(@NonNull OnDuties onDuties);
 
     void refreshOnDuties();
 }
