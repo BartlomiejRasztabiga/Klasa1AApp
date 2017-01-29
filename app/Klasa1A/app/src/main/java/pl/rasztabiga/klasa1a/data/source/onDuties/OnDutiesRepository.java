@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data.source;
+package pl.rasztabiga.klasa1a.data.source.onDuties;
 
 
 import android.support.annotation.NonNull;
@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.rasztabiga.klasa1a.data.OnDuties;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

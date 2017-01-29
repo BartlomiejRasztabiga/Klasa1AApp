@@ -4,13 +4,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import pl.rasztabiga.klasa1a.data.source.LuckyNumbersRepository;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesDataSource;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
-import pl.rasztabiga.klasa1a.data.source.local.LuckyNumbersLocalDataSource;
-import pl.rasztabiga.klasa1a.data.source.local.OnDutiesLocalDataSource;
-import pl.rasztabiga.klasa1a.data.source.remote.LuckyNumbersRemoteDataSource;
-import pl.rasztabiga.klasa1a.data.source.remote.OnDutiesRemoteDataSource;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersRepository;
+import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesDataSource;
+import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.local.LuckyNumbersLocalDataSource;
+import pl.rasztabiga.klasa1a.data.source.onDuties.local.OnDutiesLocalDataSource;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.remote.LuckyNumbersRemoteDataSource;
+import pl.rasztabiga.klasa1a.data.source.onDuties.remote.OnDutiesRemoteDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data.source;
+package pl.rasztabiga.klasa1a.data.source.onDuties;
 
 
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 
 import pl.rasztabiga.klasa1a.Injection;
-import pl.rasztabiga.klasa1a.data.OnDuties;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

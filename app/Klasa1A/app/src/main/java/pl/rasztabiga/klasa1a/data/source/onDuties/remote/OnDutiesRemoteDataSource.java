@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data.source.remote;
+package pl.rasztabiga.klasa1a.data.source.onDuties.remote;
 
 
 import android.content.Context;
@@ -9,8 +9,8 @@ import com.google.gson.Gson;
 import java.lang.ref.WeakReference;
 
 import pl.rasztabiga.klasa1a.RequestException;
-import pl.rasztabiga.klasa1a.data.OnDuties;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesDataSource;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
+import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesDataSource;
 import pl.rasztabiga.klasa1a.utils.ApiKeyUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 

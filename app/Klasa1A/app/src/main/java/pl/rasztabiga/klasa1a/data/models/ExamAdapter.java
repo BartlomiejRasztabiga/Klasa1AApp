@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.models;
+package pl.rasztabiga.klasa1a.data.models;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

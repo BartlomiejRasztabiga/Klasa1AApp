@@ -1,10 +1,10 @@
-package pl.rasztabiga.klasa1a.data.source;
+package pl.rasztabiga.klasa1a.data.source.onDuties;
 
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import pl.rasztabiga.klasa1a.data.OnDuties;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 
 public interface OnDutiesDataSource {
 

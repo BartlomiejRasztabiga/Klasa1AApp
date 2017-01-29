@@ -2,6 +2,10 @@ package pl.rasztabiga.klasa1a.utils;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import pl.rasztabiga.klasa1a.R;
 
 public class ApiKeyUtils {
 

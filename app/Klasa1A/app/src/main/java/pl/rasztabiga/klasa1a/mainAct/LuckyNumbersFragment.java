@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.R;
-import pl.rasztabiga.klasa1a.data.LuckyNumbers;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
 
 public class LuckyNumbersFragment extends Fragment implements LuckyNumbersContract.View {
 

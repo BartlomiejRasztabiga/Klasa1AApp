@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data.source.local;
+package pl.rasztabiga.klasa1a.data.source.luckyNumbers.local;
 
 import android.content.Context;
 

@@ -62,8 +62,8 @@ import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.rasztabiga.klasa1a.models.Exam;
-import pl.rasztabiga.klasa1a.models.ExamAdapter;
+import pl.rasztabiga.klasa1a.data.models.Exam;
+import pl.rasztabiga.klasa1a.data.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 

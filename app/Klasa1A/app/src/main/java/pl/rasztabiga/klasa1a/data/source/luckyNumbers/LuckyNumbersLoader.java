@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data.source;
+package pl.rasztabiga.klasa1a.data.source.luckyNumbers;
 
 
 import android.support.v4.content.AsyncTaskLoader;
@@ -6,7 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import pl.rasztabiga.klasa1a.Injection;
-import pl.rasztabiga.klasa1a.data.LuckyNumbers;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class LuckyNumbersLoader extends AsyncTaskLoader<LuckyNumbers> implements LuckyNumbersRepository.LuckyNumbersRepositoryObserver {

@@ -6,9 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import pl.rasztabiga.klasa1a.data.LuckyNumbers;
-import pl.rasztabiga.klasa1a.data.source.LuckyNumbersLoader;
-import pl.rasztabiga.klasa1a.data.source.LuckyNumbersRepository;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersLoader;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

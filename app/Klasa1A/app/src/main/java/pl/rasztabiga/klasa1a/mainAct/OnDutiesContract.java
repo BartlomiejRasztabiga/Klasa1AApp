@@ -3,7 +3,7 @@ package pl.rasztabiga.klasa1a.mainAct;
 
 import pl.rasztabiga.klasa1a.BasePresenter;
 import pl.rasztabiga.klasa1a.BaseView;
-import pl.rasztabiga.klasa1a.data.OnDuties;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 
 public interface OnDutiesContract {
 

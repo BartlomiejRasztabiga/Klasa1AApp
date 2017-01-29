@@ -14,8 +14,8 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.R;
-import pl.rasztabiga.klasa1a.data.OnDuties;
-import pl.rasztabiga.klasa1a.data.Student;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.Student;
 
 public class OnDutiesFragment extends Fragment implements OnDutiesContract.View {
 
@@ -84,7 +84,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
     @Override
     public void showOnDuties(OnDuties onDuties) {
-        mProgressBar.setVisibility(View.INVISIBLE);
+        setLoadingIndicator(false);
 
         if (onDuties != null) {
             Student[] students = onDuties.getStudentsArray();

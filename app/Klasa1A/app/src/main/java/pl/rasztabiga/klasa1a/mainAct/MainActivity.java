@@ -5,17 +5,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.Injection;
 import pl.rasztabiga.klasa1a.R;
-import pl.rasztabiga.klasa1a.data.source.LuckyNumbersLoader;
-import pl.rasztabiga.klasa1a.data.source.LuckyNumbersRepository;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesLoader;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersLoader;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersRepository;
+import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesLoader;
+import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 
 
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         showChangelogOnFirstRun();
 
         //OnDuties
-        Log.d("MainActivity", "Before onDutiesFragment");
         OnDutiesFragment onDutiesFragment = (OnDutiesFragment) getSupportFragmentManager().findFragmentById(R.id.onDutiesContentFrame);
         if (onDutiesFragment == null) {
             onDutiesFragment = OnDutiesFragment.newInstance();
@@ -100,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         switch (itemThatWasClickedId) {
             case R.id.action_refresh: {
                 mOnDutiesPresenter.loadOnDuties(true);
+                mLuckyNumbersPresenter.loadLuckyNumbers(true);
                 return true;
             }
             case R.id.action_download_app_manually: {

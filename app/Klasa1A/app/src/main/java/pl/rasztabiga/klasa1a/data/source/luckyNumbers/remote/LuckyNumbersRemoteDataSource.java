@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data.source.remote;
+package pl.rasztabiga.klasa1a.data.source.luckyNumbers.remote;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import java.lang.ref.WeakReference;
 
 import pl.rasztabiga.klasa1a.RequestException;
-import pl.rasztabiga.klasa1a.data.LuckyNumbers;
-import pl.rasztabiga.klasa1a.data.source.LuckyNumbersDataSource;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersDataSource;
 import pl.rasztabiga.klasa1a.utils.ApiKeyUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 

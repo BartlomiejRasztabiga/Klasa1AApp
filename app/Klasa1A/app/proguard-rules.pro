@@ -22,7 +22,7 @@
 -dontwarn com.squareup.picasso.**
 -keepattributes Signature
 -keepattributes *Annotation*
--keepclassmembers class pl.rasztabiga.klasa1a.models.** { *; }
--keepclassmembers class pl.rasztabiga.klasa1a.data.LuckyNumbers { *; }
--keepclassmembers class pl.rasztabiga.klasa1a.data.OnDuties { *; }
--keepclassmembers class pl.rasztabiga.klasa1a.data.Student { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.models.** { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.Student { *; }

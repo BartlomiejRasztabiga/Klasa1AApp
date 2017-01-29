@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data;
+package pl.rasztabiga.klasa1a.data.source.luckyNumbers.models;
 
 import java.util.ArrayList;
 

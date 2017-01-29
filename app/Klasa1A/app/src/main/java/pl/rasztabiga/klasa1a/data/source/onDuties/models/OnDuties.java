@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data;
+package pl.rasztabiga.klasa1a.data.source.onDuties.models;
 
 import java.util.List;
 

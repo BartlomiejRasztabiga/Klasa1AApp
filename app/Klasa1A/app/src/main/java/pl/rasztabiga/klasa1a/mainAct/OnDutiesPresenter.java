@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import pl.rasztabiga.klasa1a.data.OnDuties;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesLoader;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
+import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesLoader;
+import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -50,14 +50,11 @@ public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderMana
 
     @Override
     public Loader<OnDuties> onCreateLoader(int id, Bundle args) {
-        mOnDutiesView.setLoadingIndicator(true);
         return mLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<OnDuties> loader, OnDuties data) {
-        mOnDutiesView.setLoadingIndicator(false);
-
         mCurrentOnDuties = data;
         if (mCurrentOnDuties == null) {
             mOnDutiesView.showLoadingOnDutiesError();
@@ -72,12 +69,14 @@ public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderMana
     }
 
     private void showOnDuties() {
+        mOnDutiesView.setLoadingIndicator(false);
         OnDuties onDutiesToDisplay = mCurrentOnDuties;
         processOnDuties(onDutiesToDisplay);
     }
 
     @Override
     public void loadOnDuties(boolean forceUpdate) {
+        mOnDutiesView.setLoadingIndicator(true);
         if (forceUpdate || mFirstLoad) {
             mFirstLoad = false;
             mOnDutiesRepository.refreshOnDuties();

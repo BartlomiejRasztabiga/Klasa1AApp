@@ -1,7 +1,7 @@
-package pl.rasztabiga.klasa1a.models;
+package pl.rasztabiga.klasa1a.data.models;
 
 
-import pl.rasztabiga.klasa1a.data.Student;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.Student;
 
 public final class Dyzurni {
     private final Student dyzurny1;

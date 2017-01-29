@@ -2,7 +2,7 @@ package pl.rasztabiga.klasa1a.mainAct;
 
 import pl.rasztabiga.klasa1a.BasePresenter;
 import pl.rasztabiga.klasa1a.BaseView;
-import pl.rasztabiga.klasa1a.data.LuckyNumbers;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
 
 public interface LuckyNumbersContract {
 
