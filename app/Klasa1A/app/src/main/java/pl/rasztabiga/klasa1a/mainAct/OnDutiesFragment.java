@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,7 +26,6 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
     @BindView(R.id.progress_indicator)
     ProgressBar mProgressBar;
     private OnDutiesContract.Presenter mPresenter;
-    private LinearLayout mOnDutiesView;
 
     public OnDutiesFragment() {
 

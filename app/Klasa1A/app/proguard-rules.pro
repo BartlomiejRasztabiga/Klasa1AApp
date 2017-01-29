@@ -15,6 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn com.google.common.**
 -dontwarn java.nio.file.**
 -dontwarn org.codehaus.mojo.**
 -dontwarn java.io.IOException
@@ -22,3 +23,6 @@
 -keepattributes Signature
 -keepattributes *Annotation*
 -keepclassmembers class pl.rasztabiga.klasa1a.models.** { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.LuckyNumbers { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.OnDuties { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.Student { *; }

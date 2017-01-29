@@ -13,7 +13,7 @@ import java.util.List;
 
 import pl.rasztabiga.klasa1a.R;
 
-public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder> {
+public final class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder> {
 
     private static final String TAG = ExamAdapter.class.getSimpleName();
     final private ExamClickListener onClickListener;

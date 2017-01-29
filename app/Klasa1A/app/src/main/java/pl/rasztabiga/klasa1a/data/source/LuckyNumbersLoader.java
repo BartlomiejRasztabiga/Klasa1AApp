@@ -1,32 +1,31 @@
 package pl.rasztabiga.klasa1a.data.source;
 
 
+import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.AsyncTaskLoader;
 
 import pl.rasztabiga.klasa1a.Injection;
-import pl.rasztabiga.klasa1a.data.OnDuties;
-
+import pl.rasztabiga.klasa1a.data.LuckyNumbers;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class OnDutiesLoader extends AsyncTaskLoader<OnDuties> implements OnDutiesRepository.OnDutiesRepositoryObserver {
+public class LuckyNumbersLoader extends AsyncTaskLoader<LuckyNumbers> implements LuckyNumbersRepository.LuckyNumbersRepositoryObserver {
 
-    private OnDutiesRepository mRepository;
+    private LuckyNumbersRepository mRepository;
 
-    public OnDutiesLoader(Context context, @NonNull OnDutiesRepository repository) {
+    public LuckyNumbersLoader(Context context, @NonNull LuckyNumbersRepository repository) {
         super(context);
         checkNotNull(repository);
-        mRepository = Injection.provideOnDutiesRepository(context);
+        mRepository = Injection.proviceLuckyNumbersRepository(context);
     }
 
     @Override
-    public OnDuties loadInBackground() {
-        return mRepository.getOnDuties();
+    public LuckyNumbers loadInBackground() {
+        return mRepository.getLuckyNumbers();
     }
 
     @Override
-    public void deliverResult(OnDuties data) {
+    public void deliverResult(LuckyNumbers data) {
         if (isReset()) {
             return;
         }
@@ -40,14 +39,14 @@ public class OnDutiesLoader extends AsyncTaskLoader<OnDuties> implements OnDutie
     protected void onStartLoading() {
 
         // Deliver any previously loaded data immediately if available.
-        if (mRepository.cachedOnDutiesAvailable()) {
-            deliverResult(mRepository.getCachedOnDuties());
+        if (mRepository.cachedLuckyNumbersAvailable()) {
+            deliverResult(mRepository.getCachedLuckyNumbers());
         }
 
         // Begin monitoring the underlying data source.
         mRepository.addContentObserver(this);
 
-        if (takeContentChanged() || !mRepository.cachedOnDutiesAvailable()) {
+        if (takeContentChanged() || !mRepository.cachedLuckyNumbersAvailable()) {
             // When a change has  been delivered or the repository cache isn't available, we force
             // a load.
             forceLoad();
@@ -56,12 +55,12 @@ public class OnDutiesLoader extends AsyncTaskLoader<OnDuties> implements OnDutie
 
     @Override
     protected void onReset() {
-        onStopLoading();
+        onStartLoading();
         mRepository.removeContentObserver(this);
     }
 
     @Override
-    public void onOnDutiesChanged() {
+    public void onLuckyNumbersChanged() {
         if (isStarted()) {
             forceLoad();
         }

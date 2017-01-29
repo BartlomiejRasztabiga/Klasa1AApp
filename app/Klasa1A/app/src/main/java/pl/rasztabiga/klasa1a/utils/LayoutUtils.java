@@ -31,6 +31,8 @@ public class LayoutUtils {
     private static final String CHANGELOG_NAV_DRAWER_TAG = "changelog";
     private static WeakReference<Activity> mainActivityRef;
 
+    private LayoutUtils() {}
+
     public static Drawer getNavigationDrawer(final Activity actualClass, int selectedItem, Toolbar toolbar) {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Ekran główny").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.home_icon, null));
         SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName("Pobierz nową wersję ręcznie").withSelectable(false).withTag(DOWNLOAD_NEW_VERSION_NAV_DRAWER_TAG);

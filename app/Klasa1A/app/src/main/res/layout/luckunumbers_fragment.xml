@@ -74,6 +74,7 @@
             android:gravity="end"
             android:orientation="vertical"
             android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/thisWeekLuckyNumbers">
 

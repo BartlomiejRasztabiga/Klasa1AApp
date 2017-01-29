@@ -18,8 +18,11 @@ public class OnDutiesRepository implements OnDutiesDataSource {
     private final OnDutiesDataSource mOnDutiesRemoteDataSource;
 
     private final OnDutiesDataSource mOnDutiesLocalDataSource;
+
     OnDuties mCachedOnDuties;
+
     boolean mCacheIsDirty;
+
     private List<OnDutiesRepositoryObserver> mObservers = new ArrayList<>();
 
     private OnDutiesRepository(@NonNull OnDutiesDataSource onDutiesRemoteDataSource,
@@ -55,7 +58,7 @@ public class OnDutiesRepository implements OnDutiesDataSource {
 
     private void notifyContentObserver() {
         for (OnDutiesRepositoryObserver observer : mObservers) {
-            observer.onTasksChanged();
+            observer.onOnDutiesChanged();
         }
     }
 
@@ -141,7 +144,7 @@ public class OnDutiesRepository implements OnDutiesDataSource {
 
     public interface OnDutiesRepositoryObserver {
 
-        void onTasksChanged();
+        void onOnDutiesChanged();
 
     }
 }

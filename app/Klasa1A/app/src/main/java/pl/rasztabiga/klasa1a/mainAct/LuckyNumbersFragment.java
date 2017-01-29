@@ -73,18 +73,19 @@ public class LuckyNumbersFragment extends Fragment implements LuckyNumbersContra
     @Override
     public void showLuckyNumbers(LuckyNumbers luckyNumbers) {
 
-        if (luckyNumbers != null) {
+        //When monday is set to 0, don't show lucky numbers
+        if (luckyNumbers != null && luckyNumbers.getNumbersList().get(0) != 0) {
             List<Integer> luckyNumbersList = luckyNumbers.getNumbersList();
             mMondayLuckyNumber.setText(String.valueOf(luckyNumbersList.get(0)));
             mTuesdayLuckyNumber.setText(String.valueOf(luckyNumbersList.get(1)));
             mWednesdayLuckyNumber.setText(String.valueOf(luckyNumbersList.get(2)));
-            mTuesdayLuckyNumber.setText(String.valueOf(luckyNumbersList.get(3)));
+            mThursdayLuckyNumber.setText(String.valueOf(luckyNumbersList.get(3)));
             mFridayLuckyNumber.setText(String.valueOf(luckyNumbersList.get(4)));
 
             mMondayLuckyNumber.setVisibility(View.VISIBLE);
             mTuesdayLuckyNumber.setVisibility(View.VISIBLE);
             mWednesdayLuckyNumber.setVisibility(View.VISIBLE);
-            mTuesdayLuckyNumber.setVisibility(View.VISIBLE);
+            mThursdayLuckyNumber.setVisibility(View.VISIBLE);
             mFridayLuckyNumber.setVisibility(View.VISIBLE);
         }
     }

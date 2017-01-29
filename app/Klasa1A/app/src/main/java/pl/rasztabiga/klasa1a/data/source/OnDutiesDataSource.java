@@ -17,7 +17,7 @@ public interface OnDutiesDataSource {
 
     interface GetOnDutiesCallback {
 
-        void onOnDutiesLoader(OnDuties onDuties);
+        void onOnDutiesLoaded(OnDuties onDuties);
 
         void onDataNotAvailable();
     }

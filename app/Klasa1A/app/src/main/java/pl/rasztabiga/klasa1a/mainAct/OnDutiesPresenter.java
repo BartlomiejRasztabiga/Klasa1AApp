@@ -13,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderManager.LoaderCallbacks<OnDuties> {
 
+    //Two loaders cannot have the same ID!
     private final static int ON_DUTIES_QUERY = 1;
 
     private final OnDutiesRepository mOnDutiesRepository;

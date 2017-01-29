@@ -14,6 +14,6 @@ public class OnDuties {
     }
 
     public Student[] getStudentsArray() {
-        return studentsArray;
+        return studentsArray.clone();
     }
 }

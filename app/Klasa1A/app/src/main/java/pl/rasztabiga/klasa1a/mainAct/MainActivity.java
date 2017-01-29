@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.Injection;
 import pl.rasztabiga.klasa1a.R;
+import pl.rasztabiga.klasa1a.data.source.LuckyNumbersLoader;
+import pl.rasztabiga.klasa1a.data.source.LuckyNumbersRepository;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesLoader;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
@@ -19,6 +22,7 @@ import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 public class MainActivity extends AppCompatActivity {
 
     private OnDutiesPresenter mOnDutiesPresenter;
+    private LuckyNumbersPresenter mLuckyNumbersPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         LayoutUtils.getNavigationDrawer(MainActivity.this, 1, toolbar);
 
+        //show changelog on first run
+        showChangelogOnFirstRun();
+
         //OnDuties
         Log.d("MainActivity", "Before onDutiesFragment");
         OnDutiesFragment onDutiesFragment = (OnDutiesFragment) getSupportFragmentManager().findFragmentById(R.id.onDutiesContentFrame);
@@ -38,20 +45,46 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Create the presenter
-        OnDutiesRepository repository = Injection.provideOnDutiesRepository(getApplicationContext());
-        OnDutiesLoader onDutiesLoader = new OnDutiesLoader(getApplicationContext(), repository);
+        OnDutiesRepository onDutiesRepository = Injection.provideOnDutiesRepository(getApplicationContext());
+        OnDutiesLoader onDutiesLoader = new OnDutiesLoader(getApplicationContext(), onDutiesRepository);
 
         mOnDutiesPresenter = new OnDutiesPresenter(
                 onDutiesLoader,
                 getSupportLoaderManager(),
-                repository,
+                onDutiesRepository,
                 onDutiesFragment
         );
 
         //LuckyNumbers
         LuckyNumbersFragment luckyNumbersFragment = (LuckyNumbersFragment) getSupportFragmentManager().findFragmentById(R.id.luckyNumbersContentFrame);
-        if (luckyNumbersFragment)
+        if (luckyNumbersFragment == null) {
+            luckyNumbersFragment = LuckyNumbersFragment.newInstance();
+            LayoutUtils.addFragmentToActivity(getSupportFragmentManager(), luckyNumbersFragment, R.id.luckyNumbersContentFrame);
+        }
 
+        LuckyNumbersRepository luckyNumbersRepository = Injection.proviceLuckyNumbersRepository(getApplicationContext());
+        LuckyNumbersLoader luckyNumbersLoader = new LuckyNumbersLoader(getApplicationContext(), luckyNumbersRepository);
+
+        mLuckyNumbersPresenter = new LuckyNumbersPresenter(
+                luckyNumbersLoader,
+                getSupportLoaderManager(),
+                luckyNumbersRepository,
+                luckyNumbersFragment
+        );
+
+
+    }
+
+    private void showChangelogOnFirstRun() {
+        ChangeLog changelog = new ChangeLog(this);
+        if (changelog.isFirstRun()) {
+            changelog.getLogDialog().show();
+        }
+    }
+
+    private void showChangelog() {
+        ChangeLog changelog = new ChangeLog(this);
+        changelog.getFullLogDialog().show();
 
     }
 
@@ -73,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             case R.id.action_show_changelog: {
+                showChangelog();
                 return true;
             }
         }

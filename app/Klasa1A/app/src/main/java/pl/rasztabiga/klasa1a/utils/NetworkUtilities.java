@@ -8,13 +8,15 @@ import java.net.ConnectException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import pl.rasztabiga.klasa1a.Injection;
 import pl.rasztabiga.klasa1a.RequestException;
 
 public class NetworkUtilities {
 
     //private static final String SERVER_ADDR = "http://89.36.219.95:8007";
     //private static final String SERVER_ADDR = "http://192.168.1.24:8007";
-    private static final String SERVER_ADDR = "http://94.177.229.18:8007";
+    //private static final String SERVER_ADDR = "http://94.177.229.18:8007";
+    private static final String SERVER_ADDR = Injection.provideServerAddress();
 
     private static final String DYZURNI_QUERY_URL = SERVER_ADDR + "/getdyzurni";
     private static final String ON_DUTIES_QUERY_URL = SERVER_ADDR + "/getOnDuties";
@@ -28,6 +30,11 @@ public class NetworkUtilities {
     private static final String SETCHANGINGROOM_QUERY_URL = SERVER_ADDR + "/setchangingroomstatus";
     private static final String DOOR_QUERY_URL = SERVER_ADDR + "/getdoorstatus";
     private static final String SETDOOR_QUERY_URL = SERVER_ADDR + "/setdoorstatus";
+
+    private static final int INTERNAL_SERVER_ERROR_CODE = 500;
+    private static final int NOT_FOUND_CODE = 404;
+    private static final int FORBIDDEN_CODE = 401;
+
 
     private static final String TAG = NetworkUtilities.class.getName();
 
@@ -129,7 +136,7 @@ public class NetworkUtilities {
 
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
+            if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
                 throw new RequestException();
             }
             return response.body().string();
@@ -153,7 +160,7 @@ public class NetworkUtilities {
 
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
+            if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
                 throw new RequestException();
             }
             return response.body().string();
@@ -176,7 +183,7 @@ public class NetworkUtilities {
 
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
+            if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
                 throw new RequestException();
             }
             return response.body().string();
@@ -201,10 +208,11 @@ public class NetworkUtilities {
 
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
+            if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
                 throw new RequestException();
             }
-            return Integer.valueOf(response.body().string());
+            //return Integer.valueOf(response.body().string());
+            return Integer.parseInt(response.body().string());
         } catch (ConnectException e) {
             //ignore
         } catch (IOException e) {
@@ -224,7 +232,7 @@ public class NetworkUtilities {
 
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
+            if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
                 throw new RequestException();
             }
             return response.body().string();
@@ -248,7 +256,7 @@ public class NetworkUtilities {
             Response response = client.newCall(request).execute();
             if (response.code() == 200) {
                 return null;
-            } else if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
+            } else if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
                 return "Nie znaleziono takiego klucza";
             }
         } catch (ConnectException e) {
@@ -270,7 +278,7 @@ public class NetworkUtilities {
 
         try {
             Response response = client.newCall(request).execute();
-            if (response.code() == 500 || response.code() == 404 || response.code() == 401) {
+            if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
                 throw new RequestException();
             }
             return response.body().string();
