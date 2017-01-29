@@ -27,11 +27,12 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        LayoutUtils.getNavigationDrawer(MainActivity.this, 1 ,toolbar);
+        LayoutUtils.getNavigationDrawer(MainActivity.this, 1, toolbar);
 
+        //OnDuties
         Log.d("MainActivity", "Before onDutiesFragment");
         OnDutiesFragment onDutiesFragment = (OnDutiesFragment) getSupportFragmentManager().findFragmentById(R.id.onDutiesContentFrame);
-        if(onDutiesFragment == null) {
+        if (onDutiesFragment == null) {
             onDutiesFragment = OnDutiesFragment.newInstance();
             LayoutUtils.addFragmentToActivity(getSupportFragmentManager(), onDutiesFragment, R.id.onDutiesContentFrame);
         }
@@ -46,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
                 repository,
                 onDutiesFragment
         );
+
+        //LuckyNumbers
+        LuckyNumbersFragment luckyNumbersFragment = (LuckyNumbersFragment) getSupportFragmentManager().findFragmentById(R.id.luckyNumbersContentFrame);
+        if (luckyNumbersFragment)
 
 
     }

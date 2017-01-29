@@ -17,19 +17,26 @@ import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.data.LuckyNumbers;
 
-public class LuckyNumbersFragment extends Fragment implements LuckyNumbersContract.View  {
+public class LuckyNumbersFragment extends Fragment implements LuckyNumbersContract.View {
 
+    @BindView(R.id.monday_ln)
+    TextView mMondayLuckyNumber;
+    @BindView(R.id.tuesday_ln)
+    TextView mTuesdayLuckyNumber;
+    @BindView(R.id.wednesday_ln)
+    TextView mWednesdayLuckyNumber;
+    @BindView(R.id.thursday_ln)
+    TextView mThursdayLuckyNumber;
+    @BindView(R.id.friday_ln)
+    TextView mFridayLuckyNumber;
     private LuckyNumbersContract.Presenter mPresenter;
 
-    @BindView(R.id.monday_ln) TextView mMondayLuckyNumber;
-    @BindView(R.id.tuesday_ln) TextView mTuesdayLuckyNumber;
-    @BindView(R.id.wednesday_ln) TextView mWednesdayLuckyNumber;
-    @BindView(R.id.thursday_ln) TextView mThursdayLuckyNumber;
-    @BindView(R.id.friday_ln) TextView mFridayLuckyNumber;
+    public LuckyNumbersFragment() {
+    }
 
-    public LuckyNumbersFragment() {}
-
-    public static LuckyNumbersFragment newInstance() { return new LuckyNumbersFragment(); }
+    public static LuckyNumbersFragment newInstance() {
+        return new LuckyNumbersFragment();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

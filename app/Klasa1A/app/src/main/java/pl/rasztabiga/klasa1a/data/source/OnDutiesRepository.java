@@ -8,21 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.rasztabiga.klasa1a.data.OnDuties;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class OnDutiesRepository implements OnDutiesDataSource  {
+public class OnDutiesRepository implements OnDutiesDataSource {
 
     private static OnDutiesRepository instance = null;
 
     private final OnDutiesDataSource mOnDutiesRemoteDataSource;
 
     private final OnDutiesDataSource mOnDutiesLocalDataSource;
-
+    OnDuties mCachedOnDuties;
+    boolean mCacheIsDirty;
     private List<OnDutiesRepositoryObserver> mObservers = new ArrayList<>();
 
-    OnDuties mCachedOnDuties;
-
-    boolean mCacheIsDirty;
+    private OnDutiesRepository(@NonNull OnDutiesDataSource onDutiesRemoteDataSource,
+                               @NonNull OnDutiesDataSource onDutiesLocalDataSource) {
+        mOnDutiesRemoteDataSource = checkNotNull(onDutiesRemoteDataSource);
+        mOnDutiesLocalDataSource = checkNotNull(onDutiesLocalDataSource);
+    }
 
     public static OnDutiesRepository getInstance(OnDutiesDataSource onDutiesRemoteDataSource,
                                                  OnDutiesDataSource onDutiesLocalDataSource) {
@@ -35,12 +39,6 @@ public class OnDutiesRepository implements OnDutiesDataSource  {
 
     public static void destroyInstance() {
         instance = null;
-    }
-
-    private OnDutiesRepository(@NonNull OnDutiesDataSource onDutiesRemoteDataSource,
-                               @NonNull OnDutiesDataSource onDutiesLocalDataSource) {
-        mOnDutiesRemoteDataSource = checkNotNull(onDutiesRemoteDataSource);
-        mOnDutiesLocalDataSource = checkNotNull(onDutiesLocalDataSource);
     }
 
     public void addContentObserver(OnDutiesRepositoryObserver observer) {

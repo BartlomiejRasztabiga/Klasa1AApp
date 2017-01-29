@@ -8,17 +8,17 @@ import pl.rasztabiga.klasa1a.data.OnDuties;
 
 public interface OnDutiesDataSource {
 
-    interface GetOnDutiesCallback {
-
-        void onOnDutiesLoader(OnDuties onDuties);
-
-        void onDataNotAvailable();
-    }
-
     @Nullable
     OnDuties getOnDuties();
 
     void saveOnDuties(@NonNull OnDuties onDuties);
 
     void refreshOnDuties();
+
+    interface GetOnDutiesCallback {
+
+        void onOnDutiesLoader(OnDuties onDuties);
+
+        void onDataNotAvailable();
+    }
 }

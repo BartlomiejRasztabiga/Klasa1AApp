@@ -4,11 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import pl.rasztabiga.klasa1a.data.OnDuties;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesLoader;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderManager.LoaderCallbacks<OnDuties> {
 
@@ -43,7 +44,7 @@ public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderMana
 
     @Override
     public void start() {
-        mLoaderManager.initLoader(ON_DUTIES_QUERY, null ,this);
+        mLoaderManager.initLoader(ON_DUTIES_QUERY, null, this);
     }
 
     @Override

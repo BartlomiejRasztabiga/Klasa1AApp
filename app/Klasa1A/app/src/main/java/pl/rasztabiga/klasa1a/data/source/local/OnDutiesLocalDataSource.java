@@ -16,16 +16,16 @@ public class OnDutiesLocalDataSource implements OnDutiesDataSource {
 
     private OnDutiesDbHelper mDbHelper;
 
+    private OnDutiesLocalDataSource(@NonNull Context context) {
+        checkNotNull(context);
+        mDbHelper = new OnDutiesDbHelper(context);
+    }
+
     public static OnDutiesLocalDataSource getInstance(@NonNull Context context) {
         if (instance == null) {
             instance = new OnDutiesLocalDataSource(context);
         }
         return instance;
-    }
-
-    private OnDutiesLocalDataSource(@NonNull Context context) {
-        checkNotNull(context);
-        mDbHelper = new OnDutiesDbHelper(context);
     }
 
     @Nullable

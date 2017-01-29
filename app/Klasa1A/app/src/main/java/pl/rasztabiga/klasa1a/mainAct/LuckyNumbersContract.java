@@ -8,7 +8,7 @@ public interface LuckyNumbersContract {
 
     interface View extends BaseView<Presenter> {
 
-       //void setLoadingIndicator(boolean active);
+        //void setLoadingIndicator(boolean active);
 
         void showLuckyNumbers(LuckyNumbers luckyNumbers);
 

@@ -1,4 +1,3 @@
-
 package pl.rasztabiga.klasa1a.utils;
 
 
@@ -89,8 +88,8 @@ public class LayoutUtils {
         mainActivityRef = new WeakReference<>(activity);
     }
 
-    public static void addFragmentToActivity (@NonNull FragmentManager fragmentManager,
-                                              @NonNull Fragment fragment, int frameId) {
+    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
+                                             @NonNull Fragment fragment, int frameId) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment);
         transaction.commit();

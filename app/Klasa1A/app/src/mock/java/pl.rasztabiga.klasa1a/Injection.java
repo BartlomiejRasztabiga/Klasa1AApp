@@ -3,11 +3,9 @@ package pl.rasztabiga.klasa1a;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-
 import pl.rasztabiga.klasa1a.data.FakeOnDutiesRemoteDataSource;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesLoader;
-import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
 import pl.rasztabiga.klasa1a.data.source.OnDutiesDataSource;
+import pl.rasztabiga.klasa1a.data.source.OnDutiesRepository;
 import pl.rasztabiga.klasa1a.data.source.local.OnDutiesLocalDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;

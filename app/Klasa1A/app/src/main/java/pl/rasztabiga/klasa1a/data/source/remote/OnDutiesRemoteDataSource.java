@@ -19,6 +19,9 @@ public class OnDutiesRemoteDataSource implements OnDutiesDataSource {
     private static OnDutiesRemoteDataSource instance;
     private static WeakReference<Context> sContext;
 
+    private OnDutiesRemoteDataSource() {
+    }
+
     public static OnDutiesRemoteDataSource getInstance(@NonNull Context context) {
         if (instance == null) {
             instance = new OnDutiesRemoteDataSource();
@@ -28,12 +31,10 @@ public class OnDutiesRemoteDataSource implements OnDutiesDataSource {
         return instance;
     }
 
-    private OnDutiesRemoteDataSource() {}
-
     public OnDuties getOnDuties() {
         String response = null;
         try {
-            response =  NetworkUtilities.getOnDuties(ApiKeyUtils.getApiKey(sContext.get()));
+            response = NetworkUtilities.getOnDuties(ApiKeyUtils.getApiKey(sContext.get()));
         } catch (RequestException e) {
             e.printStackTrace();
         }

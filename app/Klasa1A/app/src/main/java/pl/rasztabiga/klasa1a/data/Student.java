@@ -12,7 +12,8 @@ public class Student {
         this.number = number;
     }
 
-    public Student() {}
+    public Student() {
+    }
 
     public String getName() {
         return name;

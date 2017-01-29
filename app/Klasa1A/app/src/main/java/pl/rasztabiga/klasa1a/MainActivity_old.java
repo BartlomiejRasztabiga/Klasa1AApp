@@ -188,7 +188,12 @@ public class MainActivity_old extends AppCompatActivity implements LoaderManager
             getSupportLoaderManager().initLoader(GET_DYZURNI_LOADER, null, this);
             getSupportLoaderManager().initLoader(GET_LUCKY_NUMBERS_LOADER, null, this);
             */
-/** FEATURE *//*
+/**
+ * FEATURE
+ * FEATURE
+ * <p>
+ * CHANGINGROOM AND DOOR STATUS
+ *//*
 
             //new GetChangingRoomStatus().execute();
             //new GetDoorStatus().execute();
@@ -426,8 +431,8 @@ public class MainActivity_old extends AppCompatActivity implements LoaderManager
 
     */
 /**
-     * FEATURE
-     *//*
+ * FEATURE
+ *//*
 
 
     private void setChangingRoomButton(String data) {
@@ -573,8 +578,8 @@ public class MainActivity_old extends AppCompatActivity implements LoaderManager
 
     */
 /**
-     * CHANGINGROOM AND DOOR STATUS
-     *//*
+ * CHANGINGROOM AND DOOR STATUS
+ *//*
 
 
     */

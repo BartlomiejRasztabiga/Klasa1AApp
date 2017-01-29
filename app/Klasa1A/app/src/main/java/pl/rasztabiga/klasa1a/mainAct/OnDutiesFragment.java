@@ -20,13 +20,14 @@ import pl.rasztabiga.klasa1a.data.Student;
 
 public class OnDutiesFragment extends Fragment implements OnDutiesContract.View {
 
+    @BindView(R.id.onDuty1)
+    TextView mFirstOnDuty;
+    @BindView(R.id.onDuty2)
+    TextView mSecondOnDuty;
+    @BindView(R.id.progress_indicator)
+    ProgressBar mProgressBar;
     private OnDutiesContract.Presenter mPresenter;
-
     private LinearLayout mOnDutiesView;
-
-    @BindView(R.id.onDuty1) TextView mFirstOnDuty;
-    @BindView(R.id.onDuty2) TextView mSecondOnDuty;
-    @BindView(R.id.progress_indicator) ProgressBar mProgressBar;
 
     public OnDutiesFragment() {
 
@@ -50,7 +51,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
     @Override
     public void setPresenter(OnDutiesContract.Presenter presenter) {
-        if(presenter != null) {
+        if (presenter != null) {
             mPresenter = presenter;
         }
     }
@@ -76,7 +77,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
             return;
         }
 
-        if(active) {
+        if (active) {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mProgressBar.setVisibility(View.INVISIBLE);
@@ -87,7 +88,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
     public void showOnDuties(OnDuties onDuties) {
         mProgressBar.setVisibility(View.INVISIBLE);
 
-        if(onDuties != null) {
+        if (onDuties != null) {
             Student[] students = onDuties.getStudentsArray();
             Student first = students[0];
             Student second = students[1];
