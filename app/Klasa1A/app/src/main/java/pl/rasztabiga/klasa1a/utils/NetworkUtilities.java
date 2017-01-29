@@ -269,6 +269,29 @@ public class NetworkUtilities {
         return null;
     }
 
+    public static boolean validateApiKey(String apiKey) throws RequestException {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(CHECK_API_KEY_URL + "?apiKey=" + apiKey)
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.code() == 200) {
+                return true;
+            } else if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
+                throw new RequestException("ApiKey not found");
+            }
+        } catch (IOException e) {
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            return false;
+        }
+
+        return false;
+    }
+
     public static String getAssociatedImagesList(String apiKey, Integer examId) throws RequestException {
         OkHttpClient client = new OkHttpClient();
 

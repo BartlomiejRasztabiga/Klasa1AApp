@@ -36,10 +36,8 @@ public class Injection {
 
     public static String provideServerAddress() {
         if ((BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE).equals("prodrelease")) {
-            Log.d("LOL", "http://89.36.219.95:8007");
             return "http://89.36.219.95:8007";
         }
-        Log.d("LOL", "http://94.177.229.18:8007");
         return "http://94.177.229.18:8007";
     }
 }

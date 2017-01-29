@@ -5,50 +5,44 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.rasztabiga.klasa1a.R;
 
-public class EnterApiKeyFragment extends Fragment {
+public class EnterApiKeyFragment extends Fragment implements EnterApiKeyContract.View {
 
     @BindView(R.id.submitApiKeyButton)
     Button submitButton;
     @BindView(R.id.apiKeyEditText)
     EditText apiKeyEditText;
+    @BindView(R.id.loggingInProgressBar)
+    ProgressBar progressIndicator;
 
-    //private presenter;
-
-    public EnterApiKeyFragment() {
-
+    @OnClick(R.id.submitApiKeyButton)
+    public void submitApiKey() {
+        Log.d("LOL", "submitApiKey()");
+        onSubmitApiKey();
     }
 
+    private EnterApiKeyContract.Presenter mPresenter;
+
     public static EnterApiKeyFragment newInstance() {
+
         return new EnterApiKeyFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //Presenter.start();
-    }
-
-    //setPresenter
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Nullable
@@ -58,5 +52,40 @@ public class EnterApiKeyFragment extends Fragment {
         ButterKnife.bind(this, root);
 
         return root;
+    }
+
+    @Override
+    public void setPresenter(EnterApiKeyContract.Presenter presenter) {
+        if (presenter != null) {
+            mPresenter = presenter;
+        }
+    }
+
+    @Override
+    public void onSubmitApiKey() {
+        if (!apiKeyEditText.getText().toString().equals("") && apiKeyEditText.getText() != null) {
+            Log.d("LOL", "it should be here " + apiKeyEditText.getText().toString());
+            mPresenter.checkIsApiKeyValid(apiKeyEditText.getText().toString());
+        }
+    }
+
+    @Override
+    public void showApiKeyError() {
+        Log.d("LOL", "An error occurred");
+    }
+
+    @Override
+    public void acceptApiKey() {
+        Intent intent = new Intent(getActivity(), SplashActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void setProgressIndicator(boolean active) {
+        if (active) {
+            progressIndicator.setVisibility(View.VISIBLE);
+        } else {
+            progressIndicator.setVisibility(View.INVISIBLE);
+        }
     }
 }
