@@ -41,4 +41,6 @@
     <string name="apiKey_pref_key">apiKey</string>
     <string name="countdown">Odliczanie</string>
     <string name="zero_time">00h:00m:00s</string>
+    <string name="reset_api_key">Zresetuj klucz api</string>
+    <string name="api_key_not_found">Podany klucz nie istnieje. W razie problemów, skontaktuj się z administratorem</string>
 </resources>

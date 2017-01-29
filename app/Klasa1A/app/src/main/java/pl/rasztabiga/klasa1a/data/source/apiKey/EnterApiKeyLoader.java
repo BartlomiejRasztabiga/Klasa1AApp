@@ -31,13 +31,9 @@ public class EnterApiKeyLoader extends AsyncTaskLoader<Boolean> {
     }
 
     @Override
-    public void deliverResult(Boolean data) {
-        super.deliverResult(data);
-    }
-
-    @Override
     protected void onReset() {
-        onStopLoading();
+        super.onReset();
+        forceLoad();
     }
 
     public void setApiKeyToValidate(String apiKeyToValidate) {

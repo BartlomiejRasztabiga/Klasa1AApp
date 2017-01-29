@@ -19,7 +19,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.acitivity_enter_api_key);
 
-        PreferencesUtils.saveApiKey(getApplicationContext(), "");
+        //PreferencesUtils.saveApiKey(getApplicationContext(), "");
 
         if (PreferencesUtils.getApiKey(getApplicationContext()).equals("")) {
             Intent intent = new Intent(SplashActivity.this, EnterApiKeyActivity.class);

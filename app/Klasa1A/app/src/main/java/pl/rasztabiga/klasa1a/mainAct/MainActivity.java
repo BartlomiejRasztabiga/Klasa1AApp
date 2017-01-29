@@ -16,6 +16,7 @@ import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersRepository;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesLoader;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
+import pl.rasztabiga.klasa1a.utils.PreferencesUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -101,12 +102,8 @@ public class MainActivity extends AppCompatActivity {
                 mLuckyNumbersPresenter.loadLuckyNumbers(true);
                 return true;
             }
-            case R.id.action_download_app_manually: {
-                return true;
-            }
-            case R.id.action_show_changelog: {
-                showChangelog();
-                return true;
+            case R.id.action_reset_apikey: {
+                PreferencesUtils.saveApiKey(getApplicationContext(), "");
             }
         }
         return super.onOptionsItemSelected(item);

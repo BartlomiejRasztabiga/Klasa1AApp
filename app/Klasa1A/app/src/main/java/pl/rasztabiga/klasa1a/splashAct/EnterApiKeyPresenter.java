@@ -44,7 +44,15 @@ public class EnterApiKeyPresenter implements EnterApiKeyContract.Presenter, Load
     public void checkIsApiKeyValid(String apiKeyToValidate) {
         this.apiKeyToValidate = apiKeyToValidate;
         mLoader.setApiKeyToValidate(apiKeyToValidate);
+
+        //Maybe not needed
+        /*if (mLoaderManager.getLoader(VALIDATE_API_KEY_QUERY) != null) {
+            mLoaderManager.restartLoader(VALIDATE_API_KEY_QUERY, null, this);
+        } else {
+            mLoaderManager.initLoader(VALIDATE_API_KEY_QUERY, null, this);
+        }*/
         mLoaderManager.initLoader(VALIDATE_API_KEY_QUERY, null, this);
+
     }
 
 
@@ -55,6 +63,7 @@ public class EnterApiKeyPresenter implements EnterApiKeyContract.Presenter, Load
 
     @Override
     public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+        mLoaderManager.destroyLoader(loader.getId());
         if (data == null) {
             mEnterApiKeyView.showApiKeyError();
         } else {

@@ -22,7 +22,6 @@ public class EnterApiKeyActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d("LOL", "EnterApiKeyActivity");
 
         EnterApiKeyFragment enterApiKeyFragment = (EnterApiKeyFragment) getSupportFragmentManager().findFragmentById(R.id.enterApiKeyContentFrame);
         if (enterApiKeyFragment == null) {

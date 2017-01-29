@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,10 +27,11 @@ public class EnterApiKeyFragment extends Fragment implements EnterApiKeyContract
     EditText apiKeyEditText;
     @BindView(R.id.loggingInProgressBar)
     ProgressBar progressIndicator;
+    @BindView(R.id.apiKeyErrorTextView)
+    TextView errorTextView;
 
     @OnClick(R.id.submitApiKeyButton)
     public void submitApiKey() {
-        Log.d("LOL", "submitApiKey()");
         onSubmitApiKey();
     }
 
@@ -64,14 +66,13 @@ public class EnterApiKeyFragment extends Fragment implements EnterApiKeyContract
     @Override
     public void onSubmitApiKey() {
         if (!apiKeyEditText.getText().toString().equals("") && apiKeyEditText.getText() != null) {
-            Log.d("LOL", "it should be here " + apiKeyEditText.getText().toString());
             mPresenter.checkIsApiKeyValid(apiKeyEditText.getText().toString());
         }
     }
 
     @Override
     public void showApiKeyError() {
-        Log.d("LOL", "An error occurred");
+        errorTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
