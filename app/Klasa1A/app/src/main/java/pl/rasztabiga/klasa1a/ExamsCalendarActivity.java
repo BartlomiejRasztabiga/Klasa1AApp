@@ -62,8 +62,8 @@ import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.rasztabiga.klasa1a.data.models.Exam;
-import pl.rasztabiga.klasa1a.data.models.ExamAdapter;
+import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
+import pl.rasztabiga.klasa1a.data.source.exams.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
@@ -185,7 +185,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                     @Override
                     public String loadInBackground() {
                         try {
-                            return NetworkUtilities.getExams(apiKey);
+                            return NetworkUtilities.showExams(apiKey);
                         } catch (RequestException e) {
                             FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
                             FirebaseCrash.report(e);

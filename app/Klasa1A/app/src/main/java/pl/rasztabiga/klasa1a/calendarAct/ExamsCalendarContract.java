@@ -4,15 +4,15 @@ import java.util.List;
 
 import pl.rasztabiga.klasa1a.BasePresenter;
 import pl.rasztabiga.klasa1a.BaseView;
-import pl.rasztabiga.klasa1a.data.models.Exam;
+import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
 
 public interface ExamsCalendarContract {
 
     interface View extends BaseView<Presenter> {
 
-        void getExams(List<Exam> exams);
+        void showExams(List<Exam> exams);
 
-        void showExamsOnCurrentDay(List<Exam> exams);
+        //void showExamsOnCurrentDay(List<Exam> exams);
 
     }
 

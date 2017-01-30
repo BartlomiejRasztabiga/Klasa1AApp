@@ -23,6 +23,7 @@ import java.lang.ref.WeakReference;
 
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.R;
+import pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity;
 import pl.rasztabiga.klasa1a.countdownsAct.CountdownsActivity;
 import pl.rasztabiga.klasa1a.mainAct.MainActivity;
 
@@ -37,7 +38,7 @@ public class LayoutUtils {
 
     public static Drawer getNavigationDrawer(final Activity actualClass, int selectedItem, Toolbar toolbar) {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Ekran główny").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.home_icon, null)).withTag(MainActivity.class);
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(1).withName("Kalendarz sprawdzianów").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.calendar_icon, null)).withTag(MainActivity.class);
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Kalendarz sprawdzianów").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.calendar_icon, null)).withTag(ExamsCalendarActivity.class);
         PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Odliczanie").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.clock_icon, null)).withTag(CountdownsActivity.class);
         SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName("Pobierz nową wersję ręcznie").withSelectable(false).withTag(DOWNLOAD_NEW_VERSION_NAV_DRAWER_TAG);
         SecondaryDrawerItem item5 = new SecondaryDrawerItem().withIdentifier(5).withName("Co nowego...").withSelectable(false).withTag(CHANGELOG_NAV_DRAWER_TAG);

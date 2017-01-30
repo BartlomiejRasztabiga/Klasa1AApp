@@ -16,7 +16,7 @@ public class LuckyNumbersLoader extends AsyncTaskLoader<LuckyNumbers> implements
     public LuckyNumbersLoader(Context context, @NonNull LuckyNumbersRepository repository) {
         super(context);
         checkNotNull(repository);
-        mRepository = Injection.proviceLuckyNumbersRepository(context);
+        mRepository = Injection.provideLuckyNumbersRepository(context);
     }
 
     @Override

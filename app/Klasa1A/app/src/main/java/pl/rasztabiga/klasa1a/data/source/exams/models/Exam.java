@@ -1,4 +1,4 @@
-package pl.rasztabiga.klasa1a.data.models;
+package pl.rasztabiga.klasa1a.data.source.exams.models;
 
 
 import android.graphics.Color;

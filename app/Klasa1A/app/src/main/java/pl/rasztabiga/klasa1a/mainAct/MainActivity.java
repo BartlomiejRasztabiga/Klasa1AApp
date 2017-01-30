@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             LayoutUtils.addFragmentToActivity(getSupportFragmentManager(), luckyNumbersFragment, R.id.luckyNumbersContentFrame);
         }
 
-        LuckyNumbersRepository luckyNumbersRepository = Injection.proviceLuckyNumbersRepository(getApplicationContext());
+        LuckyNumbersRepository luckyNumbersRepository = Injection.provideLuckyNumbersRepository(getApplicationContext());
         LuckyNumbersLoader luckyNumbersLoader = new LuckyNumbersLoader(getApplicationContext(), luckyNumbersRepository);
 
         mLuckyNumbersPresenter = new LuckyNumbersPresenter(
