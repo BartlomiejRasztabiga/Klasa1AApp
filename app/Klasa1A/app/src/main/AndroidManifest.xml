@@ -22,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity"/>
         <activity android:name="pl.rasztabiga.klasa1a.splashAct.EnterApiKeyActivity" />
         <activity android:name="pl.rasztabiga.klasa1a.mainAct.MainActivity" />
         <activity android:name="pl.rasztabiga.klasa1a.countdownsAct.CountdownsActivity" />

@@ -64,7 +64,7 @@ public class LuckyNumbersFragment extends Fragment implements LuckyNumbersContra
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.luckunumbers_fragment, container, false);
+        View root = inflater.inflate(R.layout.luckynumbers_fragment, container, false);
         ButterKnife.bind(this, root);
 
         return root;

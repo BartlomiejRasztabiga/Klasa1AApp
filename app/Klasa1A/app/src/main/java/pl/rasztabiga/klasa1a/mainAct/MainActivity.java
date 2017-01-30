@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         //show changelog on first run
         showChangelogOnFirstRun();
 
+        //lookForNewUpdate
+
         //OnDuties
         OnDutiesFragment onDutiesFragment = (OnDutiesFragment) getSupportFragmentManager().findFragmentById(R.id.onDutiesContentFrame);
         if (onDutiesFragment == null) {

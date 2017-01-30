@@ -49,6 +49,7 @@ public class LayoutUtils {
                 .addDrawerItems(
                         item1,
                         item2,
+                        item3,
                         new DividerDrawerItem(),
                         item4,
                         item5
