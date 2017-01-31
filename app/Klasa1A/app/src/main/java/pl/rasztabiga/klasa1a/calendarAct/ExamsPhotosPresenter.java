@@ -1,7 +1,6 @@
 package pl.rasztabiga.klasa1a.calendarAct;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,9 +24,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.data.source.examPhotos.ExamsPhotosLoader;
 import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ExamsPhotosPresenter implements ExamsPhotosContract.Presenter, LoaderManager.LoaderCallbacks<List<String>>, ImageGalleryAdapter.ImageThumbnailLoader, FullScreenImageGalleryAdapter.FullScreenImageLoader {
@@ -96,7 +94,7 @@ public class ExamsPhotosPresenter implements ExamsPhotosContract.Presenter, Load
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(ImageGalleryActivity.KEY_IMAGES, imagesRealUrl);
-        bundle.putString(ImageGalleryActivity.KEY_TITLE, "Exam Images");
+        bundle.putString(ImageGalleryActivity.KEY_TITLE, "Zdjęcia sprawdzianów");
         intent.putExtras(bundle);
 
         mContext.startActivity(intent);

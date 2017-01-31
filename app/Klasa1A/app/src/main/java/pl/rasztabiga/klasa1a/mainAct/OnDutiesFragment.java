@@ -95,6 +95,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
             mFirstOnDuty.setText(first.getName() + " " + first.getSurname());
             mSecondOnDuty.setText(second.getName() + " " + second.getSurname());
+            mErrorTextView.setVisibility(View.INVISIBLE);
             mFirstOnDuty.setVisibility(View.VISIBLE);
             mSecondOnDuty.setVisibility(View.VISIBLE);
         }
@@ -104,6 +105,7 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
     @Override
     public void showLoadingOnDutiesError() {
+        setLoadingIndicator(false);
         mFirstOnDuty.setVisibility(View.INVISIBLE);
         mSecondOnDuty.setVisibility(View.INVISIBLE);
         mErrorTextView.setVisibility(View.VISIBLE);

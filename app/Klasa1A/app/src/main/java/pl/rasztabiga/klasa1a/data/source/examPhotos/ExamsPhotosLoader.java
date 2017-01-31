@@ -46,7 +46,8 @@ public class ExamsPhotosLoader extends AsyncTaskLoader<List<String>> {
 
     private List<String> processImagesUrls(String data) {
         Gson gson = new Gson();
-        Type collectionType = new TypeToken<List<String>>(){}.getType();
+        Type collectionType = new TypeToken<List<String>>() {
+        }.getType();
         return gson.fromJson(data, collectionType);
     }
 

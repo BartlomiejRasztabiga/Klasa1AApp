@@ -41,6 +41,9 @@ public class ExamsCalendarFragment extends Fragment implements ExamsCalendarCont
     CompactCalendarView compactCalendarView;
     @BindView(R.id.recyclerview_exams)
     RecyclerView examsRecyclerView;
+    private ExamsCalendarContract.Presenter mExamsPresenter;
+    private ExamAdapter mExamAdapter;
+    private ExamsPhotosContract.Presenter mExamsPhotosPresenter;
     ExamAdapter.ExamClickListener mItemListener = new ExamAdapter.ExamClickListener() {
         @Override
         public void onExamClick(int clickedItemIndex) {
@@ -56,9 +59,6 @@ public class ExamsCalendarFragment extends Fragment implements ExamsCalendarCont
             mExamsPhotosPresenter.getImagesUrls();
         }
     };
-    private ExamsCalendarContract.Presenter mExamsPresenter;
-    private ExamAdapter mExamAdapter;
-    private ExamsPhotosContract.Presenter mExamsPhotosPresenter;
 
     public ExamsCalendarFragment() {
 

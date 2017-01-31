@@ -1,7 +1,5 @@
 package pl.rasztabiga.klasa1a.calendarAct;
 
-import java.util.List;
-
 import pl.rasztabiga.klasa1a.BasePresenter;
 
 public interface ExamsPhotosContract {

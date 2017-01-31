@@ -18,8 +18,6 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import java.lang.ref.WeakReference;
-
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity;
@@ -31,7 +29,6 @@ public class LayoutUtils {
     private static final String TAG = LayoutUtils.class.getName();
     private static final String DOWNLOAD_NEW_VERSION_NAV_DRAWER_TAG = "download_new_version";
     private static final String CHANGELOG_NAV_DRAWER_TAG = "changelog";
-    private static WeakReference<Activity> mainActivityRef;
 
     private LayoutUtils() {
     }
@@ -89,10 +86,6 @@ public class LayoutUtils {
                     }
                 })
                 .build();
-    }
-
-    public static void setMainActivityRef(Activity activity) {
-        mainActivityRef = new WeakReference<>(activity);
     }
 
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
