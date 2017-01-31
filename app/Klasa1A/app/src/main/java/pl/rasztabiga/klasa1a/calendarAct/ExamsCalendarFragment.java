@@ -45,10 +45,20 @@ public class ExamsCalendarFragment extends Fragment implements ExamsCalendarCont
         @Override
         public void onExamClick(int clickedItemIndex) {
             //prepareImagesUris(mExamAdapter.getExamList().get(clickedItemIndex));
+            mExamsPhotosPresenter = new ExamsPhotosPresenter(
+                    mExamAdapter.getExamList().get(clickedItemIndex),
+                    getActivity().getSupportLoaderManager(),
+                    getContext(),
+                    getActivity()
+            );
+
+            mExamsPhotosPresenter.start();
+            mExamsPhotosPresenter.getImagesUrls();
         }
     };
     private ExamsCalendarContract.Presenter mExamsPresenter;
     private ExamAdapter mExamAdapter;
+    private ExamsPhotosContract.Presenter mExamsPhotosPresenter;
 
     public ExamsCalendarFragment() {
 

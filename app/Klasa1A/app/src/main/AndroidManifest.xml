@@ -26,6 +26,11 @@
         <activity android:name="pl.rasztabiga.klasa1a.splashAct.EnterApiKeyActivity" />
         <activity android:name="pl.rasztabiga.klasa1a.mainAct.MainActivity" />
         <activity android:name="pl.rasztabiga.klasa1a.countdownsAct.CountdownsActivity" />
+        <activity
+            android:name="com.etiennelawlor.imagegallery.library.activities.ImageGalleryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label=""
+            android:theme="@style/Theme.ImageGallery" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
