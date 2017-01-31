@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 import pl.rasztabiga.klasa1a.R;
 
-public class ApiKeyUtils {
+public final class ApiKeyUtils {
 
     private ApiKeyUtils() {
     }

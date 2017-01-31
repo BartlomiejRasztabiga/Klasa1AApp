@@ -9,7 +9,7 @@ import android.os.Bundle;
 import pl.rasztabiga.klasa1a.R;
 
 
-public class DownloadNewVersionDialog extends DialogFragment {
+public final class DownloadNewVersionDialog extends DialogFragment {
 
     private final String TAG = DownloadNewVersionDialog.class.getName();
     private UpdaterPresenter mPresenter;

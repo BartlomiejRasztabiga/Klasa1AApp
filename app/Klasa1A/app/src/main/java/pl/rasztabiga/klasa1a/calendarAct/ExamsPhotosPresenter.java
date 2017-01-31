@@ -94,7 +94,7 @@ public class ExamsPhotosPresenter implements ExamsPhotosContract.Presenter, Load
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(ImageGalleryActivity.KEY_IMAGES, imagesRealUrl);
-        bundle.putString(ImageGalleryActivity.KEY_TITLE, "Zdjęcia sprawdzianów");
+        bundle.putString(ImageGalleryActivity.KEY_TITLE, "Zdjęcia sprawdzianu");
         intent.putExtras(bundle);
 
         mContext.startActivity(intent);
@@ -126,7 +126,7 @@ public class ExamsPhotosPresenter implements ExamsPhotosContract.Presenter, Load
                     .into(iv, new Callback() {
                         @Override
                         public void onSuccess() {
-                            Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+
                         }
 
                         @Override

@@ -24,5 +24,6 @@
 -keepattributes *Annotation*
 -keepclassmembers class pl.rasztabiga.klasa1a.data.source.models.** { *; }
 -keepclassmembers class pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.exams.models.Exam { *; }
 -keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties { *; }
 -keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.Student { *; }

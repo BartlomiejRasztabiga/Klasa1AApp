@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.R;
 
-public class CountdownsFragment extends Fragment {
+public final class CountdownsFragment extends Fragment {
 
 
     //TODO This class is maybe not needed

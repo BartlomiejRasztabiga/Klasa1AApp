@@ -25,7 +25,7 @@ import pl.rasztabiga.klasa1a.RequestException;
 import pl.rasztabiga.klasa1a.utils.ApiKeyUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class DownloadNewVersionLoader extends AsyncTaskLoader<Void> {
+public final class DownloadNewVersionLoader extends AsyncTaskLoader<Void> {
 
     private static final String TAG = DownloadNewVersionLoader.class.getSimpleName();
 
@@ -79,7 +79,7 @@ public class DownloadNewVersionLoader extends AsyncTaskLoader<Void> {
             input = connection.getInputStream();
             output = new FileOutputStream(apkFile);
 
-            byte data[] = new byte[4096];
+            byte[] data = new byte[4096];
             int count;
             while ((count = input.read(data)) != -1) {
                 // allow canceling with back button
@@ -96,10 +96,12 @@ public class DownloadNewVersionLoader extends AsyncTaskLoader<Void> {
             e.printStackTrace();
         } finally {
             try {
-                if (output != null)
+                if (output != null) {
                     output.close();
-                if (input != null)
+                }
+                if (input != null) {
                     input.close();
+                }
             } catch (IOException ignored) {
             }
 

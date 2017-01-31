@@ -92,7 +92,7 @@ public class OnDutiesRepository implements OnDutiesDataSource {
         }
 
         //TODO Remove later
-        onDuties = mOnDutiesRemoteDataSource.getOnDuties();
+        //onDuties = mOnDutiesRemoteDataSource.getOnDuties();
 
         processLoadedOnDuties(onDuties);
         return getCachedOnDuties();

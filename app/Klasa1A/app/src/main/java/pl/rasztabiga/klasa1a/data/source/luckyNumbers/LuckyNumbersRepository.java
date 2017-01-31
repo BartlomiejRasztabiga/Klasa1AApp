@@ -93,7 +93,7 @@ public class LuckyNumbersRepository implements LuckyNumbersDataSource {
         }
 
         //TODO Remove later
-        luckyNumbers = mLuckyNumbersRemoteDataSource.getLuckyNumbers();
+        //luckyNumbers = mLuckyNumbersRemoteDataSource.getLuckyNumbers();
 
         processLoadedLuckyNumbers(luckyNumbers);
         return getCachedLuckyNumbers();

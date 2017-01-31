@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 
-public class CountdownsActivity extends AppCompatActivity {
+public final class CountdownsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

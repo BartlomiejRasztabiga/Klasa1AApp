@@ -9,7 +9,7 @@ import pl.rasztabiga.klasa1a.RequestException;
 import pl.rasztabiga.klasa1a.utils.ApiKeyUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
-public class CheckNewUpdatesLoader extends AsyncTaskLoader<Integer> {
+public final class CheckNewUpdatesLoader extends AsyncTaskLoader<Integer> {
 
     private WeakReference<Context> mContext;
 
