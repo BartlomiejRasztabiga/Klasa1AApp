@@ -57,6 +57,50 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085041726357:android:2438fd3df0dd3e20",
+        "android_client_info": {
+          "package_name": "pl.rasztabiga.klasa1a.mock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085041726357-g23l02hn7crjt5e2ig5c6qgdacll0di4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.rasztabiga.klasa1a.mock",
+            "certificate_hash": "DBC690FF05423EBE37C50D4E0A31EC4ABED9DC99"
+          }
+        },
+        {
+          "client_id": "1085041726357-sa0ujbk7lo8dvlf4l4rovi0o1a8ae7bo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUgN9yZV8tf_rgACixuEq3gK1NmXi0_8c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085041726357-sa0ujbk7lo8dvlf4l4rovi0o1a8ae7bo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -15,6 +15,7 @@ import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersLoader;
 import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersRepository;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesLoader;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
+import pl.rasztabiga.klasa1a.updater.UpdaterPresenter;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.PreferencesUtils;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private OnDutiesPresenter mOnDutiesPresenter;
     private LuckyNumbersPresenter mLuckyNumbersPresenter;
+    private UpdaterPresenter mUpdaterPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
                 luckyNumbersRepository,
                 luckyNumbersFragment
         );
+
+        //Updater
+        mUpdaterPresenter = new UpdaterPresenter(
+                getSupportLoaderManager(),
+                this,
+                getApplicationContext()
+        );
+
+        //mUpdaterPresenter.showNewVersionDialog();
+        mUpdaterPresenter.checkNewVersion();
 
 
     }

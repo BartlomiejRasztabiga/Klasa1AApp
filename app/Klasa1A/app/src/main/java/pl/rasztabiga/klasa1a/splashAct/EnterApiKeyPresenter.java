@@ -45,12 +45,6 @@ public class EnterApiKeyPresenter implements EnterApiKeyContract.Presenter, Load
         this.apiKeyToValidate = apiKeyToValidate;
         mLoader.setApiKeyToValidate(apiKeyToValidate);
 
-        //Maybe not needed
-        /*if (mLoaderManager.getLoader(VALIDATE_API_KEY_QUERY) != null) {
-            mLoaderManager.restartLoader(VALIDATE_API_KEY_QUERY, null, this);
-        } else {
-            mLoaderManager.initLoader(VALIDATE_API_KEY_QUERY, null, this);
-        }*/
         mLoaderManager.initLoader(VALIDATE_API_KEY_QUERY, null, this);
 
     }

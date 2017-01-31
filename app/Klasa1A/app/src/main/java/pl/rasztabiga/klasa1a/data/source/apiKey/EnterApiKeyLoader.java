@@ -30,11 +30,11 @@ public class EnterApiKeyLoader extends AsyncTaskLoader<Boolean> {
         forceLoad();
     }
 
-    @Override
+    /*@Override
     protected void onReset() {
         super.onReset();
         forceLoad();
-    }
+    }*/
 
     public void setApiKeyToValidate(String apiKeyToValidate) {
         this.mApiKeyToValidate = apiKeyToValidate;

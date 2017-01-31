@@ -1,5 +1,5 @@
-/*
-package pl.rasztabiga.klasa1a;
+
+package pl.rasztabiga.klasa1a.updater;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,11 +7,14 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import pl.rasztabiga.klasa1a.R;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 public class DownloadNewVersionDialog extends DialogFragment {
 
     private final String TAG = DownloadNewVersionDialog.class.getName();
-
+    private UpdaterPresenter mPresenter;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -20,7 +23,7 @@ public class DownloadNewVersionDialog extends DialogFragment {
                 .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ((MainActivity_old) getActivity()).downloadNewVersion();
+                        mPresenter.downloadNewVersion();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -32,6 +35,7 @@ public class DownloadNewVersionDialog extends DialogFragment {
         return builder.create();
     }
 
-
+    public void setPresenter(UpdaterPresenter presenter) {
+        this.mPresenter = presenter;
+    }
 }
-*/
