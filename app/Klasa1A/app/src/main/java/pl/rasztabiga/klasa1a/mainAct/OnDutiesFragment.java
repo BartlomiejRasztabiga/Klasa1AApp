@@ -23,6 +23,8 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
     TextView mFirstOnDuty;
     @BindView(R.id.onDuty2)
     TextView mSecondOnDuty;
+    @BindView(R.id.error_text_view)
+    TextView mErrorTextView;
     @BindView(R.id.progress_indicator)
     ProgressBar mProgressBar;
     private OnDutiesContract.Presenter mPresenter;
@@ -102,6 +104,8 @@ public class OnDutiesFragment extends Fragment implements OnDutiesContract.View 
 
     @Override
     public void showLoadingOnDutiesError() {
-
+        mFirstOnDuty.setVisibility(View.INVISIBLE);
+        mSecondOnDuty.setVisibility(View.INVISIBLE);
+        mErrorTextView.setVisibility(View.VISIBLE);
     }
 }

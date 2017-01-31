@@ -92,6 +92,11 @@ public class LuckyNumbersFragment extends Fragment implements LuckyNumbersContra
 
     @Override
     public void showLoadingLuckyNumbersError() {
+        mMondayLuckyNumber.setVisibility(View.INVISIBLE);
+        mTuesdayLuckyNumber.setVisibility(View.INVISIBLE);
+        mWednesdayLuckyNumber.setVisibility(View.INVISIBLE);
+        mThursdayLuckyNumber.setVisibility(View.INVISIBLE);
+        mFridayLuckyNumber.setVisibility(View.INVISIBLE);
 
     }
 }
