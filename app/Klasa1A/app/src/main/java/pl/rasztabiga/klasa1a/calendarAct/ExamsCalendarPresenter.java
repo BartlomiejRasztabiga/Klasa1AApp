@@ -8,9 +8,10 @@ import android.support.v4.content.Loader;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.rasztabiga.klasa1a.data.source.exams.ExamsRepository;
 import pl.rasztabiga.klasa1a.data.source.exams.ExamsLoader;
+import pl.rasztabiga.klasa1a.data.source.exams.ExamsRepository;
 import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ExamsCalendarPresenter implements ExamsCalendarContract.Presenter, LoaderManager.LoaderCallbacks<List<Exam>> {

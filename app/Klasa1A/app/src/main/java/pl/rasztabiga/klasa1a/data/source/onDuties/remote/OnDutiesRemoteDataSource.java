@@ -9,8 +9,8 @@ import com.google.gson.Gson;
 import java.lang.ref.WeakReference;
 
 import pl.rasztabiga.klasa1a.RequestException;
-import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesDataSource;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 import pl.rasztabiga.klasa1a.utils.ApiKeyUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 

@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext()
         );
 
-        //mUpdaterPresenter.showNewVersionDialog();
         mUpdaterPresenter.checkNewVersion();
 
 

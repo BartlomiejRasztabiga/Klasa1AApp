@@ -1,7 +1,6 @@
 package pl.rasztabiga.klasa1a.calendarAct;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,9 +11,7 @@ import pl.rasztabiga.klasa1a.Injection;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.data.source.exams.ExamsLoader;
 import pl.rasztabiga.klasa1a.data.source.exams.ExamsRepository;
-import pl.rasztabiga.klasa1a.mainAct.MainActivity;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
-import pl.rasztabiga.klasa1a.utils.PreferencesUtils;
 
 public class ExamsCalendarActivity extends AppCompatActivity {
 

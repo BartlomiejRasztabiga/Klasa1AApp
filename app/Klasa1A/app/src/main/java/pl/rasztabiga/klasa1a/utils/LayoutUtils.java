@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -34,7 +33,8 @@ public class LayoutUtils {
     private static final String CHANGELOG_NAV_DRAWER_TAG = "changelog";
     private static WeakReference<Activity> mainActivityRef;
 
-    private LayoutUtils() {}
+    private LayoutUtils() {
+    }
 
     public static Drawer getNavigationDrawer(final Activity actualClass, int selectedItem, Toolbar toolbar) {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Ekran główny").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.home_icon, null)).withTag(MainActivity.class);

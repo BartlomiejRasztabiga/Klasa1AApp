@@ -1,8 +1,6 @@
 package pl.rasztabiga.klasa1a.splashAct;
 
 
-import android.content.Context;
-
 import pl.rasztabiga.klasa1a.BasePresenter;
 import pl.rasztabiga.klasa1a.BaseView;
 

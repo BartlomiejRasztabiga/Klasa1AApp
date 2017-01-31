@@ -5,8 +5,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
 import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersDataSource;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class LuckyNumbersLocalDataSource implements LuckyNumbersDataSource {

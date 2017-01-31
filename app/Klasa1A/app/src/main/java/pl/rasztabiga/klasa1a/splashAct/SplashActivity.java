@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.mainAct.MainActivity;
-import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.PreferencesUtils;
 
 public class SplashActivity extends AppCompatActivity {

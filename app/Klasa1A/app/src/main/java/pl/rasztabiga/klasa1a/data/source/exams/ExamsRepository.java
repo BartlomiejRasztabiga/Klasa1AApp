@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ExamsRepository implements ExamsDataSource {
@@ -16,12 +17,15 @@ public class ExamsRepository implements ExamsDataSource {
     private final ExamsDataSource mExamsRemoteDataSource;
 
     private final ExamsDataSource mExamsLocalDataSource;
-
+    List<Exam> mCachedExams;
+    boolean mCacheIsDirty;
     private List<ExamsRepositoryObserver> mObservers = new ArrayList<>();
 
-    List<Exam> mCachedExams;
-
-    boolean mCacheIsDirty;
+    private ExamsRepository(@NonNull ExamsDataSource examsRemoteDataSource,
+                            @NonNull ExamsDataSource tasksLocalDataSource) {
+        mExamsRemoteDataSource = checkNotNull(examsRemoteDataSource);
+        mExamsLocalDataSource = checkNotNull(tasksLocalDataSource);
+    }
 
     public static ExamsRepository getInstance(ExamsDataSource examsRemoteDataSource,
                                               ExamsDataSource examsLocalDataSource) {
@@ -34,12 +38,6 @@ public class ExamsRepository implements ExamsDataSource {
 
     public static void destroyInstance() {
         instance = null;
-    }
-
-    private ExamsRepository(@NonNull ExamsDataSource examsRemoteDataSource,
-                            @NonNull ExamsDataSource tasksLocalDataSource) {
-        mExamsRemoteDataSource = checkNotNull(examsRemoteDataSource);
-        mExamsLocalDataSource = checkNotNull(tasksLocalDataSource);
     }
 
     public void addContentObserver(ExamsRepositoryObserver observer) {

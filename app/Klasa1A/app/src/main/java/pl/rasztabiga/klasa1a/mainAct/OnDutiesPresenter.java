@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesLoader;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
+import pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

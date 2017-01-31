@@ -2,12 +2,10 @@ package pl.rasztabiga.klasa1a.data.source.exams;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import android.support.v4.content.AsyncTaskLoader;
 
 import java.util.List;
 
-import pl.rasztabiga.klasa1a.data.source.exams.ExamsRepository;
 import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
 
 import static com.google.common.base.Preconditions.checkNotNull;

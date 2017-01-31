@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,23 +28,27 @@ import butterknife.ButterKnife;
 import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
 import pl.rasztabiga.klasa1a.data.source.exams.models.ExamAdapter;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ExamsCalendarFragment extends Fragment implements ExamsCalendarContract.View {
 
+    private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+    private final SimpleDateFormat monthDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
     @BindView(R.id.date_tv)
     TextView dateTextView;
     @BindView(R.id.compactcalendar_view)
     CompactCalendarView compactCalendarView;
     @BindView(R.id.recyclerview_exams)
     RecyclerView examsRecyclerView;
-
+    ExamAdapter.ExamClickListener mItemListener = new ExamAdapter.ExamClickListener() {
+        @Override
+        public void onExamClick(int clickedItemIndex) {
+            //prepareImagesUris(mExamAdapter.getExamList().get(clickedItemIndex));
+        }
+    };
     private ExamsCalendarContract.Presenter mExamsPresenter;
-
     private ExamAdapter mExamAdapter;
-
-    private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-    private final SimpleDateFormat monthDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
 
     public ExamsCalendarFragment() {
 
@@ -98,19 +101,12 @@ public class ExamsCalendarFragment extends Fragment implements ExamsCalendarCont
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(monthDateFormat.format(firstDayOfNewMonth));
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(monthDateFormat.format(firstDayOfNewMonth));
             }
         });
 
         return root;
     }
-
-    ExamAdapter.ExamClickListener mItemListener = new ExamAdapter.ExamClickListener() {
-        @Override
-        public void onExamClick(int clickedItemIndex) {
-            //prepareImagesUris(mExamAdapter.getExamList().get(clickedItemIndex));
-        }
-    };
 
     public void showExamsOnCurrentDay(Date dateClicked) {
         List<Event> events = compactCalendarView.getEvents(dateClicked);
@@ -141,7 +137,7 @@ public class ExamsCalendarFragment extends Fragment implements ExamsCalendarCont
 
             Date presentDate = new Date();
             dateTextView.setText(dateFormat.format(presentDate));
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(monthDateFormat.format(presentDate));
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(monthDateFormat.format(presentDate));
 
             List<Event> events = compactCalendarView.getEvents(presentDate);
 

@@ -6,7 +6,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FirebaseUtils {
     private static FirebaseDatabase mDatabase;
 
-    private FirebaseUtils() {}
+    private FirebaseUtils() {
+    }
 
     public static FirebaseDatabase getDatabase() {
         if (mDatabase == null) {

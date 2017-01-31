@@ -31,7 +31,8 @@ public class ActivityUtils {
      * performed by the {@code fragmentManager}.
      */
 
-    private ActivityUtils() {}
+    private ActivityUtils() {
+    }
 
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
                                              @NonNull Fragment fragment, int frameId) {

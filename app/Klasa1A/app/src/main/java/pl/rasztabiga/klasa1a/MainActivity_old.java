@@ -193,6 +193,10 @@ public class MainActivity_old extends AppCompatActivity implements LoaderManager
  * FEATURE
  * <p>
  * CHANGINGROOM AND DOOR STATUS
+ * <p>
+ * FEATURE
+ * <p>
+ * CHANGINGROOM AND DOOR STATUS
  *//*
 
             //new GetChangingRoomStatus().execute();

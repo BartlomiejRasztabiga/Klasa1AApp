@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -21,11 +19,9 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.channels.NetworkChannel;
 
 import pl.rasztabiga.klasa1a.BuildConfig;
 import pl.rasztabiga.klasa1a.RequestException;
-import pl.rasztabiga.klasa1a.updater.UpdaterPresenter;
 import pl.rasztabiga.klasa1a.utils.ApiKeyUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
@@ -111,6 +107,7 @@ public class DownloadNewVersionLoader extends AsyncTaskLoader<Void> {
                 connection.disconnect();
         }
     }
+
     private String getApkUrl() {
         int serverVersionCode = 0;
         try {
@@ -133,7 +130,6 @@ public class DownloadNewVersionLoader extends AsyncTaskLoader<Void> {
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         mContext.get().startActivity(install);
     }
-
 
 
     @Override

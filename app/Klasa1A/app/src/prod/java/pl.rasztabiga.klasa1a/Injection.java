@@ -2,17 +2,16 @@ package pl.rasztabiga.klasa1a;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import pl.rasztabiga.klasa1a.data.source.exams.ExamsRepository;
 import pl.rasztabiga.klasa1a.data.source.exams.local.ExamsLocalDataSource;
 import pl.rasztabiga.klasa1a.data.source.exams.remote.ExamsRemoteDataSource;
 import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersRepository;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.local.LuckyNumbersLocalDataSource;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.remote.LuckyNumbersRemoteDataSource;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesDataSource;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
-import pl.rasztabiga.klasa1a.data.source.luckyNumbers.local.LuckyNumbersLocalDataSource;
 import pl.rasztabiga.klasa1a.data.source.onDuties.local.OnDutiesLocalDataSource;
-import pl.rasztabiga.klasa1a.data.source.luckyNumbers.remote.LuckyNumbersRemoteDataSource;
 import pl.rasztabiga.klasa1a.data.source.onDuties.remote.OnDutiesRemoteDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,7 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Injection {
 
-    private Injection() {}
+    private Injection() {
+    }
 
     public static OnDutiesRepository provideOnDutiesRepository(@NonNull Context context) {
         checkNotNull(context);

@@ -4,14 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import pl.rasztabiga.klasa1a.RequestException;
@@ -51,7 +48,8 @@ public class ExamsRemoteDataSource implements ExamsDataSource {
 
         if (response != null) {
             Gson gson = new Gson();
-            Type collectionType = new TypeToken<List<Exam>>() {}.getType();
+            Type collectionType = new TypeToken<List<Exam>>() {
+            }.getType();
             List<Exam> examsList = gson.fromJson(response, collectionType);
             return examsList;
         }

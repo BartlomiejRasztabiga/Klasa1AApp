@@ -9,9 +9,6 @@ import java.util.List;
 
 import pl.rasztabiga.klasa1a.data.source.exams.ExamsDataSource;
 import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
-import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersDataSource;
-import pl.rasztabiga.klasa1a.data.source.luckyNumbers.local.LuckyNumbersDbHelper;
-import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

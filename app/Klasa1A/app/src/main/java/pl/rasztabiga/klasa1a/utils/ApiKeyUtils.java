@@ -9,7 +9,8 @@ import pl.rasztabiga.klasa1a.R;
 
 public class ApiKeyUtils {
 
-    private ApiKeyUtils() {}
+    private ApiKeyUtils() {
+    }
 
     public static String getApiKey(Context context) {
         //TODO Uncomment alter

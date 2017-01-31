@@ -1,4 +1,3 @@
-
 package pl.rasztabiga.klasa1a.updater;
 
 import android.app.AlertDialog;
@@ -8,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import pl.rasztabiga.klasa1a.R;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class DownloadNewVersionDialog extends DialogFragment {

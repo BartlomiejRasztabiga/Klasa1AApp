@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import java.lang.ref.WeakReference;
 
 import pl.rasztabiga.klasa1a.RequestException;
-import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
 import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersDataSource;
+import pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers;
 import pl.rasztabiga.klasa1a.utils.ApiKeyUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 

@@ -14,6 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:title="@string/app_name"
@@ -25,11 +26,11 @@
             app:titleTextColor="@android:color/white"
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintTop_creator="1"
-            android:layout_weight="1">
+            tools:layout_constraintTop_creator="1">
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
+
     <GridLayout
         android:id="@+id/countdowns_grid"
         android:layout_width="wrap_content"
