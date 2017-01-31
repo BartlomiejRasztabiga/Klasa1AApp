@@ -15,10 +15,15 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn com.google.common.**
 -dontwarn java.nio.file.**
 -dontwarn org.codehaus.mojo.**
 -dontwarn java.io.IOException
 -dontwarn com.squareup.picasso.**
 -keepattributes Signature
 -keepattributes *Annotation*
--keepclassmembers class pl.rasztabiga.klasa1a.models.** { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.models.** { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.luckyNumbers.models.LuckyNumbers { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.exams.models.Exam { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.Student { *; }

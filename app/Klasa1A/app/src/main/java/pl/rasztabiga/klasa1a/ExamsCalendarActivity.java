@@ -1,3 +1,4 @@
+/*
 package pl.rasztabiga.klasa1a;
 
 import android.content.Intent;
@@ -61,8 +62,8 @@ import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.rasztabiga.klasa1a.models.Exam;
-import pl.rasztabiga.klasa1a.models.ExamAdapter;
+import pl.rasztabiga.klasa1a.data.source.exams.models.Exam;
+import pl.rasztabiga.klasa1a.data.source.exams.models.ExamAdapter;
 import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
@@ -122,10 +123,12 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
 
 
         //Show date and events for actual day
-        /*Date presentDate = new Date();
+        */
+/*Date presentDate = new Date();
         date_tv.setText(dateFormat.format(presentDate));
         getSupportActionBar().setTitle(simpleDateFormat.format(presentDate));
-        List<Event> events = compactCalendarView.getEvents()*/
+        List<Event> events = compactCalendarView.getEvents()*//*
+
 
         //TODO Use joda time
 
@@ -156,7 +159,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        // When the home button is pressed, take the user back to the MainActivity
+        // When the home button is pressed, take the user back to the MainActivity_old
         if (id == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
         }
@@ -182,7 +185,7 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
                     @Override
                     public String loadInBackground() {
                         try {
-                            return NetworkUtilities.getExams(apiKey);
+                            return NetworkUtilities.showExams(apiKey);
                         } catch (RequestException e) {
                             FirebaseCrash.logcat(Log.ERROR, TAG, "RequestException caught");
                             FirebaseCrash.report(e);
@@ -516,3 +519,4 @@ public class ExamsCalendarActivity extends AppCompatActivity implements LoaderMa
     }
 
 }
+*/

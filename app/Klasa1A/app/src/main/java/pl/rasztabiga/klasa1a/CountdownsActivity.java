@@ -1,3 +1,4 @@
+/*
 package pl.rasztabiga.klasa1a;
 
 import android.graphics.Color;
@@ -74,3 +75,4 @@ public class CountdownsActivity extends AppCompatActivity {
 
     }
 }
+*/
