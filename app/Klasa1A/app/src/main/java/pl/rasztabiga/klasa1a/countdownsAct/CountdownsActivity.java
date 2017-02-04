@@ -29,8 +29,8 @@ public final class CountdownsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         LayoutUtils.getNavigationDrawer(CountdownsActivity.this, 3, toolbar);
 
-        inflateCountDownTimer(2017, 5, 23, 0, 0, "Wakacje");
-        inflateCountDownTimer(2019, 4, 6, 0, 0, "Matura");
+        inflateCountDownTimer(2017, 5, 23, 0, 0, getString(R.string.holidays));
+        inflateCountDownTimer(2019, 4, 6, 0, 0, getString(R.string.mature_exam));
     }
 
     private void inflateCountDownTimer(int year, int month, int day, int hour, int minute, final String countdownTitleString) {
@@ -57,7 +57,7 @@ public final class CountdownsActivity extends AppCompatActivity {
                 millisUntilFinished -= TimeUnit.MINUTES.toMillis(minutes);
                 long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
 
-                countdownTime.setText(String.format(Locale.getDefault(), "%d d  %d h  %d min  %d sek", days, hours, minutes, seconds));
+                countdownTime.setText(String.format(Locale.getDefault(), getString(R.string.date_pattern), days, hours, minutes, seconds));
             }
 
             @Override
