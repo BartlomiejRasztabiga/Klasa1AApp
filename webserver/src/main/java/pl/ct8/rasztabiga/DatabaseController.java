@@ -202,10 +202,26 @@ public class DatabaseController {
         }
     }
 
+    static List<News> getNews() throws SQLException {
+        List<News> newsList = new ArrayList<>();
+        try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
+
+            String searchSQL = "SELECT * FROM NEWS";
+            ResultSet rs = stmt.executeQuery(searchSQL);
+
+            while (rs.next()) {
+                News news = new News(rs.getInt("ID"), rs.getString("TITLE"), rs.getString("DESCRIPTION"));
+                newsList.add(news);
+            }
+            return  newsList;
+        }
+
+    }
+
     static ArrayList<String> getAssociatedImagesList(int examId) throws SQLException {
         ArrayList<String> associatedImagesList = new ArrayList<>();
         String sql = "SELECT * FROM EXAMS_PHOTOS WHERE exam_id = ?";
-        try(Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, examId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -231,12 +247,14 @@ public class DatabaseController {
 
     }
 
-    /** FEATURE */
+    /**
+     * FEATURE
+     */
 
     static String getChangingRoomStatus() throws SQLException {
         String changingRoomStatus;
         String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "changingRoomStatus");
 
             ResultSet rs = stmt.executeQuery();
@@ -246,6 +264,7 @@ public class DatabaseController {
         }
         return changingRoomStatus;
     }
+
     static void setChangingRoomStatus(int changingRoomStatus) throws SQLException {
         String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -257,10 +276,11 @@ public class DatabaseController {
 
         }
     }
+
     static String getDoorStatus() throws SQLException {
         String doorStatus;
         String sql = "SELECT * FROM SETTINGS WHERE KEY = ?";
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "doorStatus");
 
             ResultSet rs = stmt.executeQuery();
@@ -270,6 +290,7 @@ public class DatabaseController {
         }
         return doorStatus;
     }
+
     static void setDoorStatus(int doorStatus) throws SQLException {
         String sql = "UPDATE SETTINGS SET VALUE = ? WHERE KEY = ?";
         try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {

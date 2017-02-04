@@ -3,6 +3,7 @@ package pl.rasztabiga.klasa1a.data.source.onDuties.remote;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 
@@ -30,7 +31,8 @@ public class OnDutiesRemoteDataSource implements OnDutiesDataSource {
 
         return instance;
     }
-
+    @Nullable
+    @Override
     public OnDuties getOnDuties() {
         String response = null;
         try {

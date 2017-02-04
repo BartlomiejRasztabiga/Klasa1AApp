@@ -32,7 +32,7 @@ public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderMana
                              @NonNull OnDutiesRepository onDutiesRepository, @NonNull OnDutiesContract.View onDutiesView) {
         mLoader = checkNotNull(loader, "loader cannot be null!");
         mLoaderManager = checkNotNull(loaderManager, "loader manager cannot be null");
-        mOnDutiesRepository = checkNotNull(onDutiesRepository, "tonDutiesRepository cannot be null");
+        mOnDutiesRepository = checkNotNull(onDutiesRepository, "onDutiesRepository cannot be null");
         mOnDutiesView = checkNotNull(onDutiesView, "onDutiessView cannot be null!");
 
         mOnDutiesView.setPresenter(this);

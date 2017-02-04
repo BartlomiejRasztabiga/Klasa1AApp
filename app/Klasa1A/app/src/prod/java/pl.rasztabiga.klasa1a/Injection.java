@@ -9,6 +9,9 @@ import pl.rasztabiga.klasa1a.data.source.exams.remote.ExamsRemoteDataSource;
 import pl.rasztabiga.klasa1a.data.source.luckyNumbers.LuckyNumbersRepository;
 import pl.rasztabiga.klasa1a.data.source.luckyNumbers.local.LuckyNumbersLocalDataSource;
 import pl.rasztabiga.klasa1a.data.source.luckyNumbers.remote.LuckyNumbersRemoteDataSource;
+import pl.rasztabiga.klasa1a.data.source.newsWall.NewsRepository;
+import pl.rasztabiga.klasa1a.data.source.newsWall.local.NewsLocalDataSource;
+import pl.rasztabiga.klasa1a.data.source.newsWall.remote.NewsRemoteDataSource;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesDataSource;
 import pl.rasztabiga.klasa1a.data.source.onDuties.OnDutiesRepository;
 import pl.rasztabiga.klasa1a.data.source.onDuties.local.OnDutiesLocalDataSource;
@@ -37,10 +40,16 @@ public class Injection {
                 LuckyNumbersLocalDataSource.getInstance(context));
     }
 
-    public static ExamsRepository proviceExamsRepository(@NonNull Context context) {
+    public static ExamsRepository provideExamsRepository(@NonNull Context context) {
         checkNotNull(context);
         return ExamsRepository.getInstance(ExamsRemoteDataSource.getInstance(context),
                 ExamsLocalDataSource.getInstance(context));
+    }
+
+    public static NewsRepository provideNewsRepository(@NonNull Context context){
+        checkNotNull(context);
+        return NewsRepository.getInstance(NewsRemoteDataSource.getInstance(context),
+                NewsLocalDataSource.getInstance(context));
     }
 
     public static String provideServerAddress() {

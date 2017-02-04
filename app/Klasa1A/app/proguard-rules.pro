@@ -27,3 +27,4 @@
 -keepclassmembers class pl.rasztabiga.klasa1a.data.source.exams.models.Exam { *; }
 -keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.OnDuties { *; }
 -keepclassmembers class pl.rasztabiga.klasa1a.data.source.onDuties.models.Student { *; }
+-keepclassmembers class pl.rasztabiga.klasa1a.data.source.newsWall.models.News { *; }

@@ -1,10 +1,12 @@
 package pl.ct8.rasztabiga;
 
 import com.google.gson.Gson;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.ct8.rasztabiga.models.Exam;
+import pl.ct8.rasztabiga.models.News;
 import pl.ct8.rasztabiga.utils.*;
 
 import javax.xml.crypto.Data;
@@ -135,21 +137,7 @@ public class StudentController {
         }
     }
 
-    @RequestMapping(value = "/getexams", method = RequestMethod.GET)
-    public ResponseEntity<?> getExams(@RequestParam("apiKey") String apiKey) {
-        try {
-            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
-            Gson gson = new Gson();
-           return new ResponseEntity<>(gson.toJson(DatabaseController.getExams()), HttpStatus.OK);
-        } catch (SQLException e) {
-            logger.warning(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (ApiKeyNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (NoPermissionsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
-    }
+
 
     @RequestMapping(value = "/getAssociatedImagesList", method = RequestMethod.GET)
     public ResponseEntity<?> getAssociatedImagesList(@RequestParam("apiKey") String apiKey, @RequestParam("examId") int examId) {
@@ -328,6 +316,38 @@ public class StudentController {
             SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
             DatabaseController.setDoorStatus(doorStatus);
             return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "/getexams", method = RequestMethod.GET)
+    public ResponseEntity<?> getExams(@RequestParam("apiKey") String apiKey) {
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            Gson gson = new Gson();
+            return new ResponseEntity<>(gson.toJson(DatabaseController.getExams()), HttpStatus.OK);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "/getNews", method = RequestMethod.GET)
+    public ResponseEntity<?> getNews(@RequestParam("apiKey") String apiKey){
+        try{
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            Gson gson = new Gson();
+            return new ResponseEntity<>(gson.toJson(DatabaseController.getNews()), HttpStatus.OK);
         } catch (SQLException e) {
             logger.warning(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

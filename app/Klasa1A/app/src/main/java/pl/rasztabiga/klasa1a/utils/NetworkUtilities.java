@@ -16,7 +16,8 @@ public class NetworkUtilities {
     //private static final String SERVER_ADDR = "http://89.36.219.95:8007";
     //private static final String SERVER_ADDR = "http://192.168.1.24:8007";
     //private static final String SERVER_ADDR = "http://94.177.229.18:8007";
-    private static final String SERVER_ADDR = Injection.provideServerAddress();
+    //private static final String SERVER_ADDR = Injection.provideServerAddress();
+    private static final String SERVER_ADDR = "http://192.168.100.101:8007";
 
     private static final String DYZURNI_QUERY_URL = SERVER_ADDR + "/getdyzurni";
     private static final String ON_DUTIES_QUERY_URL = SERVER_ADDR + "/getOnDuties";
@@ -30,6 +31,8 @@ public class NetworkUtilities {
     private static final String SETCHANGINGROOM_QUERY_URL = SERVER_ADDR + "/setchangingroomstatus";
     private static final String DOOR_QUERY_URL = SERVER_ADDR + "/getdoorstatus";
     private static final String SETDOOR_QUERY_URL = SERVER_ADDR + "/setdoorstatus";
+    // newsWall
+    private static final String NEWS_QUERY_URL = SERVER_ADDR + "/getNews";
 
     private static final int INTERNAL_SERVER_ERROR_CODE = 500;
     private static final int NOT_FOUND_CODE = 404;
@@ -237,6 +240,28 @@ public class NetworkUtilities {
             }
             return response.body().string();
         } catch (ConnectException e) {
+            //ignore
+        } catch (IOException e) {
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getNews(String apiKey) throws RequestException {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(NEWS_QUERY_URL + "?apiKey=" + apiKey )
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.code() == INTERNAL_SERVER_ERROR_CODE || response.code() == NOT_FOUND_CODE || response.code() == FORBIDDEN_CODE) {
+                throw new RequestException();
+            }
+            return response.body().string();
+        } catch (ConnectException e){
             //ignore
         } catch (IOException e) {
             FirebaseCrash.report(e);

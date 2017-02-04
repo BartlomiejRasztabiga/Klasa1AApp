@@ -23,6 +23,7 @@ import pl.rasztabiga.klasa1a.R;
 import pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity;
 import pl.rasztabiga.klasa1a.countdownsAct.CountdownsActivity;
 import pl.rasztabiga.klasa1a.mainAct.MainActivity;
+import pl.rasztabiga.klasa1a.newsWallAct.NewsWallActivity;
 
 public class LayoutUtils {
 
@@ -37,8 +38,9 @@ public class LayoutUtils {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Ekran główny").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.home_icon, null)).withTag(MainActivity.class);
         PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Kalendarz sprawdzianów").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.calendar_icon, null)).withTag(ExamsCalendarActivity.class);
         PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Odliczanie").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.clock_icon, null)).withTag(CountdownsActivity.class);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName("Pobierz nową wersję ręcznie").withSelectable(false).withTag(DOWNLOAD_NEW_VERSION_NAV_DRAWER_TAG);
-        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withIdentifier(5).withName("Co nowego...").withSelectable(false).withTag(CHANGELOG_NAV_DRAWER_TAG);
+        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Aktualności").withIcon(ResourcesCompat.getDrawable(actualClass.getResources(), R.drawable.newswall_icon, null)).withTag(NewsWallActivity.class);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withIdentifier(5).withName("Pobierz nową wersję ręcznie").withSelectable(false).withTag(DOWNLOAD_NEW_VERSION_NAV_DRAWER_TAG);
+        SecondaryDrawerItem item6 = new SecondaryDrawerItem().withIdentifier(6).withName("Co nowego...").withSelectable(false).withTag(CHANGELOG_NAV_DRAWER_TAG);
 
         return new DrawerBuilder().withActivity(actualClass)
                 .withTranslucentStatusBar(true)
@@ -48,9 +50,10 @@ public class LayoutUtils {
                         item1,
                         item2,
                         item3,
-                        new DividerDrawerItem(),
                         item4,
-                        item5
+                        new DividerDrawerItem(),
+                        item5,
+                        item6
                 )
                 .withSelectedItem(selectedItem)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {

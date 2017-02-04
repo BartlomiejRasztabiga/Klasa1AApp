@@ -25,7 +25,6 @@ public class LuckyNumbersLocalDataSource implements LuckyNumbersDataSource {
         if (instance == null) {
             instance = new LuckyNumbersLocalDataSource(context);
         }
-
         return instance;
     }
 

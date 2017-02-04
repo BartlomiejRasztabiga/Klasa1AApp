@@ -32,7 +32,7 @@ public class ExamsCalendarActivity extends AppCompatActivity {
             LayoutUtils.addFragmentToActivity(getSupportFragmentManager(), examsCalendarFragment, R.id.examsCalendarContentFrame);
         }
 
-        ExamsRepository repository = Injection.proviceExamsRepository(getApplicationContext());
+        ExamsRepository repository = Injection.provideExamsRepository(getApplicationContext());
         ExamsLoader examsLoader = new ExamsLoader(getApplicationContext(), repository);
 
         mExamsPresenter = new ExamsCalendarPresenter(
