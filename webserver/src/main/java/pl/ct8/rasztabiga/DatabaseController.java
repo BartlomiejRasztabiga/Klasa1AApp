@@ -206,7 +206,7 @@ public class DatabaseController {
         List<News> newsList = new ArrayList<>();
         try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
 
-            String searchSQL = "SELECT * FROM NEWS";
+            String searchSQL = "SELECT * FROM NEWS ORDER BY ID DESC";
             ResultSet rs = stmt.executeQuery(searchSQL);
 
             while (rs.next()) {

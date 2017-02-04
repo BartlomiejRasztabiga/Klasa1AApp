@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import pl.rasztabiga.klasa1a.Injection;
 import pl.rasztabiga.klasa1a.R;
@@ -41,6 +43,24 @@ public class NewsWallActivity extends AppCompatActivity {
                 getSupportLoaderManager()
 
         );
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.newswall_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
+        switch (itemThatWasClickedId) {
+            case R.id.action_refresh_news: {
+                mNewsWallPresenter.loadNews(true);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
 
     }
 }
