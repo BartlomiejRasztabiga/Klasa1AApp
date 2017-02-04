@@ -61,7 +61,7 @@ public class NewsWallFragment extends Fragment implements NewsWallContract.View 
     @Override
     public void showNews(List<News> newsList) {
         if(newsList != null && !newsList.isEmpty()){
-
+            mNewsAdapter.setNewsData(newsList);
         }
 
     }
@@ -72,9 +72,11 @@ public class NewsWallFragment extends Fragment implements NewsWallContract.View 
         View root = inflater.inflate(R.layout.newswall_fragment, container, false);
         ButterKnife.bind(this, root);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setAdapter(mNewsAdapter);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+
+        mNewsAdapter = new NewsAdapter();
+        mRecyclerView.setAdapter(mNewsAdapter);
         //setHasOptionMenu(true);
         return root;
     }

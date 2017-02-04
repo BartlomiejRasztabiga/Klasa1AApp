@@ -15,6 +15,8 @@ import pl.rasztabiga.klasa1a.R;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
+    //TODO Add listener to show detail of news
+
     private static final String TAG = NewsAdapter.class.getSimpleName();
 
     public ArrayList<News> getmNewsList() {
