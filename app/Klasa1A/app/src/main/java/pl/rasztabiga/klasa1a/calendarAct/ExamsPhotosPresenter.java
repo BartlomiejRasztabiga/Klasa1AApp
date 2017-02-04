@@ -3,8 +3,6 @@ package pl.rasztabiga.klasa1a.calendarAct;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -34,6 +32,10 @@ public class ExamsPhotosPresenter implements ExamsPhotosContract.Presenter, Load
     private final static int GET_EXAMS_PHOTOS_QUERY = 7;
 
     private final static String IMAGES_SERVER_URL = "http://94.177.229.18/images/";
+
+    private final static String EXAM_IMAGES_STRING = "Zdjęcia sprawdzianu";
+
+    private final static String NO_IMAGES_STRING = "Nie ma zdjęć tego sprawdzianu!";
 
     private final ExamsPhotosLoader mLoader;
 
@@ -94,14 +96,14 @@ public class ExamsPhotosPresenter implements ExamsPhotosContract.Presenter, Load
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(ImageGalleryActivity.KEY_IMAGES, imagesRealUrl);
-        bundle.putString(ImageGalleryActivity.KEY_TITLE, "Zdjęcia sprawdzianu");
+        bundle.putString(ImageGalleryActivity.KEY_TITLE, EXAM_IMAGES_STRING);
         intent.putExtras(bundle);
 
         mContext.startActivity(intent);
     }
 
     private void showNoImagesToast() {
-        Toast.makeText(mExamsCalendarFragment, "Nie ma zdjęć tego sprawdzianu!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mExamsCalendarFragment, NO_IMAGES_STRING, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -50,11 +50,6 @@ public final class DownloadNewVersionLoader extends AsyncTaskLoader<Void> {
         }
 
         downloadApk(file);
-        if (file.exists()) {
-            Log.d(TAG, "EXISTS!");
-            Log.d(TAG, String.valueOf(file.canRead()));
-            Log.d(TAG, file.toString());
-        }
         installApk(uri);
 
         return null;

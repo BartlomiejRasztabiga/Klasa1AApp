@@ -45,4 +45,12 @@
     <string name="api_key_not_found">Podany klucz nie istnieje. W razie problemów, skontaktuj się z administratorem</string>
     <string name="login">Zaloguj się</string>
     <string name="api_key">Klucz api</string>
+
+    <!--CountdownsActivity strings-->
+
+    <string name="holidays">Wakacje</string>
+    <string name="winter_holidays">Ferie</string>
+    <string name="mature_exam">Matura</string>
+    <string name="date_pattern">%d d  %d h  %d min  %d sek</string>
+
 </resources>
