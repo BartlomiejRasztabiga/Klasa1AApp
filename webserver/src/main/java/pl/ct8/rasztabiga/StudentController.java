@@ -151,6 +151,23 @@ public class StudentController {
         }
     }
 
+    @RequestMapping(value = "/getStudents", method = RequestMethod.GET)
+    public ResponseEntity<?> getStudent(@RequestParam("apiKey") String apiKey) {
+        try {
+            SecurityUtils.authenticate(apiKey, SecurityUtils.Role.USER);
+            Gson gson = new Gson();
+            return new ResponseEntity<>(gson.toJson(DatabaseController.getStudents()), HttpStatus.OK);
+
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ApiKeyNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoPermissionsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @RequestMapping(value = "/getAssociatedImagesList", method = RequestMethod.GET)
     public ResponseEntity<?> getAssociatedImagesList(@RequestParam("apiKey") String apiKey, @RequestParam("examId") int examId) {
         try {
