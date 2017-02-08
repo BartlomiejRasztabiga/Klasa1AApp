@@ -4,13 +4,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap.min.css">
 
     <!-- Custom styles for dashboard -->
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="/dashboard.css">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/bootstrap-theme.min.css">
 
 </head>
 <body>
@@ -30,6 +30,7 @@
                 <li><a href="#">Panel</a></li>
                 <li><a href="#">Ustawienia</a></li>
                 <li><a href="#">Profil</a></li>
+                <li><a href="/logoutAdmin">Wyloguj się</a> </li>
             </ul>
             <form class="navbar-form navbar-right">
                 <input type="text" class="form-control" placeholder="Szukaj...">
