@@ -25,9 +25,24 @@ public class App {
         before("/admin/*", (request, response) -> {
             boolean authenticated = false;
 
+            if (request.session() != null) {
+                if (request.session().attribute("authenticated") == Boolean.valueOf(true)) {
+                    authenticated = true;
+                }
+            }
+
             if (!authenticated) {
                 response.redirect("/loginAdmin");
             }
+        });
+
+        get("/admin/dashboard", (request, response) -> {
+            response.status(200);
+            response.type("text/html");
+            Students model = new Students();
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("students", model.getAllStudents());
+            return freeMarkerEngine.render(new ModelAndView(attributes, "main.ftl"));
         });
 
         get("/admin/students", (request, response) -> {
@@ -45,17 +60,25 @@ public class App {
             return null;
         });
 
-        post("/adminLoginCallback", (request, response) -> {
-            System.out.println(request.contentType()); // What type of data am I sending?
-            System.out.println(request.params()); // What are the params sent?
-            System.out.println(request.raw()); // What's the raw data sent?
-            System.out.println(request.attributes());
-            System.out.println(request.queryParams());
-            return request.body();
+        get("/logoutAdmin", (request, response) -> {
+            request.session().invalidate();
+            response.redirect("/loginAdmin");
+            return null;
         });
 
-        post("/lol", (request, response) -> {
-            return "lol";
+        post("/adminLoginCallback", (request, response) -> {
+            String email = request.queryParams("email");
+            String password = request.queryParams("password");
+            //TODO Unhardcode it later ;)
+            if (email.equals("bartlomiej.rasztabiga.official@gmail.com") && password.equals("admin")) {
+                request.session(true);
+                request.session().attribute("authenticated", true);
+                response.redirect("/admin/dashboard");
+            } else {
+                halt(401, "Wrong credentials");
+            }
+
+            return null;
         });
 
 
