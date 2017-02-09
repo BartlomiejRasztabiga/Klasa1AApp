@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -29,8 +31,9 @@ public final class CountdownsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         LayoutUtils.getNavigationDrawer(CountdownsActivity.this, 3, toolbar);
 
-        inflateCountDownTimer(2017, 5, 23, 0, 0, getString(R.string.holidays));
-        inflateCountDownTimer(2019, 4, 6, 0, 0, getString(R.string.mature_exam));
+        inflateCountDownTimer(2017, 5, 23, 24, 0, getString(R.string.holidays));
+        inflateCountDownTimer(2019, 4, 6, 24, 0, getString(R.string.mature_exam));
+        inflateCountDownTimer(2017, 1, 9, 9, 22, "Hehs");
     }
 
     private void inflateCountDownTimer(int year, int month, int day, int hour, int minute, final String countdownTitleString) {
@@ -44,6 +47,8 @@ public final class CountdownsActivity extends AppCompatActivity {
         final TextView countdownTitle = (TextView) countdown.findViewById(R.id.countdownTitle);
         final TextView countdownTime = (TextView) countdown.findViewById(R.id.countdownTime);
         countdownTitle.setText(countdownTitleString + " za: ");
+        Log.d("HEH", String.valueOf(new Date().getTime()));
+        Log.d("HEH", String.valueOf(calendar.getTimeInMillis()));
         Long timeInMilis = calendar.getTimeInMillis() - new Date().getTime();
 
         new CountDownTimer(timeInMilis, 1000) {
@@ -54,10 +59,13 @@ public final class CountdownsActivity extends AppCompatActivity {
                 long hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished);
                 millisUntilFinished -= TimeUnit.HOURS.toMillis(hours);
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
-                millisUntilFinished -= TimeUnit.MINUTES.toMillis(minutes);
-                long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+                if(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) > 30000) {
+                    minutes++;
+                }
+                //millisUntilFinished -= TimeUnit.MINUTES.toMillis(minutes);
+                //long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
 
-                countdownTime.setText(String.format(Locale.getDefault(), getString(R.string.date_pattern), days, hours, minutes, seconds));
+                countdownTime.setText(String.format(Locale.getDefault(), getString(R.string.date_pattern), days, hours, minutes));
             }
 
             @Override
