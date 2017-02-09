@@ -42,6 +42,10 @@ public class App {
             Students model = new Students();
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("students", model.getAllStudents());
+
+            System.out.println("hehs");
+            System.out.println("test2");
+            
             return freeMarkerEngine.render(new ModelAndView(attributes, "main.ftl"));
         });
 
