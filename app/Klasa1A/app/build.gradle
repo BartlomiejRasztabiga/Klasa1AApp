@@ -8,7 +8,7 @@ android {
         config {
             keyAlias 'MyAndroidKey'
             keyPassword '#aLlEnDoR@5_2013#'
-            storeFile file('D:/Klasa1AApp/keystore.jks')
+            storeFile file('../../keystore.jks')
             storePassword 'Gallendors5'
         }
     }
