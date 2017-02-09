@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import de.cketti.library.changelog.ChangeLog;
 import pl.rasztabiga.klasa1a.Injection;
 import pl.rasztabiga.klasa1a.R;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private LuckyNumbersPresenter mLuckyNumbersPresenter;
     private UpdaterPresenter mUpdaterPresenter;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         LayoutUtils.getNavigationDrawer(MainActivity.this, 1, toolbar);
+
+        //enable Firebase Analytics
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         //show changelog on first run
         showChangelogOnFirstRun();
