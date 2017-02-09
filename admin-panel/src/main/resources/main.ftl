@@ -54,7 +54,7 @@
                     <thead>
                     <tr>
                         <th>Number</th>
-                        <th>Nname</th>
+                        <th>Name</th>
                         <th>Surname</th>
                     </tr>
                     </thead>
