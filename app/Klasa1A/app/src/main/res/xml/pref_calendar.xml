@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:key="calendarBackgroundColor"
+        android:title="Kolor tła kalendarza"
+        android:defaultValue="#efefef"/>
+
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:key="currentDayBackgroundColor"
+        android:title="Kolor tła aktualnego dnia"
+        android:defaultValue="#01579b"/>
+
+    <net.margaritov.preference.colorpicker.ColorPickerPreference
+        android:key="currentSelectedDayBackgroundColor"
+        android:title="Kolor tła zaznaczonego dnia"
+        android:defaultValue="#1e88e5"/>
+</PreferenceScreen>

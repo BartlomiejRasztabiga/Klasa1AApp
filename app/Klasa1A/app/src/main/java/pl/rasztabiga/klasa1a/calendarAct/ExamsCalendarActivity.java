@@ -1,5 +1,6 @@
 package pl.rasztabiga.klasa1a.calendarAct;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import pl.rasztabiga.klasa1a.utils.LayoutUtils;
 public class ExamsCalendarActivity extends AppCompatActivity {
 
     private ExamsCalendarContract.Presenter mExamsPresenter;
+    private ExamsCalendarFragment mExamsFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,10 +28,10 @@ public class ExamsCalendarActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         LayoutUtils.getNavigationDrawer(ExamsCalendarActivity.this, 2, toolbar);
 
-        ExamsCalendarFragment examsCalendarFragment = (ExamsCalendarFragment) getSupportFragmentManager().findFragmentById(R.id.examsCalendarContentFrame);
-        if (examsCalendarFragment == null) {
-            examsCalendarFragment = ExamsCalendarFragment.newInstance();
-            LayoutUtils.addFragmentToActivity(getSupportFragmentManager(), examsCalendarFragment, R.id.examsCalendarContentFrame);
+        mExamsFragment = (ExamsCalendarFragment) getSupportFragmentManager().findFragmentById(R.id.examsCalendarContentFrame);
+        if (mExamsFragment == null) {
+            mExamsFragment = ExamsCalendarFragment.newInstance();
+            LayoutUtils.addFragmentToActivity(getSupportFragmentManager(), mExamsFragment, R.id.examsCalendarContentFrame);
         }
 
         ExamsRepository repository = Injection.proviceExamsRepository(getApplicationContext());
@@ -39,7 +41,7 @@ public class ExamsCalendarActivity extends AppCompatActivity {
                 examsLoader,
                 getSupportLoaderManager(),
                 repository,
-                examsCalendarFragment
+                mExamsFragment
         );
 
     }
@@ -56,6 +58,12 @@ public class ExamsCalendarActivity extends AppCompatActivity {
         switch (itemThatWasClickedId) {
             case R.id.action_refresh_exams: {
                 mExamsPresenter.loadExams(true);
+                return true;
+            }
+            case R.id.action_calendar_settings: {
+                Intent intent = new Intent(this, CalendarSettingsActivity.class);
+                startActivity(intent);
+                finish();
                 return true;
             }
         }

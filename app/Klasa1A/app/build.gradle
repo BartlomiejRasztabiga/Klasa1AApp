@@ -88,6 +88,10 @@ dependencies {
     //This is for ImageGallery
     //compile 'com.google.android.gms:play-services:10.0.1'
 
+    compile 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
+    compile 'com.rarepebble:colorpicker:2.1.0'
+
+    compile "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
 
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
