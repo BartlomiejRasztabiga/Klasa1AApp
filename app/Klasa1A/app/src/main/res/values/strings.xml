@@ -27,6 +27,7 @@
     <string name="toggle_button_close">Zamknięte</string>
     <string name="changing_room">Szatnia</string>
     <string name="door">Drzwi</string>
+    <string name="news">Ogłoszenia</string>
 
     <!--EnterApiKeyDialog strings-->
 

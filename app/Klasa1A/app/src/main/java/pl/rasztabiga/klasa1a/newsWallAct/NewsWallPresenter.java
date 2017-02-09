@@ -36,7 +36,7 @@ public class NewsWallPresenter implements NewsWallContract.Presenter, LoaderMana
         mLoader = checkNotNull(loader, "loader cannot be null");
         mLoaderManager = checkNotNull(loaderManager, "loader manager cannot be null");
 
-        newsWallView.setPresenter(this);
+        mNewsWallView.setPresenter(this);
     }
 
     @Override

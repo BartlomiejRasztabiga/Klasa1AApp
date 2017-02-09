@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class NewsWallFragment extends Fragment implements NewsWallContract.View 
     RecyclerView mRecyclerView;
     @BindView(R.id.progress_indicator_newswall)
     ProgressBar mProgressBar;
+    @BindView(R.id.news_error_message_tv)
+    TextView mErrorMessage;
     private NewsWallContract.Presenter mPresenter;
     private NewsAdapter mNewsAdapter;
 
@@ -62,6 +65,7 @@ public class NewsWallFragment extends Fragment implements NewsWallContract.View 
     public void showNews(List<News> newsList) {
         if(newsList != null && !newsList.isEmpty()){
             mNewsAdapter.setNewsData(newsList);
+            mErrorMessage.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -84,6 +88,8 @@ public class NewsWallFragment extends Fragment implements NewsWallContract.View 
     @Override
     public void showLoadingNewsError() {
         setLoadingIndicator(false);
+        mErrorMessage.setVisibility(View.VISIBLE);
+
 
     }
 

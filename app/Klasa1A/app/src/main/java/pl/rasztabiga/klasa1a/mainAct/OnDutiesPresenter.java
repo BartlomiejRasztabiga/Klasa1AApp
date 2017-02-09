@@ -55,6 +55,7 @@ public class OnDutiesPresenter implements OnDutiesContract.Presenter, LoaderMana
 
     @Override
     public void onLoadFinished(Loader<OnDuties> loader, OnDuties data) {
+        //TODO This is not called on second execution
         mCurrentOnDuties = data;
         if (mCurrentOnDuties == null) {
             mOnDutiesView.showLoadingOnDutiesError();
