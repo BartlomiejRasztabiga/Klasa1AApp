@@ -1,8 +1,6 @@
 package pl.rasztabiga.klasa1a.utils;
 
 
-import com.google.firebase.database.FirebaseDatabase;
-
 public class FirebaseUtils {
     private static FirebaseDatabase mDatabase;
 

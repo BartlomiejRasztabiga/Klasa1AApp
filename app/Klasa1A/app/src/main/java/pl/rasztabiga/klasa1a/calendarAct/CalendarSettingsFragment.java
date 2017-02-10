@@ -1,8 +1,6 @@
 package pl.rasztabiga.klasa1a.calendarAct;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import pl.rasztabiga.klasa1a.R;

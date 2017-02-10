@@ -1,17 +1,11 @@
 package pl.rasztabiga.klasa1a.calendarAct;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import pl.rasztabiga.klasa1a.R;
 
