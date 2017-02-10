@@ -1,10 +1,40 @@
-webserver:
-  script:
-    - app/Klasa1A/gradlew build
+image: java:8-jdk
 
-app:
+stages:
+  - build_webserver
+  - test_webserver
+  - deploy_webserver
+
+before_script:
+#  - echo `pwd` # debug
+#  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+build_webserver:
+  stage: build
   script:
-    - cd app
-    - cd Klasa1A
-    - gradlew build
-    - cd ..
+    - cd webserver/ && ./gradlew assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+  only:
+    - master
+
+test_webserver:
+  stage: test
+  script:
+    - cd webserver/ && ./gradlew check
+
+deploy_webserver:
+  stage: deploy
+  script:
+    - cd webserver/ && ./deploy
+
+after_script:
+  - echo "End CI"
