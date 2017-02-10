@@ -9,7 +9,6 @@ before_script:
 #  - echo `pwd` # debug
 #  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - export GRADLE_USER_HOME=`pwd`/.gradle
-  - ls
 
 cache:
   paths:
@@ -19,8 +18,9 @@ cache:
 build_webserver:
   stage: build_webserver
   script:
-    - cd webserver/ && chmod +x ./gradlew
-    - cd webserver/ && ./gradlew assemble
+    - ls
+    - cd webserver && chmod +x ./gradlew
+    - cd webserver && ./gradlew assemble
   artifacts:
     paths:
       - build/libs/*.jar
