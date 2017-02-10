@@ -24,6 +24,8 @@ test_webserver:
   script:
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew check
+    
+package_webserver:
   stage: package_webserver
   script:
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
