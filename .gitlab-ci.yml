@@ -18,7 +18,7 @@ cache:
 build_webserver:
   stage: build_webserver
   script:
-    - cd webserver/ && ./gradlew assemble
+    - cd webserver/ && sudo ./gradlew assemble
   artifacts:
     paths:
       - build/libs/*.jar
@@ -29,12 +29,12 @@ build_webserver:
 test_webserver:
   stage: test_webserver
   script:
-    - cd webserver/ && ./gradlew check
+    - cd webserver/ && sudo ./gradlew check
 
 deploy_webserver:
   stage: deploy_webserver
   script:
-    - cd webserver/ && ./deploy
+    - cd webserver/ && sudo ./deploy
 
 after_script:
   - echo "End CI"
