@@ -19,7 +19,7 @@ build_webserver:
   stage: build_webserver
   script:
     - ls
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && gradle wrapper && chmod +x ./gradlew
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew assemble
   artifacts:
     paths:
@@ -31,13 +31,13 @@ build_webserver:
 test_webserver:
   stage: test_webserver
   script:
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/ && gradle wrapper && chmod +x ./gradlew
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/ && chmod +x ./gradlew
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/ && ./gradlew check
 
 deploy_webserver:
   stage: deploy_webserver
   script:
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/ && gradle wrapper && chmod +x ./gradlew
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/ && chmod +x ./gradlew
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/ && ./gradle deploy
 
 after_script:
