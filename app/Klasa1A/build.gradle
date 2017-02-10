@@ -32,16 +32,10 @@ task clean(type: Delete) {
 }
 
 ext {
-    // Sdk and tools
-/*    minSdkVersion = 10
-    targetSdkVersion = 24
-    compileSdkVersion = 24
-    buildToolsVersion = '24.0.2'*/
-
     // App dependencies
     supportLibraryVersion = '25.1.1'
-    guavaVersion = '19.0'
-    junitVersion = '4.8.1'
+    guavaVersion = '20.0' //20 is maximum version for java7, don't increment this, until there won't be good compiler for java8
+    junitVersion = '4.12'
     mockitoVersion = '1.10.19'
     powerMockito = '1.6.6'
     hamcrestVersion = '1.3'
