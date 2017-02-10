@@ -10,6 +10,9 @@ android {
             storePassword 'Gallendors5'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
