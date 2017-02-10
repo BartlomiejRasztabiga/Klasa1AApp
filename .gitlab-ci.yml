@@ -19,8 +19,6 @@ build_webserver:
     - ls
     - cd /home/gitlab-runner/builds/28d81fbf/0/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
     - cd /home/gitlab-runner/builds/28d81fbf/0/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew assemble
-  only:
-    - master
 test_webserver:
   stage: test
   script:
@@ -43,8 +41,6 @@ build_app:
   script:
   - cd /home/gitlab-runner/builds/28d81fbf/0/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && chmod +x ./gradlew
   - cd /home/gitlab-runner/builds/28d81fbf/0/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && ./gradlew assemble
-  only:
-  - master
 test_app:
   stage: test
   script:
