@@ -16,7 +16,7 @@ cache:
     - .gradle/caches
 
 build_webserver:
-  stage: build
+  stage: build_webserver
   script:
     - cd webserver/ && ./gradlew assemble
   artifacts:
@@ -27,12 +27,12 @@ build_webserver:
     - master
 
 test_webserver:
-  stage: test
+  stage: test_webserver
   script:
     - cd webserver/ && ./gradlew check
 
 deploy_webserver:
-  stage: deploy
+  stage: deploy_webserver
   script:
     - cd webserver/ && ./deploy
 
