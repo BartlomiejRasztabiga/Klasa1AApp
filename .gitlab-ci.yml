@@ -29,9 +29,9 @@ package_webserver:
   stage: package_webserver
   script:
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradle build
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradle jar
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradle build
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlwe build
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew jar
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew build
   artifacts:
     paths:
     - build/libs/*.jar
