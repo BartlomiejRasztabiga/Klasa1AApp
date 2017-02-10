@@ -1,0 +1,12 @@
+webserver:
+  script:
+    - cd webserver
+    - gradlew build
+    - cd ..
+
+app:
+  script:
+    - cd app
+    - cd Klasa1A
+    - gradlew build
+    - cd ..
