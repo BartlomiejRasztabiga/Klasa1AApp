@@ -34,7 +34,6 @@ public final class CountdownsActivity extends AppCompatActivity {
 
         inflateCountDownTimer(2017, 5, 23, 0, 0, getString(R.string.holidays));
         inflateCountDownTimer(2019, 4, 6, 0, 0, getString(R.string.mature_exam));
-        inflateCountDownTimer(2017, 1, 9, 15, 28, "Hehs");
     }
 
     private void inflateCountDownTimer(int year, int month, int day, int hour, int minute, final String countdownTitleString) {

@@ -81,16 +81,37 @@ public class ExamsCalendarFragment extends Fragment implements ExamsCalendarCont
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        String calendarBackgroundColorStr = sharedPreferences.getString("calendarBackgroundColor", "#efefef");
-        compactCalendarView.setCalendarBackgroundColor(Color.parseColor(calendarBackgroundColorStr));
+        int calendarBackgroundColor = sharedPreferences.getInt("calendarBackgroundColor", Color.parseColor("#efefef"));
+        compactCalendarView.setCalendarBackgroundColor(calendarBackgroundColor);
 
-        String currentDayBackgroundColorStr = sharedPreferences.getString("currentDayBackgroundColor", "#01579b");
-        compactCalendarView.setCurrentDayBackgroundColor(Color.parseColor(currentDayBackgroundColorStr));
+        int currentDayBackgroundColor = sharedPreferences.getInt("currentDayBackgroundColor", Color.parseColor("#01579b"));
+        compactCalendarView.setCurrentDayBackgroundColor(currentDayBackgroundColor);
 
-        String currentSelectedDayBackgroundColorStr = sharedPreferences.getString("currentSelectedDayBackgroundColor", "#1e88e5");
-        compactCalendarView.setCurrentSelectedDayBackgroundColor(Color.parseColor(currentSelectedDayBackgroundColorStr));
+        int currentSelectedDayBackgroundColor = sharedPreferences.getInt("currentSelectedDayBackgroundColor", Color.parseColor("#1e88e5"));
+        compactCalendarView.setCurrentSelectedDayBackgroundColor(currentSelectedDayBackgroundColor);
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case "calendarBackgroundColor": {
+                int color = sharedPreferences.getInt(key, Color.parseColor("#efefef"));
+                compactCalendarView.setCalendarBackgroundColor(color);
+                break;
+            }
+            case "currentDayBackgroundColor": {
+                int color = sharedPreferences.getInt(key, Color.parseColor("#01579b"));
+                compactCalendarView.setCurrentDayBackgroundColor(color);
+                break;
+            }
+            case "currentSelectedDayBackgroundColor": {
+                int color = sharedPreferences.getInt(key, Color.parseColor("#1e88e5"));
+                compactCalendarView.setCurrentSelectedDayBackgroundColor(color);
+                break;
+            }
+        }
     }
 
     @Override
@@ -180,27 +201,6 @@ public class ExamsCalendarFragment extends Fragment implements ExamsCalendarCont
             }
 
             mExamAdapter.setExamsData(examArrayList);
-        }
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case "calendarBackgroundColor": {
-                String colorStr = sharedPreferences.getString(key, "#efefef");
-                compactCalendarView.setCalendarBackgroundColor(Color.parseColor(colorStr));
-                break;
-            }
-            case "currentDayBackgroundColor": {
-                String colorStr = sharedPreferences.getString(key, "#01579b");
-                compactCalendarView.setCurrentDayBackgroundColor(Color.parseColor(colorStr));
-                break;
-            }
-            case "currentSelectedDayBackgroundColor": {
-                String colorStr = sharedPreferences.getString(key, "#1e88e5");
-                compactCalendarView.setCurrentSelectedDayBackgroundColor(Color.parseColor(colorStr));
-                break;
-            }
         }
     }
 }

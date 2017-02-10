@@ -63,7 +63,6 @@ public class ExamsCalendarActivity extends AppCompatActivity {
             case R.id.action_calendar_settings: {
                 Intent intent = new Intent(this, CalendarSettingsActivity.class);
                 startActivity(intent);
-                finish();
                 return true;
             }
         }
