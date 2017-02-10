@@ -9,6 +9,7 @@ before_script:
 #  - echo `pwd` # debug
 #  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - export GRADLE_USER_HOME=`pwd`/.gradle
+  - cd webserver/ && chmod +x ./gradlew
 
 cache:
   paths:
@@ -18,7 +19,7 @@ cache:
 build_webserver:
   stage: build_webserver
   script:
-    - cd webserver/ && sudo ./gradlew assemble
+    - cd webserver/ && ./gradlew assemble
   artifacts:
     paths:
       - build/libs/*.jar
@@ -29,12 +30,12 @@ build_webserver:
 test_webserver:
   stage: test_webserver
   script:
-    - cd webserver/ && sudo ./gradlew check
+    - cd webserver/ && ./gradlew check
 
 deploy_webserver:
   stage: deploy_webserver
   script:
-    - cd webserver/ && sudo ./deploy
+    - cd webserver/ && ./deploy
 
 after_script:
   - echo "End CI"
