@@ -19,8 +19,8 @@ build_webserver:
   stage: build_webserver
   script:
     - ls
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew assemble
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && gradle wrapper && chmod +x ./gradlew
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && gradle wrapper && ./gradlew assemble
   artifacts:
     paths:
       - build/libs/*.jar
