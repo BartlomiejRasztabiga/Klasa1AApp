@@ -1,8 +1,6 @@
 webserver:
   script:
-    - cd webserver
-    - gradlew build
-    - cd ..
+    - app/Klasa1A/gradlew build
 
 app:
   script:
