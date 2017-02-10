@@ -22,8 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name="pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity"
+            android:launchMode="singleTop" />
         <activity android:name="pl.rasztabiga.klasa1a.splashAct.EnterApiKeyActivity" />
         <activity android:name="pl.rasztabiga.klasa1a.mainAct.MainActivity" />
         <activity android:name="pl.rasztabiga.klasa1a.countdownsAct.CountdownsActivity" />
@@ -31,9 +32,9 @@
             android:name="pl.rasztabiga.klasa1a.calendarAct.CalendarSettingsActivity"
             android:label="@string/settings"
             android:parentActivityName="pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.rasztabiga.klasa1a.calendarAct.ExamsCalendarActivity" />
         </activity>
 
         <activity

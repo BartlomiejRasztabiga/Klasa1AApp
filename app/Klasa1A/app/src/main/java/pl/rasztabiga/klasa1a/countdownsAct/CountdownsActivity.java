@@ -6,16 +6,11 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import pl.rasztabiga.klasa1a.R;
@@ -36,7 +31,7 @@ public final class CountdownsActivity extends AppCompatActivity {
         inflateCountDownTimer(2019, 4, 6, 0, 0, getString(R.string.mature_exam));
     }
 
-    private void inflateCountDownTimer(int year, int month, int day, int hour, int minute, final String countdownTitleString) {
+    private void inflateCountDownTimer(int year, int month, int day, final int hour, int minute, final String countdownTitleString) {
         LinearLayout rootLayout = (LinearLayout) findViewById(R.id.countdowns_layout);
         View countdown = getLayoutInflater().inflate(R.layout.countdown_fragment, rootLayout, false);
         rootLayout.addView(countdown);
@@ -63,11 +58,12 @@ public final class CountdownsActivity extends AppCompatActivity {
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
                 millisUntilFinished -= TimeUnit.MINUTES.toMillis(minutes);
 
-                if(millisUntilFinished > 30000 || minutes == 0) {
+                if (millisUntilFinished > 30000 || minutes == 0) {
                     minutes++;
                 }
 
-                countdownTime.setText(String.format(Locale.getDefault(), getString(R.string.date_pattern), days, hours, minutes));
+                //countdownTime.setText(String.format(Locale.getDefault(), getString(R.string.date_pattern), days, hours, minutes));
+                countdownTime.setText(String.format(getResources().getString(R.string.date_pattern), days, hours, minutes));
             }
 
             @Override
