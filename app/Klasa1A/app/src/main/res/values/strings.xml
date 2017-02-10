@@ -52,5 +52,6 @@
     <string name="winter_holidays">Ferie</string>
     <string name="mature_exam">Matura</string>
     <string name="date_pattern" formatted="false">%d d  %d h  %d min</string>
+    <string name="settings">Ustawienia</string>
 
 </resources>
