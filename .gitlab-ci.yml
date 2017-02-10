@@ -3,6 +3,9 @@ stages:
   - build_webserver
   - test_webserver
   - package_webserver
+  - build_app
+  - test_app
+  - package_app
 before_script:
 #  - echo `pwd` # debug
 #  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
@@ -29,12 +32,33 @@ package_webserver:
   stage: package_webserver
   script:
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
-    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlwe build
+    - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew build
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew jar
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew build
   artifacts:
     paths:
-    - build/libs/*.jar
-    - build/libs/*.jar.original
+    - /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/build/libs/*.jar
+    - /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/build/libs/*.jar.original
+build_app:
+  stage: build_app
+  script:
+  - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && chmod +x ./gradlew
+  - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && ./gradlew assemble
+  only:
+  - master
+test_app:
+  stage: test_app
+  script:
+  - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && chmod +x ./gradlew
+  - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && ./gradlew check
+package_app:
+  stage: package_app
+  script:
+  - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && chmod +x ./gradlew
+  - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && ./gradlew assemble
+  artifacts:
+    paths:
+    - /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A/app/build/outputs/apk/*.apk
+    - /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A/app/build/outputs/mapping/release/mapping.txt
 after_script:
   - echo "End CI"
