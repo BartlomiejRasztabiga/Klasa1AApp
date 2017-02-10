@@ -1,11 +1,9 @@
 image: java:8-jdk
 stages:
-  - build_webserver
-  - test_webserver
-  - package_webserver
-  - build_app
-  - test_app
-  - package_app
+  - build
+  - test
+  - package
+
 before_script:
 #  - echo `pwd` # debug
 #  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
@@ -15,7 +13,7 @@ cache:
     - .gradle/wrapper
     - .gradle/caches
 build_webserver:
-  stage: build_webserver
+  stage: build
   script:
     - ls
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
@@ -23,13 +21,13 @@ build_webserver:
   only:
     - master
 test_webserver:
-  stage: test_webserver
+  stage: test
   script:
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew check
     
 package_webserver:
-  stage: package_webserver
+  stage: package
   script:
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && chmod +x ./gradlew
     - cd /builds/BartlomiejRasztabiga/Klasa1AApp/webserver && ./gradlew build
@@ -40,19 +38,19 @@ package_webserver:
     - /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/build/libs/*.jar
     - /builds/BartlomiejRasztabiga/Klasa1AApp/webserver/build/libs/*.jar.original
 build_app:
-  stage: build_app
+  stage: build
   script:
   - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && chmod +x ./gradlew
   - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && ./gradlew assemble
   only:
   - master
 test_app:
-  stage: test_app
+  stage: test
   script:
   - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && chmod +x ./gradlew
   - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && ./gradlew check
 package_app:
-  stage: package_app
+  stage: package
   script:
   - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && chmod +x ./gradlew
   - cd /builds/BartlomiejRasztabiga/Klasa1AApp/app/Klasa1A && ./gradlew assemble
