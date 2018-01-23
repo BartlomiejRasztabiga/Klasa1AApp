@@ -1,3 +1,4 @@
+/*
 package pl.rasztabiga.klasa1a;
 
 
@@ -20,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 import pl.rasztabiga.klasa1a.utils.NetworkUtilities;
 
 public class EnterApiKeyDialog extends DialogFragment {
-    private final String TAG = MainActivity.class.getName();
+    private final String TAG = MainActivity_old.class.getName();
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -93,3 +94,4 @@ public class EnterApiKeyDialog extends DialogFragment {
 }
 
 
+*/

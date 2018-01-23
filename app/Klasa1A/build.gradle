@@ -8,20 +8,38 @@ buildscript {
     dependencies {
         classpath 'com.google.firebase:firebase-plugins:1.0.4'
         classpath 'com.android.tools.build:gradle:2.2.3'
-
+        classpath 'com.google.gms:google-services:3.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
 allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xbootclasspath/a:" + System.properties.get("java.home") + "/lib/rt.jar"
+        }
+    }
     repositories {
         jcenter()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    // App dependencies
+    supportLibraryVersion = '25.1.1'
+    guavaVersion = '20.0' //20 is maximum version for java7, don't increment this, until there won't be good compiler for java8
+    junitVersion = '4.12'
+    mockitoVersion = '1.10.19'
+    powerMockito = '1.6.6'
+    hamcrestVersion = '1.3'
+    runnerVersion = '0.5'
+    rulesVersion = '0.5'
+    espressoVersion = '2.2.2'
 }

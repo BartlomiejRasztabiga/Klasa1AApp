@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+        android:defaultValue="#efefef"
+        android:key="calendarBackgroundColor"
+        android:title="Kolor tła kalendarza"
+        app:colorChoices="@array/color_choices" />
+
+    <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+        android:defaultValue="#01579b"
+        android:key="currentDayBackgroundColor"
+        android:title="Kolor aktualnego dnia"
+        app:colorChoices="@array/color_choices" />
+
+    <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+        android:defaultValue="#1e88e5"
+        android:key="currentSelectedDayBackgroundColor"
+        android:title="Kolor zaznaczonego dnia"
+        app:colorChoices="@array/color_choices" />
+
+</PreferenceScreen>
